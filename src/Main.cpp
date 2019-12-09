@@ -1,3 +1,5 @@
+#include <nanogui/nanogui.h>
+
 #include <iostream>
 
 int main()
