@@ -36,6 +36,24 @@ include_directories (
 )
 
 ############################################################################
+# tbb
+############################################################################
+
+# Build Thread Building Blocks (main shared libraries only)
+set(TBB_BUILD_SHARED          OFF  CACHE BOOL " " FORCE)
+set(TBB_BUILD_STATIC          ON  CACHE BOOL " " FORCE)
+set(TBB_BUILD_TBBMALLOC       OFF CACHE BOOL " " FORCE)
+set(TBB_BUILD_TBBMALLOC_PROXY OFF CACHE BOOL " " FORCE)
+set(TBB_BUILD_TESTS           OFF CACHE BOOL " " FORCE)
+
+add_subdirectory(ext/tbb)
+set_property(TARGET tbb_static tbb_def_files PROPERTY FOLDER "dependencies")
+
+include_directories (
+	${CMAKE_CURRENT_SOURCE_DIR}/ext/tbb/include
+)
+
+############################################################################
 # Rays
 ############################################################################
 
@@ -56,4 +74,4 @@ set (RAYS_SOURCE
 
 add_executable (Rays ${RAYS_SOURCE})
 
-target_link_libraries (Rays nanogui ${NANOGUI_EXTRA_LIBS})
+target_link_libraries (Rays nanogui tbb_static ${NANOGUI_EXTRA_LIBS})
