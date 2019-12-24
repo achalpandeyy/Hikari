@@ -4,8 +4,15 @@ project (Rays)
 
 set (CMAKE_CXX_STANDARD 14)
 
-##################
+############################################################################
+# glm
+############################################################################
+
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/ext/glm/)
+
+############################################################################
 # nanogui
+############################################################################
 
 # Disable building extras we won't need (pure C++ project)
 set (NANOGUI_BUILD_EXAMPLE OFF CACHE BOOL " " FORCE)
@@ -28,8 +35,25 @@ include_directories (
 	${NANOGUI_EXTRA_INCS}
 )
 
-##################
+############################################################################
+# Rays
+############################################################################
 
-add_executable (Rays src/Main.cpp)
+include_directories (src/)
+
+set (RAYS_SOURCE
+	src/DirectionalLight.cpp
+	src/Main.cpp
+	src/PointLight.cpp
+	src/RaysApp.cpp
+	src/Renderer.cpp
+	src/Sphere.cpp
+	src/Ray.cpp
+	src/Camera.cpp
+	src/Scene.cpp
+	src/Whitted.cpp
+)
+
+add_executable (Rays ${RAYS_SOURCE})
 
 target_link_libraries (Rays nanogui ${NANOGUI_EXTRA_LIBS})

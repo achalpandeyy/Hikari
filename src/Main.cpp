@@ -1,9 +1,10 @@
-#include <nanogui/nanogui.h>
+#include "RaysApp.h"
 
-#include <iostream>
+#include "glm/vec3.hpp"
 
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
+    Rays::RaysApp app;
+    app.Start();
     return 0;
 }
