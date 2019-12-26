@@ -1,5 +1,6 @@
 #pragma once
 
+#include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
 namespace Rays { class Ray; }
@@ -18,11 +19,7 @@ public:
         double              focalLength = 1.0,
         float               fieldOfView = 90.f);
 
-    ~Camera();
-
-    Ray SpawnRay(unsigned int rasterX, unsigned int rasterY) const;
-    void SetPixelRadiance(unsigned int rasterX, unsigned int rasterY, const glm::vec3& radiance);
-    void WriteImage();
+    Ray SpawnRay(const glm::vec2& rasterCoordinates) const;
 
 private:
     glm::vec3 m_Position;
@@ -33,7 +30,6 @@ private:
     // Film
     unsigned int m_FilmWidth;
     unsigned int m_FilmHeight;
-    glm::vec3* m_Film;
 };
 
 }   // namespace Rays

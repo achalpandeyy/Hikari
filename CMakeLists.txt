@@ -60,7 +60,9 @@ include_directories (
 include_directories (src/)
 
 set (RAYS_SOURCE
+	src/BlockGenerator.cpp
 	src/DirectionalLight.cpp
+	src/ImageBlock.cpp
 	src/Main.cpp
 	src/PointLight.cpp
 	src/RaysApp.cpp

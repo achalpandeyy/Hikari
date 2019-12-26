@@ -5,6 +5,8 @@
 
 #include <memory>
 
+namespace Rays { class ImageBlock; }
+
 namespace Rays
 {
 
@@ -15,6 +17,7 @@ public:
     ~Renderer() {}
 
     void Render() const;
+    void RenderBlock(ImageBlock& block) const;
 
 private:
     std::unique_ptr<Scene> m_Scene = nullptr;

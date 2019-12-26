@@ -4,10 +4,24 @@
 #include "Sphere.h"
 #include "PointLight.h"
 #include "DirectionalLight.h"
+#include "BlockGenerator.h"
+#include "ImageBlock.h"
 
+#include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
+#include "tbb/blocked_range.h"
+#include "tbb/parallel_for.h"
 
-#include <fstream>
+#include <iostream>
+#include <thread>
+#include <chrono>
+
+// TODO: Temporarily global
+// TODO: Hardcoding the image width and height temporarily - this should
+// be something which the user can change at runtime in accordance with
+// the resolution enum
+unsigned int imageWidth = 640u;
+unsigned int imageHeight = 400u;
 
 namespace Rays
 {
@@ -23,22 +37,65 @@ Renderer::Renderer()
 }
 
 void Renderer::Render() const
-{
-    // TODO: Hardcoding the image width and height temporarily - this should
-    // be something which the user can change at runtime in accordance with
-    // the resolution enum
-    unsigned int imageWidth = 640u;
-    unsigned int imageHeight = 400u;
-    for (unsigned int rasterY = 0; rasterY < imageHeight; rasterY++)
+{   
+    auto startTime = std::chrono::high_resolution_clock::now();
+    
+    // Parallel
+    glm::vec2 framebufferDimensions(imageWidth, imageHeight);
+
+    BlockGenerator blockGenerator(framebufferDimensions, BLOCK_DIMENSION);
+    ImageBlock outputImage(framebufferDimensions);
+
+    std::thread renderThread([&]
     {
-        for (unsigned int rasterX = 0; rasterX < imageWidth; rasterX++)
+        std::cout << "Rendering.." << std::endl;
+
+        tbb::blocked_range<unsigned int> range(0u, blockGenerator.GetBlockCount());
+
+        auto map = [&](const tbb::blocked_range<unsigned int>& range)
         {
-            Ray primaryRay = m_Scene->m_Camera->SpawnRay(rasterX, rasterY);
-            glm::vec3 radiance = m_Integrator->Li(primaryRay, *m_Scene, 0);
-            m_Scene->m_Camera->SetPixelRadiance(rasterX, rasterY, radiance);
+            ImageBlock imageBlock(glm::vec2(BLOCK_DIMENSION));
+
+            // !"This `for` loop shouldn't be necessary"!
+            // An interesting behaviour: If we remove the `for` loop
+            // from here `m_BlocksLeft` rarely hits 0 (which should happen
+            // all the time) instead it sometimes stops at 3 sometimes at 1 etc.
+            for (unsigned int i = range.begin(); i < range.end(); ++i)
+            {
+                blockGenerator.NextBlock(imageBlock);
+                RenderBlock(imageBlock);
+                outputImage.Put(imageBlock);
+            }
+        };
+
+        tbb::parallel_for(range, map);
+        // map(range);
+    });
+
+    renderThread.join();
+    auto stopTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stopTime - startTime);
+
+    std::cout << "Render time: " << duration.count() / 1e6 << " seconds." << std::endl;
+
+    outputImage.WriteImage();
+}
+
+void Renderer::RenderBlock(ImageBlock& block) const
+{
+    glm::vec2 rasterCoordinates(block.m_Position.x * BLOCK_DIMENSION, block.m_Position.y * BLOCK_DIMENSION);
+
+    for (unsigned int col = 0; col < block.m_Dimensions.y; ++col)
+    {
+        for (unsigned int row = 0; row < block.m_Dimensions.x; ++row)
+        {
+            Ray primaryRay = m_Scene->m_Camera->SpawnRay(glm::vec2(rasterCoordinates.x + row, rasterCoordinates.y + col));
+
+            glm::vec3 color = m_Integrator->Li(primaryRay, *m_Scene, 0);
+            unsigned int idx = col * block.m_Dimensions.x + row;
+            block.m_Data[idx] = color;
         }
     }
-    m_Scene->m_Camera->WriteImage();
 }
 
 void Renderer::CreateScene(Scene& scene)
@@ -71,8 +128,8 @@ void Renderer::CreateScene(Scene& scene)
     (
         glm::vec3(0.f, 0.f, 20.f),      // camera position
         glm::vec3(0.f, 0.f, 0.f),       // look at
-        640u,                           // image width
-        400u                            // image height
+        imageWidth,                           // image width
+        imageHeight                            // image height
     );
 }
 
