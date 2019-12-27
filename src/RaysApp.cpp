@@ -2,8 +2,6 @@
 
 #include "nanogui/nanogui.h"
 
-#include <iostream>
-
 namespace Rays
 {
 
@@ -13,39 +11,31 @@ RaysApp::RaysApp()
 
     nanogui::init();
 
-    nanogui::Screen* screen(new nanogui::Screen(nanogui::Vector2i(1280, 720),
-        "NanoGUI test [GL 4.6]",
-        true, false, 8, 8, 24, 8, 0, 4, 6));
-
+    nanogui::Screen* screen(new nanogui::Screen(nanogui::Vector2i(512, 512), "Rays"));
+    
     nanogui::FormHelper* formHelper(new nanogui::FormHelper(screen));
 
-    nanogui::ref<nanogui::Window> window = formHelper->addWindow(Eigen::Vector2i(100, 50), "Render Options");
+    nanogui::ref<nanogui::Window> window = formHelper->addWindow(Eigen::Vector2i(50, 50), "Render Options");
 
-    bool multithreading = true;
-    formHelper->addVariable("Multithreading", multithreading);
+    formHelper->addVariable("Multithreading", m_Renderer->m_RenderOptions.m_Multithreading);
+    formHelper->addVariable("Fixed Primitives", m_Renderer->m_RenderOptions.m_FixedPrimitivesMode);
 
-    bool fixedPrims = false;
-    formHelper->addVariable("Fixed Primitives", fixedPrims);
-
-    int rpp = 7;
-    auto var = formHelper->addVariable("No. of Indirect Rays", rpp);
+    auto var = formHelper->addVariable("No. of Indirect Rays", m_Renderer->m_RenderOptions.m_NumIndirectRays);
     var->setMinValue(0);
     var->setMaxValue(2048);
     var->setSpinnable(true);
 
-    enum E_Resolution
+    auto resolutionVar = formHelper->addVariable("Resolution", m_Renderer->m_RenderOptions.m_Resolution, true);
+    resolutionVar->setItems({ "640 x 400", "320 x 200", "1 x 1" });
+    resolutionVar->setCallback([&](const E_Resolution& res)
     {
-        res640x400 = 0,
-        res320x200,
-        res1x1
-    };
-    E_Resolution resolution;
-    formHelper->addVariable("Resolution", resolution, true)
-        ->setItems({ "640 x 400", "320 x 200", "1 x 1" });
+        m_Renderer->SetResolution(res);
+    });
 
     formHelper->addButton("Load Scene", []() {std::cout << "Scene Loaded." << std::endl; });
 
     formHelper->addButton("Render", [this]() { Render(); });
+
     screen->setVisible(true);
     screen->performLayout();
 }
@@ -62,9 +52,7 @@ void RaysApp::Start() const
 
 void RaysApp::Render()
 {
-    std::cout << "Rendering.." << std::endl;
     m_Renderer->Render();
-    std::cout << "Rendered" << std::endl;
 }
 
 }   // namespace Rays

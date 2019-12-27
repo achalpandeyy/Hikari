@@ -15,20 +15,19 @@ namespace Rays
 Camera::Camera(
     const glm::vec3&    position,
     const glm::vec3&    lookAt,
-    unsigned int        filmWidth,
-    unsigned int        filmHeight,
-    double              focalLength,
+    const glm::vec2&    resolution,
+    float               focalLength,
     float               fieldOfView)
-    : m_Position(position), m_LookAt(lookAt), m_FilmWidth(filmWidth), m_FilmHeight(filmHeight),
+    : m_Position(position), m_LookAt(lookAt), m_Resolution(resolution),
     m_FocalLength(focalLength), m_FieldOfView(fieldOfView)
 {}
 
 Ray Camera::SpawnRay(const glm::vec2& rasterCoordinates) const
 {
-    float aspectRatio = static_cast<float>(m_FilmWidth) / m_FilmHeight;
+    float aspectRatio = static_cast<float>(m_Resolution.x) / m_Resolution.y;
     double fieldOfViewScale = std::tan(glm::radians(m_FieldOfView) * 0.5f);
-    float cameraX = (2.f * ((rasterCoordinates.x + 0.5f) / m_FilmWidth) - 1.f) * aspectRatio * fieldOfViewScale;
-    float cameraY = (1.f - 2.f * ((rasterCoordinates.y + 0.5f) / m_FilmHeight)) * fieldOfViewScale;
+    float cameraX = (2.f * ((rasterCoordinates.x + 0.5f) / m_Resolution.x) - 1.f) * aspectRatio * fieldOfViewScale;
+    float cameraY = (1.f - 2.f * ((rasterCoordinates.y + 0.5f) / m_Resolution.y)) * fieldOfViewScale;
 
     // Construct a Ray in camera space.
     glm::vec3 rayOrigin = glm::vec3(0.f);
@@ -52,6 +51,16 @@ Ray Camera::SpawnRay(const glm::vec2& rasterCoordinates) const
         glm::vec3(inverseLookAtMatrix * glm::vec4(ray.m_Origin, 1.f)),
         glm::vec3(inverseLookAtMatrix * glm::vec4(ray.m_Direction, 0.f))
     );
+}
+
+glm::vec2 Camera::GetResolution() const
+{
+    return m_Resolution;
+}
+
+void Camera::SetResolution(const glm::vec2& resolution)
+{
+    m_Resolution = resolution;
 }
 
 }   // namespace Rays

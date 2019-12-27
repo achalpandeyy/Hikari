@@ -7,3 +7,6 @@
 [submodule "ext/tbb"]
 	path = ext/tbb
 	url = https://github.com/wjakob/tbb.git
+[submodule "ext/tinyobjloader"]
+	path = ext/tinyobjloader
+	url = https://github.com/achalpandeyy/tinyobjloader.git

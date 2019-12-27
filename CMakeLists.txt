@@ -54,6 +54,18 @@ include_directories (
 )
 
 ############################################################################
+# tinyobjloader
+############################################################################
+
+include_directories (
+	${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyobjloader
+)
+
+set (TINY_OBJ_LOADER_SOURCE
+	${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyobjloader/tiny_obj_loader.cpp
+)
+
+############################################################################
 # Rays
 ############################################################################
 
@@ -74,6 +86,6 @@ set (RAYS_SOURCE
 	src/Whitted.cpp
 )
 
-add_executable (Rays ${RAYS_SOURCE})
+add_executable (Rays ${RAYS_SOURCE} ${TINY_OBJ_LOADER_SOURCE})
 
 target_link_libraries (Rays nanogui tbb_static ${NANOGUI_EXTRA_LIBS})

@@ -14,22 +14,20 @@ public:
     Camera(
         const glm::vec3&    position,
         const glm::vec3&    lookAt,
-        unsigned int        filmWidth,
-        unsigned int        filmHeight,
-        double              focalLength = 1.0,
+        const glm::vec2&    resolution,
+        float               focalLength = 1.f,
         float               fieldOfView = 90.f);
 
     Ray SpawnRay(const glm::vec2& rasterCoordinates) const;
+    glm::vec2 GetResolution() const;
+    void SetResolution(const glm::vec2& resolution);
 
 private:
     glm::vec3 m_Position;
     glm::vec3 m_LookAt;
-    double m_FocalLength;
+    glm::vec2 m_Resolution;
+    float m_FocalLength;
     float m_FieldOfView;
-
-    // Film
-    unsigned int m_FilmWidth;
-    unsigned int m_FilmHeight;
 };
 
 }   // namespace Rays

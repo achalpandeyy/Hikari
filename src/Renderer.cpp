@@ -16,13 +16,6 @@
 #include <thread>
 #include <chrono>
 
-// TODO: Temporarily global
-// TODO: Hardcoding the image width and height temporarily - this should
-// be something which the user can change at runtime in accordance with
-// the resolution enum
-unsigned int imageWidth = 640u;
-unsigned int imageHeight = 400u;
-
 namespace Rays
 {
 
@@ -39,9 +32,8 @@ Renderer::Renderer()
 void Renderer::Render() const
 {   
     auto startTime = std::chrono::high_resolution_clock::now();
-    
-    // Parallel
-    glm::vec2 framebufferDimensions(imageWidth, imageHeight);
+
+    glm::vec2 framebufferDimensions(GetResolution().x, GetResolution().y);
 
     BlockGenerator blockGenerator(framebufferDimensions, BLOCK_DIMENSION);
     ImageBlock outputImage(framebufferDimensions);
@@ -67,15 +59,24 @@ void Renderer::Render() const
                 outputImage.Put(imageBlock);
             }
         };
-
-        tbb::parallel_for(range, map);
-        // map(range);
+        
+        if (m_RenderOptions.m_Multithreading)
+        {
+            std::cout << "Parallel" << std::endl;
+            tbb::parallel_for(range, map);
+        }
+        else
+        {
+            std::cout << "Sequential" << std::endl;
+            map(range);
+        }
     });
 
     renderThread.join();
     auto stopTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stopTime - startTime);
 
+    std::cout << "Rendered!" << std::endl;
     std::cout << "Render time: " << duration.count() / 1e6 << " seconds." << std::endl;
 
     outputImage.WriteImage();
@@ -96,6 +97,32 @@ void Renderer::RenderBlock(ImageBlock& block) const
             block.m_Data[idx] = color;
         }
     }
+}
+
+void Renderer::SetResolution(const E_Resolution& res)
+{
+    m_RenderOptions.m_Resolution = res;
+    std::cout << "Resolution: ";
+    switch (res)
+    {
+    case _640x400_:
+        std::cout << "640 x 400" << std::endl;
+        m_Scene->m_Camera->SetResolution(glm::vec2(640, 400));
+        break;
+    case _320x200_:
+        std::cout << "320 x 200" << std::endl;
+        m_Scene->m_Camera->SetResolution(glm::vec2(320, 200));
+        break;
+    case _1x1_:
+        std::cout << "1 x 1" << std::endl;
+        m_Scene->m_Camera->SetResolution(glm::vec2(1, 1));
+        break;
+    }
+}
+
+glm::vec2 Renderer::GetResolution() const
+{
+    return m_Scene->m_Camera->GetResolution();
 }
 
 void Renderer::CreateScene(Scene& scene)
@@ -128,8 +155,7 @@ void Renderer::CreateScene(Scene& scene)
     (
         glm::vec3(0.f, 0.f, 20.f),      // camera position
         glm::vec3(0.f, 0.f, 0.f),       // look at
-        imageWidth,                           // image width
-        imageHeight                            // image height
+        glm::vec2(640, 400)
     );
 }
 
