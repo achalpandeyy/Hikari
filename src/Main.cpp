@@ -1,8 +1,8 @@
-#include "RaysApp.h"
+#include "App.h"
 
 int main()
 {
-    Rays::RaysApp app;
+    Hikari::App app;
     app.Start();
     return 0;
 }

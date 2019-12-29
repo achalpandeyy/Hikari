@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace Rays
+namespace Hikari
 {
 
 BlockGenerator::BlockGenerator(const glm::vec2& framebufferDim, unsigned int blockDim)
@@ -49,4 +49,4 @@ bool BlockGenerator::NextBlock(ImageBlock& imageBlock)
     return true;
 }
 
-}   // namespace Rays
+}   // namespace Hikari

@@ -3,7 +3,7 @@
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
-namespace Rays
+namespace Hikari
 {
 
 class Ray;
@@ -27,4 +27,4 @@ public:
     glm::vec2 GetTextureCoordinates(const glm::vec3& hitPoint) const;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

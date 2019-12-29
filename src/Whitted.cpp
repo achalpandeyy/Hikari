@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace Rays
+namespace Hikari
 {
 
 glm::vec3 WhittedIntegrator::Li(const Ray& ray, const Scene& scene, unsigned int rayDepth) const
@@ -75,4 +75,4 @@ glm::vec3 WhittedIntegrator::Li(const Ray& ray, const Scene& scene, unsigned int
     return hitColor;
 }
 
-}   // namespace Rays
+}   // namespace Hikari

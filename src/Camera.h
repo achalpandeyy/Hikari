@@ -3,9 +3,9 @@
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
-namespace Rays { class Ray; }
+namespace Hikari { class Ray; }
 
-namespace Rays
+namespace Hikari
 {
 
 class Camera
@@ -30,4 +30,4 @@ private:
     float m_FieldOfView;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

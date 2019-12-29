@@ -4,9 +4,9 @@
 
 #include "glm/vec3.hpp"
 
-namespace Rays { class Ray; }
+namespace Hikari { class Ray; }
 
-namespace Rays
+namespace Hikari
 {
 
 class Integrator

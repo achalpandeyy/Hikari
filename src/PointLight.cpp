@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-namespace Rays
+namespace Hikari
 {
 
 glm::vec3 PointLight::GetIncidentLight(const glm::vec3& hitPoint) const
@@ -19,4 +19,4 @@ glm::vec3 PointLight::GetIncidentLight(const glm::vec3& hitPoint) const
     return (m_Intensity * m_Color) / glm::vec3(4.f * M_PI * distanceToLightSquared);
 }
 
-}   // namespace Rays
+}   // namespace Hikari

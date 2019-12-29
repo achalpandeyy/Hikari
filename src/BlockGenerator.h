@@ -3,9 +3,9 @@
 #include "glm/vec2.hpp"
 #include "tbb/mutex.h"
 
-namespace Rays { class ImageBlock; }
+namespace Hikari { class ImageBlock; }
 
-namespace Rays
+namespace Hikari
 {
 
 class BlockGenerator
@@ -24,4 +24,4 @@ private:
     tbb::mutex m_Mutex;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

@@ -10,7 +10,7 @@
 #include <memory>
 #include <vector>
 
-namespace Rays { class Ray; }
+namespace Hikari { class Ray; }
 
 struct Intersection
 {
@@ -21,7 +21,7 @@ struct Intersection
     glm::vec3 m_Albedo;
 };
 
-namespace Rays
+namespace Hikari
 {
 
 class Scene
@@ -49,4 +49,4 @@ public:
     bool Intersect(const Ray& ray, Intersection& intersection) const;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

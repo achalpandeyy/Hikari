@@ -7,9 +7,9 @@
 
 #include <memory>
 
-namespace Rays { class ImageBlock; }
+namespace Hikari { class ImageBlock; }
 
-namespace Rays
+namespace Hikari
 {
 
 enum E_Resolution
@@ -47,4 +47,4 @@ private:
     glm::vec2 GetResolution() const;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

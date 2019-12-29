@@ -4,14 +4,14 @@
 
 #include <memory>
 
-namespace Rays
+namespace Hikari
 {
 
-class RaysApp
+class App
 {
 public:
-    RaysApp();
-    ~RaysApp();
+    App();
+    ~App();
     void Start() const;
     void Render();
 
@@ -19,4 +19,4 @@ private:
     std::unique_ptr<Renderer> m_Renderer;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

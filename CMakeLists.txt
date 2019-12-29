@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.14.5)
 
-project (Rays)
+project (Hikari)
 
 set (CMAKE_CXX_STANDARD 14)
 
@@ -66,18 +66,18 @@ set (TINY_OBJ_LOADER_SOURCE
 )
 
 ############################################################################
-# Rays
+# Hikari
 ############################################################################
 
 include_directories (src/)
 
-set (RAYS_SOURCE
+set (HIKARI_SOURCE
 	src/BlockGenerator.cpp
 	src/DirectionalLight.cpp
 	src/ImageBlock.cpp
 	src/Main.cpp
 	src/PointLight.cpp
-	src/RaysApp.cpp
+	src/App.cpp
 	src/Renderer.cpp
 	src/Sphere.cpp
 	src/Ray.cpp
@@ -86,6 +86,6 @@ set (RAYS_SOURCE
 	src/Whitted.cpp
 )
 
-add_executable (Rays ${RAYS_SOURCE} ${TINY_OBJ_LOADER_SOURCE})
+add_executable (Hikari ${HIKARI_SOURCE} ${TINY_OBJ_LOADER_SOURCE})
 
-target_link_libraries (Rays nanogui tbb_static ${NANOGUI_EXTRA_LIBS})
+target_link_libraries (Hikari nanogui tbb_static ${NANOGUI_EXTRA_LIBS})

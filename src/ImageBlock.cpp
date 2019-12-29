@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <fstream>
 
-namespace Rays
+namespace Hikari
 {
 
 ImageBlock::ImageBlock(const glm::vec2& dim) : m_Position(0, 0), m_Dimensions(dim)
@@ -55,4 +55,4 @@ void ImageBlock::WriteImage() const
     imageFile.close();
 }
 
-}   // namespace Rays
+}   // namespace Hikari

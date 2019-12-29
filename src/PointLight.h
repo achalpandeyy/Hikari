@@ -4,7 +4,7 @@
 
 #include "glm/vec3.hpp"
 
-namespace Rays
+namespace Hikari
 {
 
 class PointLight : public Light
@@ -20,4 +20,4 @@ public:
     glm::vec3 GetIncidentLight(const glm::vec3& hitPoint) const;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

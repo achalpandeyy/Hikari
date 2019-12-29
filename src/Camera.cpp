@@ -9,7 +9,7 @@
 
 #include <cmath>
 
-namespace Rays
+namespace Hikari
 {
 
 Camera::Camera(
@@ -63,4 +63,4 @@ void Camera::SetResolution(const glm::vec2& resolution)
     m_Resolution = resolution;
 }
 
-}   // namespace Rays
+}   // namespace Hikari

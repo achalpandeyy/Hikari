@@ -1,17 +1,17 @@
-#include "RaysApp.h"
+#include "App.h"
 
 #include "nanogui/nanogui.h"
 
-namespace Rays
+namespace Hikari
 {
 
-RaysApp::RaysApp()
+App::App()
 {
     m_Renderer = std::make_unique<Renderer>();
 
     nanogui::init();
 
-    nanogui::Screen* screen(new nanogui::Screen(nanogui::Vector2i(512, 512), "Rays"));
+    nanogui::Screen* screen(new nanogui::Screen(nanogui::Vector2i(512, 512), "Hikari"));
     
     nanogui::FormHelper* formHelper(new nanogui::FormHelper(screen));
 
@@ -40,19 +40,19 @@ RaysApp::RaysApp()
     screen->performLayout();
 }
 
-RaysApp::~RaysApp()
+App::~App()
 {
     nanogui::shutdown();
 }
 
-void RaysApp::Start() const
+void App::Start() const
 {
     nanogui::mainloop();
 }
 
-void RaysApp::Render()
+void App::Render()
 {
     m_Renderer->Render();
 }
 
-}   // namespace Rays
+}   // namespace Hikari

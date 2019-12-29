@@ -16,7 +16,7 @@
 #include <thread>
 #include <chrono>
 
-namespace Rays
+namespace Hikari
 {
 
 Renderer::Renderer()
@@ -159,4 +159,4 @@ void Renderer::CreateScene(Scene& scene)
     );
 }
 
-}   // namespace Rays
+}   // namespace Hikari

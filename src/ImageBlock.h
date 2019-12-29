@@ -6,7 +6,7 @@
 
 #define BLOCK_DIMENSION 32
 
-namespace Rays
+namespace Hikari
 {
 
 class ImageBlock
@@ -25,4 +25,4 @@ private:
     tbb::mutex m_Mutex;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

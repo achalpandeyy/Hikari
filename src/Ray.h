@@ -2,7 +2,7 @@
 
 #include "glm/vec3.hpp"
 
-namespace Rays
+namespace Hikari
 {
 
 class Ray
@@ -25,4 +25,4 @@ public:
     float m_MaxDistance;
 };
 
-}   // namespace Rays
+}   // namespace Hikari

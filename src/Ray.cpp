@@ -1,6 +1,6 @@
 #include "Ray.h"
 
-namespace Rays
+namespace Hikari
 {
 
 Ray::Ray(const glm::vec3& origin, const glm::vec3& direction, float maxDistance)
@@ -13,4 +13,4 @@ Ray::Ray(const glm::vec3& origin, const glm::vec3& direction, float maxDistance)
     }
 }
 
-}   // namespace Rays
+}   // namespace Hikari

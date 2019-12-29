@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include "Ray.h"
 
-namespace Rays
+namespace Hikari
 {
 
 bool Scene::Intersect(const Ray& ray) const
@@ -51,4 +51,4 @@ bool Scene::Intersect(const Ray& ray, Intersection& intersection) const
     return false;
 }
 
-}   // namespace Rays
+}   // namespace Hikari

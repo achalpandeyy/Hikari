@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace Rays
+namespace Hikari
 {
 
 inline bool solveQuadratic(float a, float b, float c, float& alpha, float& beta)
@@ -66,4 +66,4 @@ glm::vec2 Sphere::GetTextureCoordinates(const glm::vec3& hitPoint) const
     );
 }
 
-}   // namespace Rays
+}   // namespace Hikari
