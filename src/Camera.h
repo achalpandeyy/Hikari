@@ -14,6 +14,7 @@ public:
     Camera(
         const glm::vec3&    position,
         const glm::vec3&    lookAt,
+        const glm::vec3&    up,
         const glm::vec2&    resolution,
         float               focalLength = 1.f,
         float               fieldOfView = 90.f);
@@ -25,6 +26,7 @@ public:
 private:
     glm::vec3 m_Position;
     glm::vec3 m_LookAt;
+    glm::vec3 m_Up;
     glm::vec2 m_Resolution;
     float m_FocalLength;
     float m_FieldOfView;

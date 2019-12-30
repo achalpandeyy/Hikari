@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Ray.h"
+#include "Transform.h"
 
 #include "glm/mat4x4.hpp"
 #include "glm/vec4.hpp"
@@ -8,6 +9,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <cmath>
+#include <iostream>
 
 namespace Hikari
 {
@@ -15,10 +17,11 @@ namespace Hikari
 Camera::Camera(
     const glm::vec3&    position,
     const glm::vec3&    lookAt,
+    const glm::vec3&    up,
     const glm::vec2&    resolution,
     float               focalLength,
     float               fieldOfView)
-    : m_Position(position), m_LookAt(lookAt), m_Resolution(resolution),
+    : m_Position(position), m_LookAt(lookAt), m_Up(up), m_Resolution(resolution),
     m_FocalLength(focalLength), m_FieldOfView(fieldOfView)
 {}
 
@@ -34,23 +37,8 @@ Ray Camera::SpawnRay(const glm::vec2& rasterCoordinates) const
     glm::vec3 rayDirection = glm::normalize(glm::vec3(cameraX, cameraY, -m_FocalLength));
     Ray ray(rayOrigin, rayDirection);
 
-    // TODO: Not hardcode the world up vector.
-    glm::vec3 worldUp = glm::vec3(0.f, 1.f, 0.f);
-
-    // Note: The `glm::lookAt` matrix converts from world space to view (or camera space)
-    // but here we want to convert the ray from view (or camera space) to world space so
-    // that we can find intersections of it with the objects represented in world space,
-    // hence we use inverse of the `glm::lookAt` matrix to convert the ray from view
-    // space to world space.
-    glm::mat4 inverseLookAtMatrix = glm::inverse(glm::lookAt(m_Position, m_LookAt, worldUp));
-
-    // TODO: Divide by the w component of homogenous coordinate (glm::vec4)
-    // instead of just dropping it, when you move from glm::vec4 to glm::vec3
-    return Ray
-    (
-        glm::vec3(inverseLookAtMatrix * glm::vec4(ray.m_Origin, 1.f)),
-        glm::vec3(inverseLookAtMatrix * glm::vec4(ray.m_Direction, 0.f))
-    );
+    Transform lookAt = LookAt(m_Position, m_LookAt, m_Up);
+    return lookAt(ray);
 }
 
 glm::vec2 Camera::GetResolution() const
