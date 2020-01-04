@@ -51,23 +51,22 @@ Transform Transpose(const Transform& transform)
 
 Transform Translate(const glm::vec3& delta)
 {
-    glm::mat4 matrix = glm::translate(matrix, delta);
-    glm::mat4 matrixInverse = glm::translate(matrixInverse, -delta);
+    glm::mat4 matrix = glm::translate(glm::mat4(1.f), delta);
+    glm::mat4 matrixInverse = glm::translate(glm::mat4(1.f), -delta);
     return Transform(matrix, matrixInverse);
 }
 
 Transform Scale(const glm::vec3& factor)
 {
-    glm::mat4 matrix = glm::scale(matrix, factor);
-    glm::mat4 matrixInverse = glm::scale(matrixInverse, 1.f / factor);
+    glm::mat4 matrix = glm::scale(glm::mat4(1.f), factor);
+    glm::mat4 matrixInverse = glm::scale(glm::mat4(1.f), 1.f / factor);
     return Transform(matrix, matrixInverse);
 }
 
 Transform Rotate(float degrees, const glm::vec3& axis)
 {
-    glm::mat4 matrix = glm::rotate(matrix, glm::radians(degrees), axis);
-    glm::mat4 matrixInverse = glm::transpose(matrix);
-    return Transform(matrix, matrixInverse);
+    glm::mat4 matrix = glm::rotate(glm::mat4(1.f), glm::radians(degrees), axis);
+    return Transform(matrix, glm::transpose(matrix));
 }
 
 // Note: The `glm::lookAt` matrix converts from world space to view (or camera space)

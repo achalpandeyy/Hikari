@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Interaction.h"
 #include "Ray.h"
 
 #include "glm/mat4x4.hpp"
@@ -45,9 +46,18 @@ public:
         return glm::vec3(glm::transpose(m_MatrixInverse) * glm::vec4(normal, 0.f));
     }
     
-    inline Ray Transform::operator () (const Ray& ray) const
+    inline Ray operator () (const Ray& ray) const
     {
-        return Ray(TransformPoint(ray.m_Origin), TransformVector(ray.m_Direction), ray.m_MaxDistance);
+        return Ray(TransformPoint(ray.m_Origin), TransformVector(ray.m_Direction), ray.m_tMax);
+    }
+
+    inline Interaction operator () (const Interaction& interaction) const
+    {
+        Interaction result;
+        result.m_HitPoint = TransformPoint(interaction.m_HitPoint);
+        result.m_Normal = TransformNormal(interaction.m_Normal);
+        result.m_Albedo = interaction.m_Albedo;
+        return result;
     }
 
     Transform operator * (const Transform& t) const;
