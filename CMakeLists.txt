@@ -84,6 +84,7 @@ set (HIKARI_SOURCE
 	src/Camera.cpp
 	src/Scene.cpp
 	src/Whitted.cpp
+	src/Transform.cpp
 )
 
 add_executable (Hikari ${HIKARI_SOURCE} ${TINY_OBJ_LOADER_SOURCE})
