@@ -6,9 +6,11 @@
 #include "DirectionalLight.h"
 #include "BlockGenerator.h"
 #include "ImageBlock.h"
+#include "Transform.h"
 
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "tbb/blocked_range.h"
 #include "tbb/parallel_for.h"
 
@@ -130,15 +132,25 @@ void Renderer::CreateScene(Scene& scene)
     // Objects
     scene.m_Spheres.push_back(std::make_unique<Sphere>
     (
+        new Transform(),                // objectToWorld
+        new Transform(),                // worldToObject
+        false,                          // reverseOrientation
         5.f,                            // radius
-        glm::vec3(0.f, 0.f, 0.f),       // center
+        -5.f,
+        5.f,
+        360.f,
         glm::vec3(1.f, 0.f, 0.f)        // albedo
     ));
     
     scene.m_Spheres.push_back(std::make_unique<Sphere>
     (
+        new Transform(glm::translate(glm::mat4(1.f), glm::vec3(0.f, -1000.f, 0.f))),
+        new Transform(glm::translate(glm::mat4(1.f), glm::vec3(0.f, 1000.f , 0.f))),
+        false,
         995.f,                          // radius
-        glm::vec3(0.f, -1000.f, 0.f),   // center
+        -1000.f,
+        1000.f,
+        360.f,
         glm::vec3(0.4f, 0.9f, 0.4f)     // albedo
     ));
 

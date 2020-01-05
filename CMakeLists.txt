@@ -75,6 +75,7 @@ set (HIKARI_SOURCE
 	src/BlockGenerator.cpp
 	src/DirectionalLight.cpp
 	src/ImageBlock.cpp
+	src/Interaction.cpp
 	src/Main.cpp
 	src/PointLight.cpp
 	src/App.cpp

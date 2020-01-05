@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Sphere.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Sphere.h"
 
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
@@ -10,19 +10,11 @@
 #include <memory>
 #include <vector>
 
-namespace Hikari { class Ray; }
-
-struct Intersection
-{
-    bool m_Valid;
-    float m_Distance;
-    glm::vec3 m_Normal;
-    glm::vec2 m_TextureCoordinates;
-    glm::vec3 m_Albedo;
-};
-
 namespace Hikari
 {
+
+class Interaction;
+class Ray;
 
 class Scene
 {
@@ -46,7 +38,7 @@ public:
     std::unique_ptr<Camera> m_Camera;
 
     bool Intersect(const Ray& ray) const;
-    bool Intersect(const Ray& ray, Intersection& intersection) const;
+    bool Intersect(const Ray& ray, Interaction& interaction) const;
 };
 
 }   // namespace Hikari

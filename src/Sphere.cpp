@@ -129,12 +129,7 @@ bool Sphere::Intersect(const Ray& r, float* t, Interaction* interaction) const
     glm::vec3 dndv = glm::vec3((g * F - f * G) * invEGF2 * dpdu +
         (f * F - g * E) * invEGF2 * dpdv);
 
-    // *interaction = (*m_ObjectToWorld)(Interaction(pHit, glm::vec2(u, v), dpdu, dpdv, dndu, dndv, this));
-    Interaction objectSpaceInteraction;
-    objectSpaceInteraction.m_HitPoint = pHit;
-    objectSpaceInteraction.m_Normal = normal;
-    objectSpaceInteraction.m_Albedo = m_Albedo;
-    *interaction = (*m_ObjectToWorld)(objectSpaceInteraction);
+    *interaction = (*m_ObjectToWorld)(Interaction(pHit, glm::vec2(u, v), dpdu, dpdv, dndu, dndv, m_Albedo, this));
 
     return true;   
 }

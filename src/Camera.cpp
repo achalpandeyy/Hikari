@@ -1,4 +1,7 @@
+#define _USE_MATH_DEFINES
+
 #include "Camera.h"
+
 #include "Ray.h"
 #include "Transform.h"
 

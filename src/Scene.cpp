@@ -1,4 +1,6 @@
 #include "Scene.h"
+
+#include "Interaction.h"
 #include "Ray.h"
 
 namespace Hikari
@@ -6,10 +8,11 @@ namespace Hikari
 
 bool Scene::Intersect(const Ray& ray) const
 {
+    Interaction interaction;
     for (size_t i = 0; i < m_Spheres.size(); ++i)
     {
         float t;
-        if (m_Spheres[i]->Intersect(ray, &t) && t < ray.m_MaxDistance)
+        if (m_Spheres[i]->IntersectP(ray) && t < ray.m_tMax)
         {
             return true;
         }
@@ -17,38 +20,23 @@ bool Scene::Intersect(const Ray& ray) const
     return false;
 }
 
-bool Scene::Intersect(const Ray& ray, Intersection& intersection) const
+bool Scene::Intersect(const Ray& ray, Interaction& interaction) const
 {
+    Interaction intr;
     float tMin = std::numeric_limits<float>::max();
-    size_t hitObjIdx;
     bool intersectionFound = false;
     for (size_t i = 0; i < m_Spheres.size(); i++)
     {
         float t;
-        if (m_Spheres[i]->Intersect(ray, &t) && t < tMin)
+        if (m_Spheres[i]->Intersect(ray, &t, &intr) && t < tMin)
         {
             intersectionFound = true;
-            hitObjIdx = i;
+            interaction = intr;
             tMin = t;
         }
     }
 
-    if (intersectionFound)
-    {
-        // Assemble intersection structure
-        intersection.m_Valid = true;
-        intersection.m_Distance = tMin;
-
-        glm::vec3 hitPoint = ray.m_Origin + ray.m_Direction * intersection.m_Distance;
-
-        intersection.m_Normal = m_Spheres[hitObjIdx]->GetSurfaceNormal(hitPoint);
-        intersection.m_TextureCoordinates = m_Spheres[hitObjIdx]->GetTextureCoordinates(hitPoint);
-        intersection.m_Albedo = m_Spheres[hitObjIdx]->m_Albedo;
-        return true;
-    }
-
-    intersection.m_Valid = false;
-    return false;
+    return intersectionFound;
 }
 
 }   // namespace Hikari
