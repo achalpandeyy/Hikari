@@ -130,8 +130,71 @@ bool Sphere::Intersect(const Ray& r, float* t, Interaction* interaction) const
         (f * F - g * E) * invEGF2 * dpdv);
 
     *interaction = (*m_ObjectToWorld)(Interaction(pHit, glm::vec2(u, v), dpdu, dpdv, dndu, dndv, m_Albedo, this));
-
+    *t = tShapeHit;
     return true;   
+}
+
+bool Sphere::IntersectP(const Ray& r) const
+{
+    float phi;
+    glm::vec3 pHit;
+
+    Ray ray = (*m_WorldToObject)(r);
+
+    float a = glm::dot(ray.m_Direction, ray.m_Direction);
+    float b = 2.f * glm::dot(ray.m_Direction, ray.m_Origin);
+    float c = glm::dot(ray.m_Origin, ray.m_Origin) - (m_Radius * m_Radius);
+
+    float t0, t1;
+    if (!Quadratic(a, b, c, &t0, &t1))
+    {
+        return false;
+    }
+
+    if (t0 > ray.m_tMax || t1 <= 0.f)
+    {
+        return false;
+    }
+
+    float tShapeHit = t0;
+    if (tShapeHit <= 0.f)
+    {
+        tShapeHit = t1;
+        if (tShapeHit > ray.m_tMax)
+        {
+            return false;
+        }
+    }
+
+    pHit = ray(tShapeHit);
+    phi = std::atan2(pHit.z, pHit.x);
+
+    if (phi < 0.f) phi += 2.f * M_PI;
+
+    if ((m_YMin > -m_Radius && pHit.y < m_YMin) || (m_YMax < m_Radius && pHit.y > m_YMax)
+        || phi > m_PhiMax)
+    {
+        if (tShapeHit == t1) return false;
+        if (t1 > ray.m_tMax) return false;
+
+        tShapeHit = t1;
+
+        // Compute hitpoint and phi again for the case when `tShapeHit` = `t1`
+        pHit = ray(tShapeHit);
+        phi = std::atan2(pHit.y, pHit.x);
+        if (phi < 0.f) phi += 2.f * M_PI;
+
+        if ((m_YMin > -m_Radius && pHit.y < m_YMin) ||
+            (m_YMax < m_Radius && pHit.y > m_YMax) ||
+            phi > m_PhiMax)
+            return false;
+    }
+    return true;
+}
+
+float Sphere::Area() const
+{
+    return m_PhiMax * m_Radius * (m_YMax - m_YMin);
 }
 
 }   // namespace Hikari

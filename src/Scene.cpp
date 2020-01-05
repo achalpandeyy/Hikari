@@ -8,11 +8,9 @@ namespace Hikari
 
 bool Scene::Intersect(const Ray& ray) const
 {
-    Interaction interaction;
     for (size_t i = 0; i < m_Spheres.size(); ++i)
     {
-        float t;
-        if (m_Spheres[i]->IntersectP(ray) && t < ray.m_tMax)
+        if (m_Spheres[i]->IntersectP(ray))
         {
             return true;
         }

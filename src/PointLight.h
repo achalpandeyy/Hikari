@@ -10,7 +10,10 @@ namespace Hikari
 class PointLight : public Light
 {
 public:
-    PointLight(const glm::vec3& position, const glm::vec3& color = glm::vec3(1.f), float intensity = 1.f)
+    PointLight(
+        const glm::vec3&    position,
+        const glm::vec3&    color = glm::vec3(1.f),
+        float               intensity = 3500.f)
         : Light(color, intensity)
     {
         m_Position = position;

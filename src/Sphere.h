@@ -41,6 +41,8 @@ public:
     {}
 
     bool Intersect(const Ray& ray, float* t, Interaction* interaction) const;
+    bool IntersectP(const Ray& ray) const;
+    float Area() const;
 
 private:
     const float m_Radius;

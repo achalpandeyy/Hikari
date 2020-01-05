@@ -16,6 +16,7 @@ public:
         m_ReverseOrientation(reverseOrientation),
         m_TransformSwapsHandedness(m_ObjectToWorld->SwapsHandedness())
     {}
+    virtual ~Shape() {}
 
     virtual bool Intersect(const Ray& ray, float* tHit, Interaction* interaction) const = 0;
     virtual bool IntersectP(const Ray& ray) const
@@ -24,6 +25,7 @@ public:
         Interaction interaction;
         return Intersect(ray, &tHit, &interaction);
     }
+    virtual float Area() const = 0;
 
     const Transform* m_ObjectToWorld;
     const Transform* m_WorldToObject;
