@@ -56,17 +56,9 @@ public:
         Interaction result;
         result.m_HitPoint = TransformPoint(interaction.m_HitPoint);
         result.m_Normal = glm::normalize(TransformNormal(interaction.m_Normal));
-        result.m_dpdu = TransformVector(interaction.m_dpdu);
-        result.m_dpdv = TransformVector(interaction.m_dpdv);
-        result.m_dndu = TransformNormal(interaction.m_dndu);
-        result.m_dndv = TransformVector(interaction.m_dndv);
+        result.m_Albedo = interaction.m_Albedo;
+        result.m_Shape = interaction.m_Shape;
 
-        result.Shading.m_Normal = glm::normalize(TransformNormal(interaction.Shading.m_Normal));
-        result.Shading.m_dpdu = TransformVector(interaction.Shading.m_dpdu);
-        result.Shading.m_dpdv = TransformVector(interaction.Shading.m_dpdv);
-        result.Shading.m_dndu = TransformNormal(interaction.Shading.m_dndu);
-        result.Shading.m_dndv = TransformNormal(interaction.Shading.m_dndv);
-        result.Shading.m_Albedo = interaction.Shading.m_Albedo;
         return result;
     }
 

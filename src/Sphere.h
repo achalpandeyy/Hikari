@@ -25,30 +25,27 @@ public:
     Sphere(
         const Transform*    objectToWorld,
         const Transform*    worldToObject,
+        const glm::vec3&    albedo,
         bool                reverseOrientation,
         float               radius,
         float               yMin,
         float               yMax,
-        float               phiMax = 2.f * M_PI,
-        const glm::vec3& 	albedo = glm::vec3(0.18f))
-        : Shape(objectToWorld, worldToObject, reverseOrientation),
+        float               phiMax = 2.f * M_PI)
+        : Shape(objectToWorld, worldToObject, albedo, reverseOrientation),
         m_Radius(radius), m_YMin(glm::clamp(std::min(yMin, yMax), -radius, radius)),
         m_YMax(glm::clamp(std::max(yMin, yMax), -radius, radius)),
         m_ThetaMin(std::acos(glm::clamp(m_YMin / radius, -1.f, 1.f))),
         m_ThetaMax(std::acos(glm::clamp(m_YMax / radius, -1.f, 1.f))),
-        m_PhiMax(glm::radians(glm::clamp(phiMax, 0.f, 360.f))),
-        m_Albedo(albedo)
+        m_PhiMax(glm::radians(glm::clamp(phiMax, 0.f, 360.f)))
     {}
 
     bool Intersect(const Ray& ray, float* t, Interaction* interaction) const;
     bool IntersectP(const Ray& ray) const;
-    float Area() const;
 
 private:
     const float m_Radius;
     const float m_YMin, m_YMax;
     const float m_ThetaMin, m_ThetaMax, m_PhiMax;
-    glm::vec3 m_Albedo;
 };
 
 }   // namespace Hikari

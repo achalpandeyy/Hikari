@@ -1,4 +1,5 @@
 #include "Renderer.h"
+
 #include "Ray.h"
 #include "Whitted.h"
 #include "Sphere.h"
@@ -7,6 +8,7 @@
 #include "BlockGenerator.h"
 #include "ImageBlock.h"
 #include "Transform.h"
+#include "Triangle.h"
 
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
@@ -14,9 +16,10 @@
 #include "tbb/blocked_range.h"
 #include "tbb/parallel_for.h"
 
+#include <chrono>
 #include <iostream>
 #include <thread>
-#include <chrono>
+
 
 namespace Hikari
 {
@@ -130,29 +133,44 @@ glm::vec2 Renderer::GetResolution() const
 void Renderer::CreateScene(Scene& scene)
 {
     // Objects
-    scene.m_Spheres.push_back(std::make_unique<Sphere>
+    /*
+    glm::mat4 spObj2Wrld = glm::translate(glm::mat4(1.f), glm::vec3(7.f, 0.f, 0.f));
+    scene.m_Shapes.push_back(std::make_unique<Sphere>
     (
-        new Transform(),                // objectToWorld
+        new Transform(spObj2Wrld),                // objectToWorld
         new Transform(),                // worldToObject
+        glm::vec3(1.f, 0.f, 0.f),        // albedo
         false,                          // reverseOrientation
         5.f,                            // radius
         -5.f,
         5.f,
-        360.f,
-        glm::vec3(1.f, 0.f, 0.f)        // albedo
+        360.f
     ));
-    
-    scene.m_Spheres.push_back(std::make_unique<Sphere>
+    */
+
+    glm::mat4 obj2Wrld = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -8.5f, 0.f));
+    obj2Wrld = glm::rotate(obj2Wrld, glm::radians(15.f), glm::vec3(0.f, 1.f, 0.f));
+    obj2Wrld = glm::scale(obj2Wrld, glm::vec3(100.f));
+    std::vector< std::shared_ptr<Shape> > shapes = CreateTriangleMesh("bunny.obj",
+        new Transform(obj2Wrld), new Transform(), glm::vec3(1.f, 1.f, 0.f));
+
+    if (!shapes.empty())
+    {
+        scene.m_Shapes.insert(scene.m_Shapes.end(), shapes.begin(), shapes.end());
+    }
+
+    scene.m_Shapes.push_back(std::make_unique<Sphere>
     (
         new Transform(glm::translate(glm::mat4(1.f), glm::vec3(0.f, -1000.f, 0.f))),
         new Transform(glm::translate(glm::mat4(1.f), glm::vec3(0.f, 1000.f , 0.f))),
+        glm::vec3(0.4f, 0.9f, 0.4f),     // albedo
         false,
         995.f,                          // radius
         -1000.f,
         1000.f,
-        360.f,
-        glm::vec3(0.4f, 0.9f, 0.4f)     // albedo
+        360.f
     ));
+    
 
     // Lights
     scene.m_Lights.push_back(std::make_unique<DirectionalLight>

@@ -95,6 +95,7 @@ bool Sphere::Intersect(const Ray& r, float* t, Interaction* interaction) const
             return false;
     }
 
+    /*
     float u = phi / m_PhiMax;
     float theta = std::acos(glm::clamp(pHit.y / m_Radius, -1.f, 1.f));
     float v = (theta - m_ThetaMin) / (m_ThetaMax - m_ThetaMin);
@@ -128,8 +129,9 @@ bool Sphere::Intersect(const Ray& r, float* t, Interaction* interaction) const
         (e * F - f * E) * invEGF2 * dpdv);
     glm::vec3 dndv = glm::vec3((g * F - f * G) * invEGF2 * dpdu +
         (f * F - g * E) * invEGF2 * dpdv);
+    */
 
-    *interaction = (*m_ObjectToWorld)(Interaction(pHit, glm::vec2(u, v), dpdu, dpdv, dndu, dndv, m_Albedo, this));
+    *interaction = (*m_ObjectToWorld)(Interaction(pHit, glm::normalize(pHit), m_Albedo, this));
     *t = tShapeHit;
     return true;   
 }
@@ -190,11 +192,6 @@ bool Sphere::IntersectP(const Ray& r) const
             return false;
     }
     return true;
-}
-
-float Sphere::Area() const
-{
-    return m_PhiMax * m_Radius * (m_YMax - m_YMin);
 }
 
 }   // namespace Hikari

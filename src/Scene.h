@@ -24,7 +24,7 @@ public:
     // TODO: This memeber is `public` because we need it to hardcode a scene
     // in the `Renderer`, when we remove hardcoding of the scene I think
     // this will also be safe to make `private`.
-    std::vector< std::unique_ptr<Sphere> > m_Spheres;
+    std::vector< std::shared_ptr<Shape> > m_Shapes;
 
     // TODO: Make this functioning.
     // TODO: This memeber is `public` because we need it to hardcode a scene

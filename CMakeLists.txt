@@ -61,10 +61,6 @@ include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyobjloader
 )
 
-set (TINY_OBJ_LOADER_SOURCE
-	${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyobjloader/tiny_obj_loader.cpp
-)
-
 ############################################################################
 # Hikari
 ############################################################################
@@ -72,22 +68,24 @@ set (TINY_OBJ_LOADER_SOURCE
 include_directories (src/)
 
 set (HIKARI_SOURCE
+	src/App.cpp
 	src/BlockGenerator.cpp
+	src/Camera.cpp
 	src/DirectionalLight.cpp
 	src/ImageBlock.cpp
 	src/Interaction.cpp
 	src/Main.cpp
+	src/ObjLoader.cpp
 	src/PointLight.cpp
-	src/App.cpp
-	src/Renderer.cpp
-	src/Sphere.cpp
 	src/Ray.cpp
-	src/Camera.cpp
+	src/Renderer.cpp
 	src/Scene.cpp
-	src/Whitted.cpp
+	src/Sphere.cpp
 	src/Transform.cpp
+	src/Triangle.cpp
+	src/Whitted.cpp
 )
 
-add_executable (Hikari ${HIKARI_SOURCE} ${TINY_OBJ_LOADER_SOURCE})
+add_executable (Hikari ${HIKARI_SOURCE})
 
 target_link_libraries (Hikari nanogui tbb_static ${NANOGUI_EXTRA_LIBS})
