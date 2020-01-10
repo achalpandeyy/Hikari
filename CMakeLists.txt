@@ -77,6 +77,7 @@ set (HIKARI_SOURCE
 	src/Main.cpp
 	src/ObjLoader.cpp
 	src/PointLight.cpp
+	src/Primitive.cpp
 	src/Ray.cpp
 	src/Renderer.cpp
 	src/Scene.cpp

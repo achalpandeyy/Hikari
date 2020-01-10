@@ -25,13 +25,12 @@ public:
     Sphere(
         const Transform*    objectToWorld,
         const Transform*    worldToObject,
-        const glm::vec3&    albedo,
         bool                reverseOrientation,
         float               radius,
         float               yMin,
         float               yMax,
         float               phiMax = 2.f * M_PI)
-        : Shape(objectToWorld, worldToObject, albedo, reverseOrientation),
+        : Shape(objectToWorld, worldToObject, reverseOrientation),
         m_Radius(radius), m_YMin(glm::clamp(std::min(yMin, yMax), -radius, radius)),
         m_YMax(glm::clamp(std::max(yMin, yMax), -radius, radius)),
         m_ThetaMin(std::acos(glm::clamp(m_YMin / radius, -1.f, 1.f))),
@@ -39,7 +38,7 @@ public:
         m_PhiMax(glm::radians(glm::clamp(phiMax, 0.f, 360.f)))
     {}
 
-    bool Intersect(const Ray& ray, float* t, Interaction* interaction) const;
+    bool Intersect(const Ray& ray, float& t, Interaction& interaction) const;
     bool IntersectP(const Ray& ray) const;
 
 private:

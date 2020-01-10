@@ -37,17 +37,16 @@ TriangleMesh::TriangleMesh(
 Triangle::Triangle(
     const Transform*                        objectToWorld,
     const Transform*                        worldToObject,
-    const glm::vec3&                        albedo,
     bool                                    reverseOrientation,
     const std::shared_ptr<TriangleMesh>&    mesh,
     int                                     triNumber)
-    : Shape(objectToWorld, worldToObject, albedo, reverseOrientation), m_Mesh(mesh)
+    : Shape(objectToWorld, worldToObject, reverseOrientation), m_Mesh(mesh)
 {
     m_Vertices = &m_Mesh->m_VertexIndices[3 * triNumber];
     m_Normals = &m_Mesh->m_NormalIndices[3 * triNumber];
 }
 
-bool Triangle::Intersect(const Ray& ray, float* t, Interaction* interaction) const
+bool Triangle::Intersect(const Ray& ray, float& t, Interaction& interaction) const
 {
     const glm::vec3& p0 = m_Mesh->m_VertexPositions[m_Vertices[0]];
     const glm::vec3& p1 = m_Mesh->m_VertexPositions[m_Vertices[1]];
@@ -308,8 +307,8 @@ bool Triangle::Intersect(const Ray& ray, float* t, Interaction* interaction) con
     }
     */
 
-    *interaction = Interaction(ray(tHit), glm::normalize(glm::cross(p1 - p0, p2 - p0)), m_Albedo, this);
-    *t = tHit;
+    interaction = Interaction(ray(tHit), glm::normalize(glm::cross(p1 - p0, p2 - p0)), this);
+    t = tHit;
     return true;
 }
 
@@ -397,8 +396,7 @@ bool Triangle::IntersectP(const Ray& ray) const
 std::vector< std::shared_ptr<Shape> > CreateTriangleMesh(
     const char*         path,
     Transform*          objectToWorld,
-    Transform*          worldToObject,
-    const glm::vec3&    albedo)
+    Transform*          worldToObject)
 {
     size_t numVertices, numTriangles;
     std::vector<size_t> vertexIndices, normalIndices;
@@ -418,7 +416,7 @@ std::vector< std::shared_ptr<Shape> > CreateTriangleMesh(
         for (size_t i = 0; i < numTriangles; ++i)
         {
             std::shared_ptr<Shape> triangle = std::make_shared<Triangle>(
-                objectToWorld, worldToObject, albedo, false, mesh, i);
+                objectToWorld, worldToObject, false, mesh, i);
             triangles[i] = triangle;
         }
         return triangles;

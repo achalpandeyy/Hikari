@@ -56,8 +56,8 @@ public:
         Interaction result;
         result.m_HitPoint = TransformPoint(interaction.m_HitPoint);
         result.m_Normal = glm::normalize(TransformNormal(interaction.m_Normal));
-        result.m_Albedo = interaction.m_Albedo;
         result.m_Shape = interaction.m_Shape;
+        result.m_Primitive = interaction.m_Primitive;
 
         return result;
     }

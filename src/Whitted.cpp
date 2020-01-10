@@ -60,7 +60,7 @@ glm::vec3 WhittedIntegrator::Li(const Ray& ray, const Scene& scene, unsigned int
         // while making sure that energy is conserved i.e. the total amount of light reflected
         // off the surface should always be less than or equal to the sum of amount of light
         // received by the surface and emitted by the surface.
-        glm::vec3 diffuse = (interaction.m_Albedo / glm::vec3(M_PI)) * (scene.m_Lights[i]->GetIncidentLight(interaction.m_HitPoint)) * std::max(0.f, glm::dot(lightDirection, interaction.m_Normal) * static_cast<int>(!inShadow));
+        glm::vec3 diffuse = (interaction.m_Primitive->GetAlbedo() / glm::vec3(M_PI)) * (scene.m_Lights[i]->GetIncidentLight(interaction.m_HitPoint)) * std::max(0.f, glm::dot(lightDirection, interaction.m_Normal) * static_cast<int>(!inShadow));
 
         // Compute Specular component.
         // glm::vec3 viewDirection = -ray.m_Direction;

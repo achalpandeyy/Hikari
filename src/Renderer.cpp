@@ -4,6 +4,7 @@
 #include "Whitted.h"
 #include "Sphere.h"
 #include "PointLight.h"
+#include "Primitive.h"
 #include "DirectionalLight.h"
 #include "BlockGenerator.h"
 #include "ImageBlock.h"
@@ -132,45 +133,63 @@ glm::vec2 Renderer::GetResolution() const
 
 void Renderer::CreateScene(Scene& scene)
 {
-    // Objects
-    /*
-    glm::mat4 spObj2Wrld = glm::translate(glm::mat4(1.f), glm::vec3(7.f, 0.f, 0.f));
-    scene.m_Shapes.push_back(std::make_unique<Sphere>
+    // Red Sphere
+    std::shared_ptr<Shape> redSphereShape = std::make_shared<Sphere>
     (
-        new Transform(spObj2Wrld),                // objectToWorld
-        new Transform(),                // worldToObject
-        glm::vec3(1.f, 0.f, 0.f),        // albedo
-        false,                          // reverseOrientation
-        5.f,                            // radius
+        new Transform(),
+        new Transform(),
+        false,
+        5.f,
         -5.f,
         5.f,
         360.f
-    ));
-    */
+    );
+    glm::vec3 redSphereAlbedo(1.f, 0.f, 0.f);
+    std::shared_ptr<Primitive> redSphere = std::make_shared<GeometricPrimitive>(
+        redSphereShape, redSphereAlbedo);
+    scene.m_Primitives.push_back(redSphere);
 
+    // Green Ground Sphere
+    std::shared_ptr<Shape> greenSphereShape = std::make_shared<Sphere>
+    (
+        new Transform(glm::translate(glm::mat4(1.f), glm::vec3(0.f, -1000.f, 0.f))),
+        new Transform(glm::translate(glm::mat4(1.f), glm::vec3(0.f, 1000.f, 0.f))),
+        false,
+        995.f,
+        -1000.f,
+        1000.f,
+        360.f
+    );
+    glm::vec3 greenSphereAlbedo(0.4f, 0.9f, 0.4f);
+    std::shared_ptr<Primitive> greenSphere = std::make_shared<GeometricPrimitive>(
+        greenSphereShape, greenSphereAlbedo);
+    scene.m_Primitives.push_back(greenSphere);
+
+    /*
+    // Triangle Mesh
     glm::mat4 obj2Wrld = glm::translate(glm::mat4(1.f), glm::vec3(0.f, -8.5f, 0.f));
     obj2Wrld = glm::rotate(obj2Wrld, glm::radians(15.f), glm::vec3(0.f, 1.f, 0.f));
     obj2Wrld = glm::scale(obj2Wrld, glm::vec3(100.f));
     std::vector< std::shared_ptr<Shape> > shapes = CreateTriangleMesh("bunny.obj",
-        new Transform(obj2Wrld), new Transform(), glm::vec3(1.f, 1.f, 0.f));
+        new Transform(obj2Wrld), new Transform());
 
-    if (!shapes.empty())
+    std::vector< std::shared_ptr<GeometricPrimitive> > primitives(shapes.size());
+    for (size_t i = 0; i < shapes.size(); ++i)
     {
-        scene.m_Shapes.insert(scene.m_Shapes.end(), shapes.begin(), shapes.end());
+        std::shared_ptr<GeometricPrimitive> triangle = std::make_shared<GeometricPrimitive>
+        (
+            shapes[i],
+            glm::vec3(1.f, 1.f, 0.f)
+        );
+        primitives[i] = triangle;
     }
 
-    scene.m_Shapes.push_back(std::make_unique<Sphere>
-    (
-        new Transform(glm::translate(glm::mat4(1.f), glm::vec3(0.f, -1000.f, 0.f))),
-        new Transform(glm::translate(glm::mat4(1.f), glm::vec3(0.f, 1000.f , 0.f))),
-        glm::vec3(0.4f, 0.9f, 0.4f),     // albedo
-        false,
-        995.f,                          // radius
-        -1000.f,
-        1000.f,
-        360.f
-    ));
-    
+    if (!primitives.empty())
+    {
+        scene.m_Primitives.insert(scene.m_Primitives.end(), primitives.begin(),
+            primitives.end());
+    }
+    */
 
     // Lights
     scene.m_Lights.push_back(std::make_unique<DirectionalLight>

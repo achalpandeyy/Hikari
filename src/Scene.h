@@ -2,10 +2,7 @@
 
 #include "Camera.h"
 #include "Light.h"
-#include "Sphere.h"
-
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
+#include "Primitive.h"
 
 #include <memory>
 #include <vector>
@@ -24,7 +21,7 @@ public:
     // TODO: This memeber is `public` because we need it to hardcode a scene
     // in the `Renderer`, when we remove hardcoding of the scene I think
     // this will also be safe to make `private`.
-    std::vector< std::shared_ptr<Shape> > m_Shapes;
+    std::vector< std::shared_ptr<Primitive> > m_Primitives;
 
     // TODO: Make this functioning.
     // TODO: This memeber is `public` because we need it to hardcode a scene

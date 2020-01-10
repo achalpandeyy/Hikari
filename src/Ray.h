@@ -30,7 +30,7 @@ public:
     // casts a shadown on the object (light source is in between the two objects).
     // Here we set the Max Distance to the distance to the light source so we don't
     // consider any intersections beyond that point.
-    float m_tMax;
+    mutable float m_tMax;
 };
 
 }   // namespace Hikari

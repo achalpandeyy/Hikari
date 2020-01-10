@@ -11,26 +11,26 @@
 namespace Hikari
 {
 
-inline bool Quadratic(float a, float b, float c, float* t0, float* t1)
+inline bool Quadratic(float a, float b, float c, float& t0, float& t1)
 {
     float discriminant = b * b - 4.f * a * c;
     if (discriminant < 0.f)
         return false;
     else if (discriminant == 0.f)
-        *t0 = *t1 = -0.5 * (b / a);
+        t0 = t1 = -0.5 * (b / a);
     else
     {
         float rootDiscriminant = sqrt(discriminant);
         float q = b > 0.f ? -0.5f * (b + rootDiscriminant) : -0.5f * (b - rootDiscriminant);
-        *t0 = q / a;
-        *t1 = c / q;
+        t0 = q / a;
+        t1 = c / q;
 
-        if (*t0 > *t1) std::swap(*t0, *t1);
+        if (t0 > t1) std::swap(t0, t1);
     }
     return true;
 }
 
-bool Sphere::Intersect(const Ray& r, float* t, Interaction* interaction) const
+bool Sphere::Intersect(const Ray& r, float& t, Interaction& interaction) const
 {
     float phi;
     glm::vec3 pHit;
@@ -42,7 +42,7 @@ bool Sphere::Intersect(const Ray& r, float* t, Interaction* interaction) const
     float c = glm::dot(ray.m_Origin, ray.m_Origin) - (m_Radius * m_Radius);
 
     float t0, t1;
-    if (!Quadratic(a, b, c, &t0, &t1))
+    if (!Quadratic(a, b, c, t0, t1))
     {
         return false;
     }
@@ -131,8 +131,8 @@ bool Sphere::Intersect(const Ray& r, float* t, Interaction* interaction) const
         (f * F - g * E) * invEGF2 * dpdv);
     */
 
-    *interaction = (*m_ObjectToWorld)(Interaction(pHit, glm::normalize(pHit), m_Albedo, this));
-    *t = tShapeHit;
+    interaction = (*m_ObjectToWorld)(Interaction(pHit, glm::normalize(pHit), this));
+    t = tShapeHit;
     return true;   
 }
 
@@ -148,7 +148,7 @@ bool Sphere::IntersectP(const Ray& r) const
     float c = glm::dot(ray.m_Origin, ray.m_Origin) - (m_Radius * m_Radius);
 
     float t0, t1;
-    if (!Quadratic(a, b, c, &t0, &t1))
+    if (!Quadratic(a, b, c, t0, t1))
     {
         return false;
     }

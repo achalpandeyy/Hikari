@@ -8,9 +8,9 @@ namespace Hikari
 
 bool Scene::Intersect(const Ray& ray) const
 {
-    for (size_t i = 0; i < m_Shapes.size(); ++i)
+    for (size_t i = 0; i < m_Primitives.size(); ++i)
     {
-        if (m_Shapes[i]->IntersectP(ray))
+        if (m_Primitives[i]->IntersectP(ray))
         {
             return true;
         }
@@ -23,14 +23,12 @@ bool Scene::Intersect(const Ray& ray, Interaction& interaction) const
     Interaction intr;
     float tMin = std::numeric_limits<float>::max();
     bool intersectionFound = false;
-    for (size_t i = 0; i < m_Shapes.size(); i++)
+    for (size_t i = 0; i < m_Primitives.size(); i++)
     {
-        float t;
-        if (m_Shapes[i]->Intersect(ray, &t, &intr) && t < tMin)
+        if (m_Primitives[i]->Intersect(ray, intr))
         {
             intersectionFound = true;
             interaction = intr;
-            tMin = t;
         }
     }
 

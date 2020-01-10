@@ -37,12 +37,11 @@ public:
     Triangle(
         const Transform*                        objectToWorld,
         const Transform*                        worldToObject,
-        const glm::vec3&                        albedo,
         bool                                    reverseOrientation,
         const std::shared_ptr<TriangleMesh>&    mesh,
         int                                     triNumber);
 
-    bool Intersect(const Ray& ray, float* t, Interaction* interaction) const;
+    bool Intersect(const Ray& ray, float& t, Interaction& interaction) const;
     bool IntersectP(const Ray& ray) const;
 
 private:
@@ -54,7 +53,6 @@ private:
 std::vector< std::shared_ptr<Shape> > CreateTriangleMesh(
     const char*         path,
     Transform*          objectToWorld,
-    Transform*          worldToObject,
-    const glm::vec3&    albedo);
+    Transform*          worldToObject);
 
 }   // namespace Hikari
