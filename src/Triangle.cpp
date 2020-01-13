@@ -393,6 +393,28 @@ bool Triangle::IntersectP(const Ray& ray) const
     return true;
 }
 
+AABB Triangle::ObjectBound() const
+{
+    const glm::vec3& p0 = m_Mesh->m_VertexPositions[m_Vertices[0]];
+    const glm::vec3& p1 = m_Mesh->m_VertexPositions[m_Vertices[1]];
+    const glm::vec3& p2 = m_Mesh->m_VertexPositions[m_Vertices[2]];
+
+    return Union
+    (
+        AABB(m_WorldToObject->TransformPoint(p0), m_WorldToObject->TransformPoint(p1)),
+        m_WorldToObject->TransformPoint(p2)
+    );
+}
+
+AABB Triangle::WorldBound() const
+{
+    const glm::vec3& p0 = m_Mesh->m_VertexPositions[m_Vertices[0]];
+    const glm::vec3& p1 = m_Mesh->m_VertexPositions[m_Vertices[1]];
+    const glm::vec3& p2 = m_Mesh->m_VertexPositions[m_Vertices[2]];
+
+    return Union(AABB(p0, p1), p2);
+}
+
 std::vector< std::shared_ptr<Shape> > CreateTriangleMesh(
     const char*         path,
     Transform*          objectToWorld,

@@ -194,4 +194,12 @@ bool Sphere::IntersectP(const Ray& r) const
     return true;
 }
 
+AABB Sphere::ObjectBound() const
+{
+    // TODO(achal): A more efficient bound can be constructed if we take
+    // `m_PhiMax` into account, particularly when `m_PhiMax < 3.f * PI / 2.f`.
+    return AABB(glm::vec3(-m_Radius, m_YMin, -m_Radius),
+        glm::vec3(m_Radius, m_YMax, m_Radius));
+}
+
 }   // namespace Hikari

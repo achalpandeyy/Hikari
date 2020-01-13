@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AABB.h"
 #include "Shape.h"
 
 #include "glm/vec2.hpp"
@@ -41,8 +42,10 @@ public:
         const std::shared_ptr<TriangleMesh>&    mesh,
         int                                     triNumber);
 
-    bool Intersect(const Ray& ray, float& t, Interaction& interaction) const;
-    bool IntersectP(const Ray& ray) const;
+    bool Intersect(const Ray& ray, float& t, Interaction& interaction) const override;
+    bool IntersectP(const Ray& ray) const override;
+    AABB ObjectBound() const override;
+    AABB WorldBound() const override;
 
 private:
     std::shared_ptr<TriangleMesh> m_Mesh;

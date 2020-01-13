@@ -68,6 +68,7 @@ include_directories (
 include_directories (src/)
 
 set (HIKARI_SOURCE
+	src/AABB.cpp
 	src/App.cpp
 	src/BlockGenerator.cpp
 	src/Camera.cpp
@@ -75,6 +76,7 @@ set (HIKARI_SOURCE
 	src/ImageBlock.cpp
 	src/Interaction.cpp
 	src/Main.cpp
+	src/Memory.cpp
 	src/ObjLoader.cpp
 	src/PointLight.cpp
 	src/Primitive.cpp
