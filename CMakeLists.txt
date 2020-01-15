@@ -99,4 +99,10 @@ set (HIKARI_SOURCE
 
 add_executable (Hikari ${HIKARI_SOURCE})
 
+# Copy Embree DLL as a post build step
+add_custom_command(TARGET Hikari POST_BUILD        # Adds a post-build event to MyTest
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+        "${CMAKE_SOURCE_DIR}/ext/embree/bin/embree3.dll"      # <--this is in-file
+        "${CMAKE_BINARY_DIR}/$<CONFIG>/") 
+
 target_link_libraries (Hikari nanogui tbb_static ${NANOGUI_EXTRA_LIBS} ${EMBREE_LIBRARY})
