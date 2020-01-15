@@ -54,6 +54,14 @@ include_directories (
 )
 
 ############################################################################
+# Embree
+############################################################################
+
+set (embree_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/embree)
+find_package (embree 3.0 REQUIRED)
+include_directories(${EMBREE_INCLUDE_DIRS})
+
+############################################################################
 # tinyobjloader
 ############################################################################
 
@@ -91,4 +99,4 @@ set (HIKARI_SOURCE
 
 add_executable (Hikari ${HIKARI_SOURCE})
 
-target_link_libraries (Hikari nanogui tbb_static ${NANOGUI_EXTRA_LIBS})
+target_link_libraries (Hikari nanogui tbb_static ${NANOGUI_EXTRA_LIBS} ${EMBREE_LIBRARY})
