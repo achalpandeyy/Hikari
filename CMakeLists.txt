@@ -39,19 +39,8 @@ include_directories (
 # tbb
 ############################################################################
 
-# Build Thread Building Blocks (main shared libraries only)
-set(TBB_BUILD_SHARED          OFF  CACHE BOOL " " FORCE)
-set(TBB_BUILD_STATIC          ON  CACHE BOOL " " FORCE)
-set(TBB_BUILD_TBBMALLOC       OFF CACHE BOOL " " FORCE)
-set(TBB_BUILD_TBBMALLOC_PROXY OFF CACHE BOOL " " FORCE)
-set(TBB_BUILD_TESTS           OFF CACHE BOOL " " FORCE)
-
-add_subdirectory(ext/tbb)
-set_property(TARGET tbb_static tbb_def_files PROPERTY FOLDER "dependencies")
-
-include_directories (
-	${CMAKE_CURRENT_SOURCE_DIR}/ext/tbb/include
-)
+set (CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/ext/embree/tbb)
+find_package(TBB REQUIRED)
 
 ############################################################################
 # Embree
@@ -81,6 +70,7 @@ set (HIKARI_SOURCE
 	src/BlockGenerator.cpp
 	src/Camera.cpp
 	src/DirectionalLight.cpp
+	src/EmbreeRTEngine.cpp
 	src/ImageBlock.cpp
 	src/Interaction.cpp
 	src/Main.cpp
@@ -99,10 +89,34 @@ set (HIKARI_SOURCE
 
 add_executable (Hikari ${HIKARI_SOURCE})
 
-# Copy Embree DLL as a post build step
+# Copy embree3.dll as a post build step
 add_custom_command(TARGET Hikari POST_BUILD        # Adds a post-build event to MyTest
     COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
         "${CMAKE_SOURCE_DIR}/ext/embree/bin/embree3.dll"      # <--this is in-file
-        "${CMAKE_BINARY_DIR}/$<CONFIG>/") 
+        "${CMAKE_BINARY_DIR}/$<CONFIG>")
 
-target_link_libraries (Hikari nanogui tbb_static ${NANOGUI_EXTRA_LIBS} ${EMBREE_LIBRARY})
+# Copy tbb.dll as a post build step
+add_custom_command(TARGET Hikari POST_BUILD        # Adds a post-build event to MyTest
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+        "${CMAKE_SOURCE_DIR}/ext/embree/tbb/bin/intel64/vc14/tbb.dll"      # <--this is in-file
+        "${CMAKE_BINARY_DIR}/$<CONFIG>")
+
+# Copy tbb_debug.dll as a post build step
+add_custom_command(TARGET Hikari POST_BUILD        # Adds a post-build event to MyTest
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+        "${CMAKE_SOURCE_DIR}/ext/embree/tbb/bin/intel64/vc14/tbb_debug.dll"      # <--this is in-file
+        "${CMAKE_BINARY_DIR}/$<CONFIG>")
+
+# Copy tbbmalloc.dll as a post build step
+add_custom_command(TARGET Hikari POST_BUILD        # Adds a post-build event to MyTest
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+        "${CMAKE_SOURCE_DIR}/ext/embree/tbb/bin/intel64/vc14/tbbmalloc.dll"      # <--this is in-file
+        "${CMAKE_BINARY_DIR}/$<CONFIG>")
+
+# Copy tbbmalloc_debug.dll as a post build step
+add_custom_command(TARGET Hikari POST_BUILD        # Adds a post-build event to MyTest
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+        "${CMAKE_SOURCE_DIR}/ext/embree/tbb/bin/intel64/vc14/tbbmalloc_debug.dll"      # <--this is in-file
+        "${CMAKE_BINARY_DIR}/$<CONFIG>")
+
+target_link_libraries (Hikari nanogui ${NANOGUI_EXTRA_LIBS} ${TBB_IMPORTED_TARGETS} ${EMBREE_LIBRARY})
