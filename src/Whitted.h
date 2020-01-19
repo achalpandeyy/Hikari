@@ -8,7 +8,9 @@ namespace Hikari
 class WhittedIntegrator : public Integrator
 {
 public:
-    glm::vec3 Li(const Ray& ray, const Scene& scene, unsigned int rayDepth) const;
+    WhittedIntegrator() {}
+
+    glm::vec3 Li(const Ray& ray, const Scene& scene) const;
 };
 
 }   // namespace Hikari

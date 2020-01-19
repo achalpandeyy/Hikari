@@ -32,6 +32,9 @@ Renderer::Renderer()
     // TODO: Don't hardcode the scene rather read it from file
     CreateScene(*m_Scene);
 
+    // This should entail loading the scene from a file and
+    // setting it to the RTEngine's internal scene object.
+    // m_RTEngine = std::make_shared<EmbreeRTEngine>();
     m_Integrator = std::make_unique<WhittedIntegrator>();
 }
 
@@ -98,7 +101,8 @@ void Renderer::RenderBlock(ImageBlock& block) const
         {
             Ray primaryRay = m_Scene->m_Camera->SpawnRay(glm::vec2(rasterCoordinates.x + row, rasterCoordinates.y + col));
 
-            glm::vec3 color = m_Integrator->Li(primaryRay, *m_Scene, 0);
+            // glm::vec3 color = m_Integrator->Li(primaryRay);
+            glm::vec3 color = m_Integrator->Li(primaryRay, *m_Scene);
             unsigned int idx = col * block.m_Dimensions.x + row;
             block.m_Data[idx] = color;
         }

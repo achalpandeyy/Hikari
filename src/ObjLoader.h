@@ -1,19 +1,20 @@
 #pragma once
 
-#include "glm/vec3.hpp"
+#include "Transform.h"
+
+#include "glm/glm.hpp"
 
 #include <vector>
 
 namespace Hikari
 {
 
-bool LoadObj(
-    const char*                 path,
-    size_t&                     numVertices,
-    size_t&                     numTriangles,
-    std::vector<size_t>&        vertexIndices,
-    std::vector<size_t>&        normalIndices,
-    std::vector<glm::vec3>&     vertexPositions,
-    std::vector<glm::vec3>&     vertexNormals);
+    bool LoadObj(
+        const char*                 path,
+        std::vector<glm::vec3>&     vertexPositions,
+        std::vector<glm::vec3>&     vertexNormals,
+        std::vector<glm::vec2>&     vertexUV,
+        std::vector<glm::uvec3>&    indices,
+        const Transform&            objToWorld);
 
 }   // namespace Hikari

@@ -4,17 +4,19 @@
 
 #include "glm/vec3.hpp"
 
-namespace Hikari { class Ray; }
+#include <memory>
 
 namespace Hikari
 {
 
-class Integrator
-{
-public:
-    virtual ~Integrator() {}
+    class Ray;
 
-    virtual glm::vec3 Li(const Ray& ray, const Scene&, unsigned int rayDepth) const = 0;
-};
+    class Integrator
+    {
+    public:
+        virtual ~Integrator() {}
+
+        virtual glm::vec3 Li(const Ray& ray, const Scene&) const = 0;
+    };
 
 }   // namespace Rays

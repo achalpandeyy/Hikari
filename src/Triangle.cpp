@@ -424,8 +424,8 @@ std::vector< std::shared_ptr<Shape> > CreateTriangleMesh(
     std::vector<size_t> vertexIndices, normalIndices;
     std::vector<glm::vec3> vertexPositions, vertexNormals;
 
-    bool success = LoadObj(path, numVertices, numTriangles, vertexIndices, normalIndices,
-        vertexPositions, vertexNormals);
+    bool success = false; // LoadObj(path, numVertices, numTriangles, vertexIndices, normalIndices,
+        // vertexPositions, vertexNormals);
 
     if (success)
     {
