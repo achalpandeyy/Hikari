@@ -19,9 +19,12 @@ glm::vec3 WhittedIntegrator::Li(const Ray& ray, const Scene& scene) const
     // TODO: Do not hard code background color
     glm::vec3 hitColor(1.f);
 
-    Interaction interaction;
-    if (!scene.Intersect(ray, interaction))
+    Interaction interaction = m_RTEngine->Intersect(ray);
+    if (!interaction.m_Valid)
         return hitColor;
+
+    // if (!scene.Intersect(ray, interaction))
+    //     return hitColor;
 
     // Reset hitColor to black, so that it does not have contribution
     // from the background color.
@@ -50,21 +53,20 @@ glm::vec3 WhittedIntegrator::Li(const Ray& ray, const Scene& scene) const
         }
 
         // TODO: Move bias somewhere else with other non user-controlled render options
-        float bias = 1e-3f;
+        const float bias = 1e-5f;
 
         Ray shadowRay(interaction.m_HitPoint + interaction.m_Normal * bias, lightDirection, distanceToLight);
-        // m_RTEngine->Intersect(shadowRay);
-        bool inShadow = scene.Intersect(shadowRay);
+        // bool inShadow = scene.Intersect(shadowRay);
+        bool inShadow = m_RTEngine->Occluded(shadowRay);
 
         // Note: Divding the albedo by PI enables us to specify the albedo in the range [0, 1]
         // while making sure that energy is conserved i.e. the total amount of light reflected
         // off the surface should always be less than or equal to the sum of amount of light
         // received by the surface and emitted by the surface.
-        glm::vec3 diffuse = (interaction.m_Primitive->GetAlbedo() / glm::vec3(M_PI))
+        glm::vec3 diffuse = (/*interaction.m_Primitive->GetAlbedo()*/ glm::vec3(1.f, 0.f, 0.f) / glm::vec3(M_PI))
             * (scene.m_Lights[i]->GetIncidentLight(interaction.m_HitPoint))
             * std::max(0.f, glm::dot(lightDirection, interaction.m_Normal)
                 * static_cast<int>(!inShadow));
-
 
         // Compute Specular component.
         // glm::vec3 viewDirection = -ray.m_Direction;

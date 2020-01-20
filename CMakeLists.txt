@@ -71,6 +71,7 @@ set (HIKARI_SOURCE
 	src/Camera.cpp
 	src/DirectionalLight.cpp
 	src/EmbreeRTEngine.cpp
+	src/EmbreeTriangleMesh.cpp
 	src/ImageBlock.cpp
 	src/Interaction.cpp
 	src/Main.cpp

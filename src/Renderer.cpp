@@ -11,11 +11,9 @@
 #include "Transform.h"
 #include "Triangle.h"
 
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "tbb/blocked_range.h"
-#include "tbb/parallel_for.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <tbb/tbb.h>
 
 #include <chrono>
 #include <iostream>
@@ -32,10 +30,8 @@ Renderer::Renderer()
     // TODO: Don't hardcode the scene rather read it from file
     CreateScene(*m_Scene);
 
-    // This should entail loading the scene from a file and
-    // setting it to the RTEngine's internal scene object.
-    // m_RTEngine = std::make_shared<EmbreeRTEngine>();
-    m_Integrator = std::make_unique<WhittedIntegrator>();
+    m_RTEngine = std::make_shared<EmbreeRTEngine>();
+    m_Integrator = std::make_unique<WhittedIntegrator>(m_RTEngine);
 }
 
 void Renderer::Render() const

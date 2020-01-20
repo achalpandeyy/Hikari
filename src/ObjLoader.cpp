@@ -103,14 +103,6 @@ namespace Hikari
                         idxMapping[idx] = vertIdx;
 
                         // Vertex Positions
-                        /*
-                        vertexPositions.emplace_back
-                        (
-                            attrib.vertices[3 * idx.x],
-                            attrib.vertices[3 * idx.x + 1],
-                            attrib.vertices[3 * idx.x + 2]
-                        );
-                        */
                         vertexPositions.push_back(objToWorld.TransformPoint(glm::vec3
                         (
                             attrib.vertices[3 * idx.x],
@@ -121,13 +113,13 @@ namespace Hikari
                         // Vertex Normals
                         if (idx.y != (unsigned int)(-1))
                         {
-                            glm::vec3 normal = glm::normalize(glm::vec3
-                            (
+                           vertexNormals.push_back(glm::normalize(
+                                objToWorld.TransformNormal(glm::vec3
+                                (
                                 attrib.normals[3u * idx.y],
                                 attrib.normals[3u * idx.y + 1u],
                                 attrib.normals[3u * idx.y + 2u]
-                            ));
-                            vertexNormals.push_back(normal);
+                                ))));
                         }
 
                         // Vertex UV

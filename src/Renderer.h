@@ -1,10 +1,8 @@
 #pragma once
 
+#include "EmbreeRTEngine.h"
 #include "Integrator.h"
-#include "RTEngine.h"
 #include "Scene.h"
-
-#include "embree3/rtcore_device.h"
 #include "glm/vec2.hpp"
 
 #include <memory>
@@ -42,8 +40,8 @@ public:
     void SetResolution(const E_Resolution& res);
 
 private:
+    std::shared_ptr<EmbreeRTEngine> m_RTEngine = nullptr;
     std::unique_ptr<Scene> m_Scene = nullptr;
-    std::shared_ptr<RTEngine> m_RTEngine = nullptr;
     std::unique_ptr<Integrator> m_Integrator = nullptr;
 
     void CreateScene(Scene& scene);
