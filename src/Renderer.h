@@ -1,15 +1,15 @@
 #pragma once
 
+#include "Camera.h"
 #include "EmbreeRTEngine.h"
 #include "Integrator.h"
-#include "Scene.h"
-#include "glm/vec2.hpp"
+
+#include <glm/vec2.hpp>
 
 #include <memory>
 
 namespace Hikari
 {
-
     class ImageBlock;
 
     enum E_Resolution
@@ -41,10 +41,9 @@ public:
 
 private:
     std::shared_ptr<EmbreeRTEngine> m_RTEngine = nullptr;
-    std::unique_ptr<Scene> m_Scene = nullptr;
     std::unique_ptr<Integrator> m_Integrator = nullptr;
+    std::unique_ptr<Camera> m_Camera = nullptr;
 
-    void CreateScene(Scene& scene);
     glm::vec2 GetResolution() const;
 };
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EmbreeGeometry.h"
+#include "EmbreeScene.h"
 
 #include <embree3/rtcore.h>
 #include <glm/glm.hpp>
@@ -9,7 +9,6 @@ namespace Hikari
 {
     class Interaction;
     class Ray;
-    class Transform;
 
     class EmbreeRTEngine
     {
@@ -23,16 +22,11 @@ namespace Hikari
         Interaction Intersect(const Ray& ray) const;
         bool Occluded(const Ray& ray) const;
 
+        const std::vector< std::shared_ptr<Light> >& GetLights() const { return m_Scene->GetLights(); }
+
     private:
-        void AddGeometry(
-            const char*         path,
-            const Transform&    objectToWorld,
-            const glm::vec3&    albedo);
-
-        RTCRay ToRTCRay(const Ray& ray) const;
-
-        RTCDevice m_Device;
-        RTCScene m_Scene;
+        RTCDevice m_Device = nullptr;
+        std::unique_ptr<EmbreeScene> m_Scene = nullptr;
     };
 
     void DeviceErrorHandler(void* userPtr, const RTCError code, const char* message);

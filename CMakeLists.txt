@@ -65,26 +65,22 @@ include_directories (
 include_directories (src/)
 
 set (HIKARI_SOURCE
-	src/AABB.cpp
 	src/App.cpp
 	src/BlockGenerator.cpp
 	src/Camera.cpp
 	src/DirectionalLight.cpp
 	src/EmbreeRTEngine.cpp
+	src/EmbreeScene.cpp
+	src/EmbreeSphere.cpp
 	src/EmbreeTriangleMesh.cpp
 	src/ImageBlock.cpp
-	src/Interaction.cpp
 	src/Main.cpp
 	src/Memory.cpp
 	src/ObjLoader.cpp
 	src/PointLight.cpp
-	src/Primitive.cpp
 	src/Ray.cpp
 	src/Renderer.cpp
-	src/Scene.cpp
-	src/Sphere.cpp
 	src/Transform.cpp
-	src/Triangle.cpp
 	src/Whitted.cpp
 )
 

@@ -15,7 +15,7 @@ public:
         : Integrator(rtEngine)
     {}
 
-    glm::vec3 Li(const Ray& ray, const Scene& scene) const;
+    glm::vec3 Li(const Ray& ray) const;
 };
 
 }   // namespace Hikari

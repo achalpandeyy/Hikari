@@ -35,23 +35,7 @@ Interaction Transform::operator () (const Interaction& interaction) const
     Interaction result;
     result.m_HitPoint = TransformPoint(interaction.m_HitPoint);
     result.m_Normal = glm::normalize(TransformNormal(interaction.m_Normal));
-    result.m_Shape = interaction.m_Shape;
-    result.m_Primitive = interaction.m_Primitive;
 
-    return result;
-}
-
-AABB Transform::operator () (const AABB& box) const
-{
-    const Transform& transform = *this;
-    AABB result(transform.TransformPoint(box[0]));
-    result = Union(result, transform.TransformPoint(glm::vec3(box[1].x, box[0].y, box[0].z)));
-    result = Union(result, transform.TransformPoint(glm::vec3(box[0].x, box[1].y, box[0].z)));
-    result = Union(result, transform.TransformPoint(glm::vec3(box[0].x, box[0].y, box[1].z)));
-    result = Union(result, transform.TransformPoint(glm::vec3(box[0].x, box[1].y, box[1].z)));
-    result = Union(result, transform.TransformPoint(glm::vec3(box[1].x, box[1].y, box[0].z)));
-    result = Union(result, transform.TransformPoint(glm::vec3(box[1].x, box[0].y, box[1].z)));
-    result = Union(result, transform.TransformPoint(glm::vec3(box[1])));
     return result;
 }
 

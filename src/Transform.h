@@ -1,6 +1,5 @@
 #pragma once
 
-#include "AABB.h"
 #include "Interaction.h"
 #include "Ray.h"
 
@@ -54,7 +53,6 @@ namespace Hikari
 
         Transform operator * (const Transform& t) const;
         Interaction operator () (const Interaction& interaction) const;
-        AABB operator () (const AABB& box) const;
     
         // Tells if this `Transform` swaps handedness i.e. from left-handed
         // coordinate system to right-handed coordinate system

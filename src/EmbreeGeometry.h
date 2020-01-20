@@ -19,12 +19,16 @@ namespace Hikari
         virtual ~EmbreeGeometry() {}
 
         virtual void Release() = 0;
-        void Attach(RTCScene scene) { rtcAttachGeometry(scene, m_Geometry); }
+        unsigned int Attach(RTCScene scene) { return rtcAttachGeometry(scene, m_Geometry); }
+
+        unsigned int GetId() const { return m_Id; }
+        void SetId(unsigned int id) { m_Id = id; }
 
         glm::vec3 GetAlbedo() const { return m_Albedo; }
 
     protected:
         RTCGeometry m_Geometry;
+        unsigned int m_Id;
 
     private:
         glm::vec3 m_Albedo;
@@ -48,6 +52,23 @@ namespace Hikari
         std::vector<glm::vec2> m_VertexUV;
         std::vector<glm::uvec3> m_Indices;
         RTCBuffer m_VertexPositionBuffer = nullptr, m_IndexBuffer = nullptr;
+    };
+
+    class EmbreeSphere : public EmbreeGeometry
+    {
+    public:
+        EmbreeSphere(
+            RTCDevice           device,
+            const glm::vec3&    center,
+            float               radius,
+            const glm::vec3&    albedo);
+
+        ~EmbreeSphere();
+
+        void Release() override;
+
+        glm::vec3 m_Center;
+        float m_Radius;
     };
 
 }   // namespace Hikari
