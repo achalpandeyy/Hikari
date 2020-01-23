@@ -1,3 +1,3 @@
 ### Current Progress
 
-![Image](https://user-images.githubusercontent.com/35342732/72216817-0ff93b80-354c-11ea-9425-48a581c68c9f.png)
+![Candidate1](https://user-images.githubusercontent.com/35342732/72991785-9f3e0300-3e18-11ea-9428-021bed1ee8ed.png)

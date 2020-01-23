@@ -47,9 +47,9 @@ void ImageBlock::WriteImage() const
     imageFile << "P3\n" << m_Dimensions.x << ' ' << m_Dimensions.y << "\n255\n";
     for (uint32_t i = 0; i < m_Dimensions.x * m_Dimensions.y; i++)
     {
-        unsigned int r = static_cast<unsigned int>(255.f * glm::clamp(m_Data[i].r, 0.f, 1.f));
-        unsigned int g = static_cast<unsigned int>(255.f * glm::clamp(m_Data[i].g, 0.f, 1.f));
-        unsigned int b = static_cast<unsigned int>(255.f * glm::clamp(m_Data[i].b, 0.f, 1.f));
+        unsigned int r = static_cast<unsigned int>(255.f * glm::clamp(std::sqrt(m_Data[i].r), 0.f, 1.f));
+        unsigned int g = static_cast<unsigned int>(255.f * glm::clamp(std::sqrt(m_Data[i].g), 0.f, 1.f));
+        unsigned int b = static_cast<unsigned int>(255.f * glm::clamp(std::sqrt(m_Data[i].b), 0.f, 1.f));
         imageFile << r << ' ' << g << ' ' << b << '\n';
     }
     imageFile.close();
