@@ -80,6 +80,7 @@ set (HIKARI_SOURCE
 	src/PointLight.cpp
 	src/Ray.cpp
 	src/Renderer.cpp
+	src/Spectrum.cpp
 	src/Transform.cpp
 	src/Whitted.cpp
 )
