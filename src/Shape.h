@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Transform.h"
+
 #include <embree3/rtcore.h>
 #include <glm/glm.hpp>
 
@@ -9,17 +11,23 @@ namespace Hikari
 {
     class Transform;
 
-    class EmbreeGeometry
+    class Shape
     {
     public:
-        EmbreeGeometry(RTCGeometry geometry, const glm::vec3& albedo)
-            : m_Geometry(geometry), m_Albedo(albedo)
+        Shape(
+            RTCGeometry         geometry,
+            const Transform&    objectToWorld,
+            const glm::vec3&    albedo)
+            : m_Geometry(geometry), m_ObjectToWorld(objectToWorld), m_Albedo(albedo)
         {}
 
-        virtual ~EmbreeGeometry() {}
+        virtual ~Shape() {}
 
         virtual void Release() = 0;
-        unsigned int Attach(RTCScene scene) { return rtcAttachGeometry(scene, m_Geometry); }
+        unsigned int Attach(RTCScene scene)
+        {
+            return rtcAttachGeometry(scene, m_Geometry);
+        }
 
         unsigned int GetId() const { return m_Id; }
         void SetId(unsigned int id) { m_Id = id; }
@@ -28,22 +36,23 @@ namespace Hikari
 
     protected:
         RTCGeometry m_Geometry;
+        Transform m_ObjectToWorld;
         unsigned int m_Id;
 
     private:
         glm::vec3 m_Albedo;
     };
 
-    class EmbreeTriangleMesh : public EmbreeGeometry
+    class TriangleMesh : public Shape
     {
     public:
-        EmbreeTriangleMesh(
+        TriangleMesh(
             RTCDevice           device,
-            const char*         path,
             const Transform&    objectToWorld,
+            const char*         path,
             const glm::vec3&    albedo);
 
-        ~EmbreeTriangleMesh();
+        ~TriangleMesh();
 
         void Release() override;
 
@@ -54,16 +63,15 @@ namespace Hikari
         RTCBuffer m_VertexPositionBuffer = nullptr, m_IndexBuffer = nullptr;
     };
 
-    class EmbreeSphere : public EmbreeGeometry
+    class Sphere : public Shape
     {
     public:
-        EmbreeSphere(
+        Sphere(
             RTCDevice           device,
-            const glm::vec3&    center,
-            float               radius,
+            const Transform&    objectToWorld,
             const glm::vec3&    albedo);
 
-        ~EmbreeSphere();
+        ~Sphere();
 
         void Release() override;
 

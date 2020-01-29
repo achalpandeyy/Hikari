@@ -1,5 +1,7 @@
 #include "App.h"
 
+#include "Reflection.h"
+
 // TODO(achal): Make a debug symbol for Hikari
 
 int main()

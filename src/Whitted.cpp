@@ -4,8 +4,7 @@
 #include "Interaction.h"
 #include "Ray.h"
 
-#include "glm/vec3.hpp"
-#include "glm/geometric.hpp"
+#include <glm/glm.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -13,36 +12,32 @@
 namespace Hikari
 {
   
-glm::vec3 WhittedIntegrator::Li(const Ray& ray) const
+glm::vec3 WhittedIntegrator::Li(const Ray& ray, const std::shared_ptr<Scene>& scene) const
 {
     // TODO: Do not hard code background color
     glm::vec3 hitColor(1.f);
 
-    Interaction interaction = m_RTEngine->Intersect(ray);
+    Interaction interaction = scene->Intersect(ray);
     if (!interaction.m_Valid)
         return hitColor;
-
-    // if (!scene.Intersect(ray, interaction))
-    //     return hitColor;
 
     // Reset hitColor to black, so that it does not have contribution
     // from the background color.
     hitColor = glm::vec3(0.f);
 
     // Calculate light contributions and shadows.
-    const std::vector< std::shared_ptr<Light> >& lights = m_RTEngine->GetLights();
-    for (size_t i = 0; i < lights.size(); i++)
+    for (size_t i = 0; i < scene->m_Lights.size(); i++)
     {
         glm::vec3 lightDirection;
         float distanceToLight;
-        switch (lights[i]->m_LightType)
+        switch (scene->m_Lights[i]->m_LightType)
         {
             case Light::E_POINT_LIGHT:
-                lightDirection = glm::normalize(lights[i]->m_Position - interaction.m_HitPoint);
-                distanceToLight = glm::distance(interaction.m_HitPoint, lights[i]->m_Position);
+                lightDirection = glm::normalize(scene->m_Lights[i]->m_Position - interaction.m_HitPoint);
+                distanceToLight = glm::distance(interaction.m_HitPoint, scene->m_Lights[i]->m_Position);
                 break;
             case Light::E_DIRECTIONAL_LIGHT:
-                lightDirection = lights[i]->m_Direction;
+                lightDirection = scene->m_Lights[i]->m_Direction;
                 distanceToLight = std::numeric_limits<float>::max();
                 break;
             case Light::E_SPOT_LIGHT:
@@ -56,7 +51,7 @@ glm::vec3 WhittedIntegrator::Li(const Ray& ray) const
         const float bias = 1e-4f;
 
         Ray shadowRay(interaction.m_HitPoint + interaction.m_Normal * bias, lightDirection, distanceToLight);
-        bool inShadow = m_RTEngine->Occluded(shadowRay);
+        bool inShadow = scene->Occluded(shadowRay);
 
         // Note: Divding the albedo by PI enables us to specify the albedo in the
         // range [0, 1] while making sure that energy is conserved i.e. the total
@@ -65,7 +60,7 @@ glm::vec3 WhittedIntegrator::Li(const Ray& ray) const
         // by the surface.
         //
         glm::vec3 diffuse = (interaction.m_Albedo / glm::vec3(M_PI))
-            * (lights[i]->GetIncidentLight(interaction.m_HitPoint))
+            * (scene->m_Lights[i]->GetIncidentLight(interaction.m_HitPoint))
             * std::max(0.f, glm::dot(lightDirection, interaction.m_Normal)
                 * static_cast<int>(!inShadow));
 

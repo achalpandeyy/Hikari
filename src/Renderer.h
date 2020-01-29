@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Camera.h"
-#include "EmbreeRTEngine.h"
 #include "Integrator.h"
+#include "Scene.h"
 
 #include <glm/vec2.hpp>
 
@@ -40,7 +40,7 @@ public:
     void SetResolution(const E_Resolution& res);
 
 private:
-    std::shared_ptr<EmbreeRTEngine> m_RTEngine = nullptr;
+    std::shared_ptr<Scene> m_Scene = nullptr;
     std::unique_ptr<Integrator> m_Integrator = nullptr;
     std::unique_ptr<Camera> m_Camera = nullptr;
 

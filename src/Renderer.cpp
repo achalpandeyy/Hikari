@@ -19,8 +19,12 @@ namespace Hikari
 
 Renderer::Renderer()
 {
-    m_RTEngine = std::make_shared<EmbreeRTEngine>();
-    m_Integrator = std::make_unique<WhittedIntegrator>(m_RTEngine);
+    // TODO(achal): Not make the path to scene a `nullptr` and actually
+    // parse scene files to make scenes
+    const char* path = nullptr;
+    m_Scene = std::make_shared<Scene>(path);
+
+    m_Integrator = std::make_unique<WhittedIntegrator>();
     m_Camera = std::make_unique<Camera>
     (
         glm::vec3(0.f, 0.f, 20.f),      // camera position
@@ -91,9 +95,10 @@ void Renderer::RenderBlock(ImageBlock& block) const
     {
         for (unsigned int row = 0; row < block.m_Dimensions.x; ++row)
         {
+            glm::vec3 color(0.f);
             Ray primaryRay = m_Camera->SpawnRay(glm::vec2(rasterCoordinates.x + row, rasterCoordinates.y + col));
 
-            glm::vec3 color = m_Integrator->Li(primaryRay);
+            color += m_Integrator->Li(primaryRay, m_Scene);
             unsigned int idx = col * block.m_Dimensions.x + row;
             block.m_Data[idx] = color;
         }

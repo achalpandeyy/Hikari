@@ -1,4 +1,4 @@
-#include "EmbreeGeometry.h"
+#include "Shape.h"
 
 #include "ObjLoader.h"
 
@@ -7,16 +7,17 @@
 namespace Hikari
 {
 
-    EmbreeTriangleMesh::EmbreeTriangleMesh(
+    TriangleMesh::TriangleMesh(
         RTCDevice           device,
-        const char*         path,
         const Transform&    objectToWorld,
+        const char*         path,
         const glm::vec3&    albedo)
-        : EmbreeGeometry(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE), albedo)
+        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE), objectToWorld,
+            albedo)
     {
         // Load the obj file.
         if (LoadObj(path, m_VertexPositions, m_VertexNormals, m_VertexUV, m_Indices,
-            objectToWorld))
+            m_ObjectToWorld))
         {
             m_VertexPositionBuffer = rtcNewSharedBuffer(device, m_VertexPositions.data(),
                 m_VertexPositions.size() * sizeof(glm::vec3));
@@ -36,12 +37,12 @@ namespace Hikari
         }
     }
 
-    EmbreeTriangleMesh::~EmbreeTriangleMesh()
+    TriangleMesh::~TriangleMesh()
     {
         Release();
     }
 
-    void EmbreeTriangleMesh::Release()
+    void TriangleMesh::Release()
     {
         if (m_Geometry)
         {

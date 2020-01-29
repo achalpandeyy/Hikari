@@ -1,4 +1,4 @@
-#include "EmbreeGeometry.h"
+#include "Shape.h"
 
 namespace Hikari
 {
@@ -7,13 +7,13 @@ namespace Hikari
     void Intersect(const RTCIntersectFunctionNArguments* args);
     void Occluded(const RTCOccludedFunctionNArguments* args);
 
-    EmbreeSphere::EmbreeSphere(
+    Sphere::Sphere(
         RTCDevice           device,
-        const glm::vec3&    center,
-        float               radius,
+        const Transform&    objectToWorld,
         const glm::vec3&    albedo)
-        : EmbreeGeometry(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), albedo),
-        m_Center(center), m_Radius(radius)
+        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld, albedo),
+        m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))),
+        m_Radius(m_ObjectToWorld.MaxScaleFactor() * 1.f)
     {
         // Set all callbacks
         rtcSetGeometryUserPrimitiveCount(m_Geometry, 1u);
@@ -26,12 +26,12 @@ namespace Hikari
         rtcCommitGeometry(m_Geometry);
     }
 
-    EmbreeSphere::~EmbreeSphere()
+    Sphere::~Sphere()
     {
         Release();
     }
 
-    void EmbreeSphere::Release()
+    void Sphere::Release()
     {
         if (m_Geometry)
             rtcReleaseGeometry(m_Geometry);
@@ -40,9 +40,9 @@ namespace Hikari
 
     void Bounds(const RTCBoundsFunctionArguments* args)
     {
-        const EmbreeSphere* spherePtr = static_cast<const EmbreeSphere*>(
+        const Sphere* spherePtr = static_cast<const Sphere*>(
             args->geometryUserPtr);
-        const EmbreeSphere& sphere = *spherePtr;
+        const Sphere& sphere = *spherePtr;
 
         RTCBounds* bounds_o = args->bounds_o;
         bounds_o->lower_x = sphere.m_Center.x - sphere.m_Radius;
@@ -65,9 +65,9 @@ namespace Hikari
         assert(args->N == 1u);
 
         bool isRayValid = *(args->valid);
-        const EmbreeSphere* spherePtr = static_cast<const EmbreeSphere*>(
+        const Sphere* spherePtr = static_cast<const Sphere*>(
             args->geometryUserPtr);
-        const EmbreeSphere& sphere = *spherePtr;
+        const Sphere& sphere = *spherePtr;
 
         if (!isRayValid) return;
 
@@ -134,9 +134,9 @@ namespace Hikari
 
         bool isRayValid = *(args->valid);
 
-        const EmbreeSphere* spherePtr = static_cast<const EmbreeSphere*>(
+        const Sphere* spherePtr = static_cast<const Sphere*>(
             args->geometryUserPtr);
-        const EmbreeSphere& sphere = *spherePtr;
+        const Sphere& sphere = *spherePtr;
 
         if (!isRayValid) return;
 

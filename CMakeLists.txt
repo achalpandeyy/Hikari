@@ -69,10 +69,9 @@ set (HIKARI_SOURCE
 	src/BlockGenerator.cpp
 	src/Camera.cpp
 	src/DirectionalLight.cpp
-	src/EmbreeRTEngine.cpp
-	src/EmbreeScene.cpp
-	src/EmbreeSphere.cpp
-	src/EmbreeTriangleMesh.cpp
+	src/Scene.cpp
+	src/Sphere.cpp
+	src/TriangleMesh.cpp
 	src/ImageBlock.cpp
 	src/Main.cpp
 	src/Memory.cpp
