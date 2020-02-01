@@ -67,14 +67,14 @@ include_directories (src/)
 set (HIKARI_SOURCE
 	src/App.cpp
 	src/BlockGenerator.cpp
+	src/Box.cpp
 	src/Camera.cpp
 	src/DirectionalLight.cpp
-	src/Scene.cpp
-	src/Sphere.cpp
-	src/TriangleMesh.cpp
+	src/Gaussian.cpp
 	src/ImageBlock.cpp
 	src/Main.cpp
 	src/Memory.cpp
+	src/Mitchell.cpp
 	src/ObjLoader.cpp
 	src/PathIntegrator.cpp
 	src/PointLight.cpp
@@ -82,9 +82,14 @@ set (HIKARI_SOURCE
 	src/Renderer.cpp
 	src/Sampler.cpp
 	src/Sampling.cpp
+	src/Scene.cpp
+	src/Sinc.cpp
 	src/Spectrum.cpp
+	src/Sphere.cpp
 	src/Stratified.cpp
 	src/Transform.cpp
+	src/Triangle.cpp
+	src/TriangleMesh.cpp
 	src/Whitted.cpp
 )
 
