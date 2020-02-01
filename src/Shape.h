@@ -17,30 +17,26 @@ namespace Hikari
         Shape(
             RTCGeometry         geometry,
             const Transform&    objectToWorld,
-            const glm::vec3&    albedo)
-            : m_Geometry(geometry), m_ObjectToWorld(objectToWorld), m_Albedo(albedo)
+            const glm::vec3&    albedo,
+            const glm::vec3&    emission)
+            : m_Geometry(geometry), m_ObjectToWorld(objectToWorld), m_Albedo(albedo),
+            m_Emission(emission)
         {}
 
         virtual ~Shape() {}
 
         virtual void Release() = 0;
-        unsigned int Attach(RTCScene scene)
+        virtual void Attach(RTCScene scene)
         {
-            return rtcAttachGeometry(scene, m_Geometry);
+            rtcAttachGeometry(scene, m_Geometry);
         }
 
-        unsigned int GetId() const { return m_Id; }
-        void SetId(unsigned int id) { m_Id = id; }
-
-        glm::vec3 GetAlbedo() const { return m_Albedo; }
+        glm::vec3 m_Albedo;
+        glm::vec3 m_Emission;
 
     protected:
         RTCGeometry m_Geometry;
         Transform m_ObjectToWorld;
-        unsigned int m_Id;
-
-    private:
-        glm::vec3 m_Albedo;
     };
 
     class TriangleMesh : public Shape
@@ -50,7 +46,8 @@ namespace Hikari
             RTCDevice           device,
             const Transform&    objectToWorld,
             const char*         path,
-            const glm::vec3&    albedo);
+            const glm::vec3&    albedo,
+            const glm::vec3&    emission);
 
         ~TriangleMesh();
 
@@ -69,14 +66,26 @@ namespace Hikari
         Sphere(
             RTCDevice           device,
             const Transform&    objectToWorld,
-            const glm::vec3&    albedo);
+            const glm::vec3&    albedo,
+            const glm::vec3&    emission);
 
         ~Sphere();
+
+        void Attach(RTCScene scene) override
+        {
+            m_ID = rtcAttachGeometry(scene, m_Geometry);
+        }
 
         void Release() override;
 
         glm::vec3 m_Center;
         float m_Radius;
+        unsigned int m_ID;
+
+    private:
+        static void Bounds(const RTCBoundsFunctionArguments* args);
+        static void Intersect(const RTCIntersectFunctionNArguments* args);
+        static void Occluded(const RTCOccludedFunctionNArguments* args);
     };
 
 }   // namespace Hikari

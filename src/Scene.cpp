@@ -24,17 +24,26 @@ namespace Hikari
         m_Scene = rtcNewScene(m_Device);
 
         // Add a triangle mesh
-        glm::vec3 meshAlbedo = glm::vec3(1.f, 1.f, 0.f);
-        Transform meshToWorld = Translate(glm::vec3(0.f, -8.5f, 0.f));
-        meshToWorld = meshToWorld * Rotate(15.f, glm::vec3(0.f, 1.f, 0.f));
-        meshToWorld = meshToWorld * Scale(glm::vec3(100.f));
-        AddTriangleMesh("../../models/bunny.obj", meshToWorld, meshAlbedo);
+        // glm::vec3 meshAlbedo = glm::vec3(1.f, 1.f, 0.f);
+        // Transform meshToWorld = Translate(glm::vec3(0.f, -8.5f, 0.f));
+        // meshToWorld = meshToWorld * Rotate(15.f, glm::vec3(0.f, 1.f, 0.f));
+        // meshToWorld = meshToWorld * Scale(glm::vec3(100.f));
+        // AddTriangleMesh("../../models/bunny.obj", meshToWorld, meshAlbedo);
+
+        glm::vec3 redSphereAlbedo(1.f, 0.f, 0.f);
+        Transform redSphereToWorld = Scale(glm::vec3(5.f));
+        AddSphere(redSphereToWorld, redSphereAlbedo, glm::vec3(0.f));
 
         // Add an analytic sphere
         glm::vec3 sphereAlbedo(0.4f, 0.9f, 0.4f);
         Transform sphereToWorld = Translate(glm::vec3(0.f, -1000.f, 0.f));
         sphereToWorld = sphereToWorld * Scale(glm::vec3(995.f));
-        AddSphere(sphereToWorld, sphereAlbedo);
+        AddSphere(sphereToWorld, sphereAlbedo, glm::vec3(0.f));
+
+        glm::vec3 lightAlbedo(0.f);
+        Transform lightToWorld = Scale(glm::vec3(5.f)); 
+        lightToWorld = lightToWorld * Translate(glm::vec3(10.f, 10.f, 0.f));
+        AddSphere(lightToWorld, lightAlbedo, glm::vec3(15.f));
 
         rtcCommitScene(m_Scene);
 
@@ -74,20 +83,17 @@ namespace Hikari
         // Intersect a single ray with the scene
         rtcIntersect1(m_Scene, &context, &rayhit);
 
-        Interaction interaction;
         if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID)
         {
-            interaction.m_HitPoint = ray(rayhit.ray.tfar);
-            interaction.m_Normal = glm::normalize(glm::vec3(rayhit.hit.Ng_x, rayhit.hit.Ng_y,
-                rayhit.hit.Ng_z));
-            interaction.m_Albedo = m_Albedos.at(rayhit.hit.geomID);
-            interaction.m_Valid = true;
+            assert(m_Shapes.size() > rayhit.hit.geomID);
+
+            return Interaction(
+                ray(rayhit.ray.tfar),
+                glm::normalize(glm::vec3(rayhit.hit.Ng_x, rayhit.hit.Ng_y,
+                rayhit.hit.Ng_z)),
+                m_Shapes[rayhit.hit.geomID].get());
         }
-        else
-        {
-            interaction.m_Valid = false;
-        }
-        return interaction;
+        return Interaction(glm::vec3(0.f), glm::vec3(0.f), nullptr);
     }
 
     bool Scene::Occluded(const Ray& ray) const
@@ -105,25 +111,23 @@ namespace Hikari
     void Scene::AddTriangleMesh(
         const char*         path,
         const Transform&    objectToWorld,
-        const glm::vec3&    albedo)
+        const glm::vec3&    albedo,
+        const glm::vec3&    emission)
     {
         std::shared_ptr<Shape> geom = std::make_shared<TriangleMesh>(m_Device,
-            objectToWorld, path, albedo);
-        unsigned int geomId = geom->Attach(m_Scene);
-        geom->SetId(geomId);
-        m_Albedos[geomId] = albedo;
+            objectToWorld, path, albedo, emission);
+        geom->Attach(m_Scene);
         m_Shapes.push_back(geom);
     }
 
     void Scene::AddSphere(
         const Transform&    objectToWorld,
-        const glm::vec3&    albedo)
+        const glm::vec3&    albedo,
+        const glm::vec3&    emission)
     {
         std::shared_ptr<Shape> geom = std::make_shared<Sphere>(
-            m_Device, objectToWorld, albedo);
-        unsigned int geomId = geom->Attach(m_Scene);
-        geom->SetId(geomId);
-        m_Albedos[geomId] = albedo;
+            m_Device, objectToWorld, albedo, emission);
+        geom->Attach(m_Scene);
         m_Shapes.push_back(geom);
     }
 

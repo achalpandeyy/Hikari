@@ -1,26 +1,23 @@
 #pragma once
 
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
+#include <glm/glm.hpp>
 
 namespace Hikari
 {
+    class Shape;
 
     class Interaction
     {
     public:
-        Interaction() {}
         Interaction(
             const glm::vec3&    hitPoint,
-            const glm::vec3&    normal)
-            : m_HitPoint(hitPoint), m_Normal(normal)
+            const glm::vec3&    normal,
+            const Shape*        shape)
+            : m_HitPoint(hitPoint), m_Normal(normal), m_Shape(shape)
         {}
 
-        // Temporary member variable to store if the `this` Interaction is valid
-        // which the RTEngine tells us.
-        bool m_Valid;
-
-        glm::vec3 m_HitPoint, m_Normal, m_Albedo;
+        glm::vec3 m_HitPoint, m_Normal;
+        const Shape* m_Shape;
     };
 
 }   // namespace Hikari

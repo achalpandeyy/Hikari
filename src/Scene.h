@@ -31,11 +31,13 @@ namespace Hikari
         void AddTriangleMesh(
             const char*         path,
             const Transform&    objectToWorld,
-            const glm::vec3&    albedo);
+            const glm::vec3&    albedo,
+            const glm::vec3&    emission);
 
         void AddSphere(
             const Transform&    ojbectToWorld,
-            const glm::vec3&    albedo);
+            const glm::vec3&    albedo,
+            const glm::vec3&    emission);
 
         RTCRay ToRTCRay(const Ray& ray) const;
 
@@ -44,7 +46,6 @@ namespace Hikari
         RTCDevice m_Device = nullptr;
         RTCScene m_Scene = nullptr;
         std::vector< std::shared_ptr<Shape> > m_Shapes;
-        std::unordered_map<unsigned int, glm::vec3> m_Albedos;
     };
 
 }   // namespace Hikari 

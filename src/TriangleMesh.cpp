@@ -11,9 +11,10 @@ namespace Hikari
         RTCDevice           device,
         const Transform&    objectToWorld,
         const char*         path,
-        const glm::vec3&    albedo)
+        const glm::vec3&    albedo,
+        const glm::vec3&    emission)
         : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE), objectToWorld,
-            albedo)
+            albedo, emission)
     {
         // Load the obj file.
         if (LoadObj(path, m_VertexPositions, m_VertexNormals, m_VertexUV, m_Indices,

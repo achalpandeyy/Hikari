@@ -1,21 +1,25 @@
 #include "Renderer.h"
 
-#include "Ray.h"
-#include "Whitted.h"
 #include "BlockGenerator.h"
 #include "ImageBlock.h"
+#include "PathIntegrator.h"
+#include "Ray.h"
 #include "Transform.h"
+#include "Whitted.h"
 
 #include <glm/glm.hpp>
 #include <tbb/tbb.h>
 
 #include <chrono>
 #include <iostream>
+#include <random>
 #include <thread>
 
 
 namespace Hikari
 {
+
+    const unsigned int numSamples = 128u;
 
 Renderer::Renderer()
 {
@@ -24,7 +28,7 @@ Renderer::Renderer()
     const char* path = nullptr;
     m_Scene = std::make_shared<Scene>(path);
 
-    m_Integrator = std::make_unique<WhittedIntegrator>();
+    m_Integrator = std::make_unique<PathIntegrator>();
     m_Camera = std::make_unique<Camera>
     (
         glm::vec3(0.f, 0.f, 20.f),      // camera position
@@ -96,11 +100,20 @@ void Renderer::RenderBlock(ImageBlock& block) const
         for (unsigned int row = 0; row < block.m_Dimensions.x; ++row)
         {
             glm::vec3 color(0.f);
-            Ray primaryRay = m_Camera->SpawnRay(glm::vec2(rasterCoordinates.x + row, rasterCoordinates.y + col));
 
-            color += m_Integrator->Li(primaryRay, m_Scene);
+            std::random_device dev;
+            std::mt19937 rng(dev());
+            std::uniform_real_distribution<float> dist(0.f, 1.f);
+            
+            for (unsigned int i = 0u; i < numSamples; ++i)
+            {
+                float u = dist(rng), v = dist(rng);
+                Ray primaryRay = m_Camera->SpawnRay(glm::vec2(rasterCoordinates.x + row + u, rasterCoordinates.y + col + v));
+
+                color += m_Integrator->Li(primaryRay, m_Scene);
+            }
             unsigned int idx = col * block.m_Dimensions.x + row;
-            block.m_Data[idx] = color;
+            block.m_Data[idx] = color / glm::vec3(numSamples);
         }
     }
 }

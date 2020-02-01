@@ -3,16 +3,13 @@
 namespace Hikari
 {
 
-    void Bounds(const RTCBoundsFunctionArguments* args);
-    void Intersect(const RTCIntersectFunctionNArguments* args);
-    void Occluded(const RTCOccludedFunctionNArguments* args);
-
     Sphere::Sphere(
         RTCDevice           device,
         const Transform&    objectToWorld,
-        const glm::vec3&    albedo)
-        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld, albedo),
-        m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))),
+        const glm::vec3&    albedo,
+        const glm::vec3&    emission)
+        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld, albedo,
+            emission), m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))),
         m_Radius(m_ObjectToWorld.MaxScaleFactor() * 1.f)
     {
         // Set all callbacks
@@ -38,7 +35,7 @@ namespace Hikari
     }
 
 
-    void Bounds(const RTCBoundsFunctionArguments* args)
+    void Sphere::Bounds(const RTCBoundsFunctionArguments* args)
     {
         const Sphere* spherePtr = static_cast<const Sphere*>(
             args->geometryUserPtr);
@@ -59,7 +56,7 @@ namespace Hikari
     // https://github.com/embree/embree/blob/master/tutorials/user_geometry/user_geometry_device.cpp
     // Many features which are included above are stripped down from here.
     // Refer to the above link for more features to specialize the implementation.
-    void Intersect(const RTCIntersectFunctionNArguments* args)
+    void Sphere::Intersect(const RTCIntersectFunctionNArguments* args)
     {
         // Intersect is only implemented for one sphere per User Geometry
         assert(args->N == 1u);
@@ -97,7 +94,7 @@ namespace Hikari
 
         // TODO(achal): Set sensible values for `geomID` and `primID` and possibly
         // make use of them during shading.
-        potentialHit.geomID = sphere.GetId();
+        potentialHit.geomID = sphere.m_ID;
         potentialHit.primID = 100u;
 
         if ((ray->tnear < t0) & (t0 < ray->tfar))
@@ -127,7 +124,7 @@ namespace Hikari
         }
     }
 
-    void Occluded(const RTCOccludedFunctionNArguments* args)
+    void Sphere::Occluded(const RTCOccludedFunctionNArguments* args)
     {
         // Intersect is only implemented for one sphere per User Geometry
         assert(args->N == 1u);

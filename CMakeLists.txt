@@ -76,10 +76,14 @@ set (HIKARI_SOURCE
 	src/Main.cpp
 	src/Memory.cpp
 	src/ObjLoader.cpp
+	src/PathIntegrator.cpp
 	src/PointLight.cpp
 	src/Ray.cpp
 	src/Renderer.cpp
+	src/Sampler.cpp
+	src/Sampling.cpp
 	src/Spectrum.cpp
+	src/Stratified.cpp
 	src/Transform.cpp
 	src/Whitted.cpp
 )

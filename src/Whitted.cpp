@@ -15,10 +15,10 @@ namespace Hikari
 glm::vec3 WhittedIntegrator::Li(const Ray& ray, const std::shared_ptr<Scene>& scene) const
 {
     // TODO: Do not hard code background color
-    glm::vec3 hitColor(1.f);
+    glm::vec3 hitColor(0.f);
 
     Interaction interaction = scene->Intersect(ray);
-    if (!interaction.m_Valid)
+    if (!interaction.m_Shape)
         return hitColor;
 
     // Reset hitColor to black, so that it does not have contribution
@@ -59,7 +59,7 @@ glm::vec3 WhittedIntegrator::Li(const Ray& ray, const std::shared_ptr<Scene>& sc
         // equal to the sum of amount of light received by the surface and emitted
         // by the surface.
         //
-        glm::vec3 diffuse = (interaction.m_Albedo / glm::vec3(M_PI))
+        glm::vec3 diffuse = (interaction.m_Shape->m_Albedo / glm::vec3(M_PI))
             * (scene->m_Lights[i]->GetIncidentLight(interaction.m_HitPoint))
             * std::max(0.f, glm::dot(lightDirection, interaction.m_Normal)
                 * static_cast<int>(!inShadow));
