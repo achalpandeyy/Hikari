@@ -15,11 +15,16 @@
 #include <random>
 #include <thread>
 
+std::random_device dev;
+std::mt19937 rng(dev());
+std::uniform_real_distribution<float> dist(0.f, 1.f);
+
 
 namespace Hikari
 {
 
     const unsigned int numSamples = 128u;
+    const glm::ivec2 resolution(640u, 400u);
 
 Renderer::Renderer()
 {
@@ -34,7 +39,7 @@ Renderer::Renderer()
         glm::vec3(0.f, 0.f, 20.f),      // camera position
         glm::vec3(0.f, 0.f, 0.f),       // look at
         glm::vec3(0.f, 1.f, 0.f),       // up
-        glm::vec2(640, 400)             // resolution
+        resolution
     );
 }
 
@@ -42,10 +47,8 @@ void Renderer::Render() const
 {   
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    glm::vec2 framebufferDimensions(GetResolution().x, GetResolution().y);
-
-    BlockGenerator blockGenerator(framebufferDimensions, BLOCK_DIMENSION);
-    ImageBlock outputImage(framebufferDimensions);
+    BlockGenerator blockGenerator(resolution, BLOCK_DIMENSION);
+    ImageBlock outputImage(resolution);
 
     std::thread renderThread([&]
     {
@@ -95,15 +98,11 @@ void Renderer::RenderBlock(ImageBlock& block) const
 {
     glm::vec2 rasterCoordinates(block.m_Position.x * BLOCK_DIMENSION, block.m_Position.y * BLOCK_DIMENSION);
 
-    for (unsigned int col = 0; col < block.m_Dimensions.y; ++col)
+    for (unsigned int row = 0; row < block.m_Dimensions.x; ++row)
     {
-        for (unsigned int row = 0; row < block.m_Dimensions.x; ++row)
+        for (unsigned int col = 0; col < block.m_Dimensions.y; ++col)
         {
             glm::vec3 color(0.f);
-
-            std::random_device dev;
-            std::mt19937 rng(dev());
-            std::uniform_real_distribution<float> dist(0.f, 1.f);
             
             for (unsigned int i = 0u; i < numSamples; ++i)
             {

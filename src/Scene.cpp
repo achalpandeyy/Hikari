@@ -24,15 +24,21 @@ namespace Hikari
         m_Scene = rtcNewScene(m_Device);
 
         // Add a triangle mesh
-        // glm::vec3 meshAlbedo = glm::vec3(1.f, 1.f, 0.f);
-        // Transform meshToWorld = Translate(glm::vec3(0.f, -8.5f, 0.f));
-        // meshToWorld = meshToWorld * Rotate(15.f, glm::vec3(0.f, 1.f, 0.f));
-        // meshToWorld = meshToWorld * Scale(glm::vec3(100.f));
-        // AddTriangleMesh("../../models/bunny.obj", meshToWorld, meshAlbedo);
+        glm::vec3 meshAlbedo = glm::vec3(1.f, 1.f, 0.f);
+        Transform meshToWorld = Translate(glm::vec3(10.f, -8.5f, -3.f));
+        meshToWorld = meshToWorld * Rotate(15.f, glm::vec3(0.f, 1.f, 0.f));
+        meshToWorld = meshToWorld * Scale(glm::vec3(80.f));
+        AddTriangleMesh("../../models/bunny.obj", meshToWorld, meshAlbedo, glm::vec3(0.f));
 
-        glm::vec3 redSphereAlbedo(1.f, 0.f, 0.f);
-        Transform redSphereToWorld = Scale(glm::vec3(5.f));
-        AddSphere(redSphereToWorld, redSphereAlbedo, glm::vec3(0.f));
+        glm::vec3 meshAlbedo2 = glm::vec3(1.f, 1.f, 0.f);
+        Transform meshToWorld2 = Translate(glm::vec3(-4.0f, -8.f, 0.f));
+        meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
+        meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
+        AddTriangleMesh("../../models/ajax.obj", meshToWorld2, meshAlbedo2, glm::vec3(0.f));
+
+        // glm::vec3 redSphereAlbedo(1.f, 0.f, 0.f);
+        // Transform redSphereToWorld = Scale(glm::vec3(5.f));
+        // AddSphere(redSphereToWorld, redSphereAlbedo, glm::vec3(0.f));
 
         // Add an analytic sphere
         glm::vec3 sphereAlbedo(0.4f, 0.9f, 0.4f);
@@ -41,9 +47,19 @@ namespace Hikari
         AddSphere(sphereToWorld, sphereAlbedo, glm::vec3(0.f));
 
         glm::vec3 lightAlbedo(0.f);
-        Transform lightToWorld = Scale(glm::vec3(5.f)); 
-        lightToWorld = lightToWorld * Translate(glm::vec3(10.f, 10.f, 0.f));
+        Transform lightToWorld = Scale(glm::vec3(4.f)); 
+        lightToWorld = lightToWorld * Translate(glm::vec3(-7.f, 4.f, 0.f));
         AddSphere(lightToWorld, lightAlbedo, glm::vec3(15.f));
+
+        glm::vec3 lightAlbedo2(0.f);
+        Transform lightToWorld2 = Scale(glm::vec3(4.f));
+        lightToWorld2 = lightToWorld2 * Translate(glm::vec3(7.f, 4.f, 0.f));
+        AddSphere(lightToWorld2, lightAlbedo2, glm::vec3(15.f));
+
+        glm::vec3 lightAlbedo3(0.f);
+        Transform lightToWorld3 = Scale(glm::vec3(4.f));
+        lightToWorld3 = lightToWorld3 * Translate(glm::vec3(0.f, 6.f, 0.f));
+        AddSphere(lightToWorld3, lightAlbedo3, glm::vec3(15.f));
 
         rtcCommitScene(m_Scene);
 
