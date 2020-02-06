@@ -75,6 +75,7 @@ set (HIKARI_SOURCE
 	src/PathIntegrator.cpp
 	src/PointLight.cpp
 	src/Renderer.cpp
+	src/Sampler.cpp
 	src/Scene.cpp
 	src/Sphere.cpp
 	src/Transform.cpp

@@ -13,7 +13,7 @@
 namespace Hikari
 {
   
-glm::vec3 WhittedIntegrator::Li(const Ray& ray, const std::shared_ptr<Scene>& scene) const
+glm::vec3 WhittedIntegrator::Li(const Ray& ray, Sampler& sampler, const std::shared_ptr<Scene>& scene) const
 {
     // TODO: Do not hard code background color
     glm::vec3 hitColor(0.f);

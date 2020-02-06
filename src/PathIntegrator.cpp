@@ -1,22 +1,19 @@
 #define _USE_MATH_DEFINES
 
 #include "PathIntegrator.h"
+#include "Sampler.h"
 
 #include <cmath>
-#include <random>
 
 #define BLACK glm::vec3(0.f)
 
-std::random_device dev2;
-std::mt19937 rng2(dev2());
-std::uniform_real_distribution<float> dist2(0.f, 1.f);
-
 namespace Hikari
 {
-    glm::vec3 UniformSampleHemisphere(float eps0, float eps1)
+    glm::vec3 UniformSampleHemisphere(const glm::vec2& sample)
     {
-        float sinTheta = std::sqrt(std::max(0.f, 1.f - eps0 * eps0));
-        return glm::vec3(sinTheta * std::cos(2.f * M_PI * eps1), eps0, sinTheta * std::sin(2.f * M_PI * eps1));
+        float sinTheta = std::sqrt(std::max(0.f, 1.f - sample[0] * sample[0]));
+        return glm::vec3(sinTheta * std::cos(2.f * M_PI * sample[1]), sample[0],
+            sinTheta * std::sin(2.f * M_PI * sample[1]));
     }
 
     void OrthonormalBasis(const glm::vec3& axisY, glm::vec3& axisX, glm::vec3& axisZ)
@@ -30,7 +27,7 @@ namespace Hikari
     }
 
     const unsigned int numBounces = 5u;
-    glm::vec3 PathIntegrator::Li(const Ray& ray, const std::shared_ptr<Scene>& scene) const
+    glm::vec3 PathIntegrator::Li(const Ray& ray, Sampler& sampler, const std::shared_ptr<Scene>& scene) const
     {
         Ray tracingRay = ray;
 
@@ -53,11 +50,11 @@ namespace Hikari
 
             glm::mat4 mat(glm::vec4(normalX, 0.f), glm::vec4(normalY, 0.f), glm::vec4(normalZ, 0.f),
                 glm::vec4(glm::vec3(0.f), 1.f));
-            Transform worldToShading(mat);
+            Transform toShading(mat);
 
-            float eps0 = dist2(rng2), eps1 = dist2(rng2);
+            const glm::vec2 sample = sampler.GetSample();
 
-            glm::vec3 scatterDirection = worldToShading.TransformVector(UniformSampleHemisphere(eps0, eps1));
+            glm::vec3 scatterDirection = toShading.TransformVector(UniformSampleHemisphere(sample));
 
             const float bias = 1e-3f;
             tracingRay.m_Origin = interaction.m_HitPoint + bias * interaction.m_Normal;
