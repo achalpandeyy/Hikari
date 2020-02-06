@@ -60,10 +60,6 @@ void Renderer::Render() const
         {
             ImageBlock imageBlock(glm::vec2(BLOCK_DIMENSION));
 
-            // !"This `for` loop shouldn't be necessary"!
-            // An interesting behaviour: If we remove the `for` loop
-            // from here `m_BlocksLeft` rarely hits 0 (which should happen
-            // all the time) instead it sometimes stops at 3 sometimes at 1 etc.
             for (unsigned int i = range.begin(); i < range.end(); ++i)
             {
                 blockGenerator.NextBlock(imageBlock);
