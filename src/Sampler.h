@@ -10,7 +10,7 @@ namespace Hikari
     {
     public:
         Sampler(unsigned int numSamples) : m_NumSamples(numSamples) {}
-        void StartPixel(int seed);
+        void StartPixel();
         glm::vec2 GetSample();
 
         const unsigned int m_NumSamples;
@@ -19,6 +19,7 @@ namespace Hikari
         float Real();
 
         std::mt19937 m_Engine;
+        std::random_device m_RandomDevice;
     };
 
 }   // namespace Hikari

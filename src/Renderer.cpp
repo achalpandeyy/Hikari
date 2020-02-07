@@ -18,7 +18,7 @@
 
 namespace Hikari
 {
-    const glm::ivec2 resolution(640u, 400u);
+    const glm::ivec2 resolution(1280, 720);
 
 Renderer::Renderer()
 {
@@ -88,15 +88,14 @@ void Renderer::RenderBlock(ImageBlock& block) const
 {
     glm::vec2 rasterCoordinates(block.m_Position.x * BLOCK_DIMENSION, block.m_Position.y * BLOCK_DIMENSION);
 
-    const unsigned int numSamples = 512u;
+    const unsigned int numSamples = 16u;
     Sampler sampler(numSamples);
 
     for (unsigned int row = 0; row < block.m_Dimensions.y; ++row)
     {
         for (unsigned int col = 0; col < block.m_Dimensions.x; ++col)
         {
-            int seed = row * BLOCK_DIMENSION + col;
-            sampler.StartPixel(seed);
+            sampler.StartPixel();
 
             glm::vec3 color(0.f);
             

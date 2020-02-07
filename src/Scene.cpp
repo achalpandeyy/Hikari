@@ -2,6 +2,7 @@
 
 #include "DirectionalLight.h"
 #include "Interaction.h"
+#include "PointLight.h"
 #include "Ray.h"
 #include "Transform.h"
 
@@ -46,6 +47,12 @@ namespace Hikari
         sphereToWorld = sphereToWorld * Scale(glm::vec3(995.f));
         AddSphere(sphereToWorld, sphereAlbedo, glm::vec3(0.f));
 
+        // glm::vec3 lightAlbedo(0.f);
+        // Transform lightToWorld = Scale(glm::vec3(5.f));
+        // lightToWorld = lightToWorld * Translate(glm::vec3(0.f, 15.f, 15.f));
+        // AddSphere(lightToWorld, lightAlbedo, glm::vec3(15.f));
+
+        /*
         glm::vec3 lightAlbedo(0.f);
         Transform lightToWorld = Scale(glm::vec3(4.f)); 
         lightToWorld = lightToWorld * Translate(glm::vec3(-7.f, 4.f, 0.f));
@@ -60,16 +67,21 @@ namespace Hikari
         Transform lightToWorld3 = Scale(glm::vec3(4.f));
         lightToWorld3 = lightToWorld3 * Translate(glm::vec3(0.f, 6.f, 0.f));
         AddSphere(lightToWorld3, lightAlbedo3, glm::vec3(15.f));
+        */
 
         rtcCommitScene(m_Scene);
 
         // Lights
         m_Lights.push_back(std::make_shared<DirectionalLight>
         (
-            glm::vec3(1.f, 1.f, 1.f),
+            glm::vec3(0.f, 1.f, 1.f),
             glm::vec3(1.f),
-            3.f
+            1.f
         ));
+
+        // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(-7.f, 4.f, 0.f)));
+        // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(7.f, 4.f, 0.f)));
+        // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(0.f, 10.f, 0.f)));
     }
 
     Scene::~Scene()

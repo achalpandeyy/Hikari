@@ -2,9 +2,9 @@
 
 namespace Hikari
 {
-    void Sampler::StartPixel(int seed)
+    void Sampler::StartPixel()
     {
-        m_Engine.seed(seed);
+        m_Engine.seed(m_RandomDevice());
     }
 
     glm::vec2 Sampler::GetSample()
