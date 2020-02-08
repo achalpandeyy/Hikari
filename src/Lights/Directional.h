@@ -16,7 +16,7 @@ namespace Hikari
             : Light(intensity), m_Direction(glm::normalize(direction))
         {}
 
-        glm::vec3 GetIncidentLight(const glm::vec3& hitPoint) const override;
+        glm::vec3 GetIncidentRadiance(const glm::vec3& hitPoint) const override;
         Ray GetLightRay(const Interaction& interaction) const override;
 
     private:

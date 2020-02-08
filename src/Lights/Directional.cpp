@@ -1,11 +1,11 @@
-#include "DirectionalLight.h"
+#include "Directional.h"
 
 #include "Interaction.h"
 #include "Ray.h"
 
 namespace Hikari
 {
-    glm::vec3 DirectionalLight::GetIncidentLight(const glm::vec3& hitPoint) const
+    glm::vec3 DirectionalLight::GetIncidentRadiance(const glm::vec3& hitPoint) const
     {
         return m_Intensity;
     }

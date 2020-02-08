@@ -1,8 +1,9 @@
 #include "Scene.h"
 
-#include "DirectionalLight.h"
 #include "Interaction.h"
-#include "PointLight.h"
+#include "Lights/Directional.h"
+#include "Lights/Point.h"
+#include "Lights/Spot.h"
 #include "Ray.h"
 #include "Transform.h"
 
@@ -29,10 +30,10 @@ namespace Hikari
         Transform meshToWorld = Translate(glm::vec3(10.f, -8.5f, -3.f));
         meshToWorld = meshToWorld * Rotate(15.f, glm::vec3(0.f, 1.f, 0.f));
         meshToWorld = meshToWorld * Scale(glm::vec3(80.f));
-        AddTriangleMesh("../../models/bunny.obj", meshToWorld, meshAlbedo, glm::vec3(0.f));
+        // AddTriangleMesh("../../models/bunny.obj", meshToWorld, meshAlbedo, glm::vec3(0.f));
 
         glm::vec3 meshAlbedo2 = glm::vec3(1.f, 1.f, 0.f);
-        Transform meshToWorld2 = Translate(glm::vec3(-4.0f, -8.f, 0.f));
+        Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
         meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
         meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
         AddTriangleMesh("../../models/ajax.obj", meshToWorld2, meshAlbedo2, glm::vec3(0.f));
@@ -72,15 +73,18 @@ namespace Hikari
         rtcCommitScene(m_Scene);
 
         // Lights
+        /*
         m_Lights.push_back(std::make_shared<DirectionalLight>
         (
             glm::vec3(0.f, 1.f, 1.f),
             glm::vec3(1.f)
         ));
+        */
 
         // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(-7.f, 4.f, 0.f)));
         // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(7.f, 4.f, 0.f)));
-        // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(0.f, 10.f, 0.f)));
+        // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(0.f, 10.f, 0.f), glm::vec3(150.f)));
+        m_Lights.push_back(std::make_shared<SpotLight>(glm::vec3(0.f, 20.f, 15.f), glm::vec3(0.f), glm::vec3(350.f), 45.f, 30.f));
     }
 
     Scene::~Scene()

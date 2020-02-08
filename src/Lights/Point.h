@@ -2,7 +2,7 @@
 
 #include "Light.h"
 
-#include "glm/vec3.hpp"
+#include <glm/glm.hpp>
 
 namespace Hikari
 {
@@ -13,7 +13,7 @@ namespace Hikari
             : Light(intensity), m_Position(position)
         {}
 
-        glm::vec3 GetIncidentLight(const glm::vec3& hitPoint) const override;
+        glm::vec3 GetIncidentRadiance(const glm::vec3& hitPoint) const override;
         Ray GetLightRay(const Interaction& interaction) const override;
 
     private:

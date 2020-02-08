@@ -40,7 +40,7 @@ namespace Hikari
             // by the surface.
             //
             glm::vec3 diffuse = (interaction.m_Shape->m_Albedo / glm::vec3(M_PI))
-                * (light->GetIncidentLight(interaction.m_HitPoint))
+                * (light->GetIncidentRadiance(interaction.m_HitPoint))
                 * std::max(0.f, glm::dot(lightRay.m_Direction, interaction.m_Normal));
 
             // Compute Specular component.

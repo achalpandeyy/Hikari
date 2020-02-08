@@ -68,12 +68,10 @@ set (HIKARI_SOURCE
 	src/App.cpp
 	src/BlockGenerator.cpp
 	src/Camera.cpp
-	src/DirectionalLight.cpp
 	src/ImageBlock.cpp
 	src/Main.cpp
 	src/ObjLoader.cpp
 	src/PathIntegrator.cpp
-	src/PointLight.cpp
 	src/Renderer.cpp
 	src/Sampler.cpp
 	src/Scene.cpp
@@ -81,6 +79,10 @@ set (HIKARI_SOURCE
 	src/Transform.cpp
 	src/TriangleMesh.cpp
 	src/Whitted.cpp
+
+	src/Lights/Directional.cpp
+	src/Lights/Point.cpp
+	src/Lights/Spot.cpp
 )
 
 add_executable (Hikari ${HIKARI_SOURCE})
