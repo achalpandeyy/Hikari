@@ -12,70 +12,48 @@
 
 namespace Hikari
 {
-  
-glm::vec3 WhittedIntegrator::Li(const Ray& ray, Sampler& sampler, const std::shared_ptr<Scene>& scene) const
-{
-    // TODO: Do not hard code background color
-    glm::vec3 hitColor(0.f);
-
-    Interaction interaction = scene->Intersect(ray);
-    if (!interaction.m_Shape)
-        return hitColor;
-
-    // Reset hitColor to black, so that it does not have contribution
-    // from the background color.
-    hitColor = glm::vec3(0.f);
-
-    // Calculate light contributions and shadows.
-    for (size_t i = 0; i < scene->m_Lights.size(); i++)
+    glm::vec3 WhittedIntegrator::Li(const Ray& ray, Sampler& sampler, const std::shared_ptr<Scene>& scene) const
     {
-        glm::vec3 lightDirection;
-        float distanceToLight;
-        switch (scene->m_Lights[i]->m_LightType)
+        // TODO: Do not hard code background color
+        glm::vec3 hitColor(0.f);
+
+        Interaction interaction = scene->Intersect(ray);
+        if (!interaction.m_Shape)
+            return hitColor;
+
+        // Reset hitColor to black, so that it does not have contribution
+        // from the background color.
+        hitColor = glm::vec3(0.f);
+
+        // Calculate light contributions and shadows.
+        for (auto light : scene->m_Lights)
         {
-            case Light::E_POINT_LIGHT:
-                lightDirection = glm::normalize(scene->m_Lights[i]->m_Position - interaction.m_HitPoint);
-                distanceToLight = glm::distance(interaction.m_HitPoint, scene->m_Lights[i]->m_Position);
-                break;
-            case Light::E_DIRECTIONAL_LIGHT:
-                lightDirection = scene->m_Lights[i]->m_Direction;
-                distanceToLight = std::numeric_limits<float>::max();
-                break;
-            case Light::E_SPOT_LIGHT:
-                // TODO: Update this after implementing Spot Light
-                lightDirection = glm::vec3(0.f);
-                distanceToLight = -1.f;
-                break;
+            Ray lightRay = light->GetLightRay(interaction);
+
+            if (scene->Occluded(lightRay))
+                continue;
+
+            // Note: Divding the albedo by PI enables us to specify the albedo in the
+            // range [0, 1] while making sure that energy is conserved i.e. the total
+            // amount of light reflected off the surface should always be less than or
+            // equal to the sum of amount of light received by the surface and emitted
+            // by the surface.
+            //
+            glm::vec3 diffuse = (interaction.m_Shape->m_Albedo / glm::vec3(M_PI))
+                * (light->GetIncidentLight(interaction.m_HitPoint))
+                * std::max(0.f, glm::dot(lightRay.m_Direction, interaction.m_Normal));
+
+            // Compute Specular component.
+            // glm::vec3 viewDirection = -ray.m_Direction;
+            // Ray reflectedRay = getReflectedRay(Ray(scene.m_Lights[i]->m_Position(), -lightDirection), hitPoint, intersection.m_Normal);
+            // float n = 250.f;
+            // glm::vec3 specular = scene.mLights[i]->getIncidentLight(hitPoint) * (std::pow(std::max(0.f, glm::dot(viewDirection, reflectedRay.mDirection)), n) * static_cast<int>(!inShadow));
+
+            // hitColor += 0.15f * specular + 0.85f * diffuse;
+            hitColor += 0.85f * diffuse;
         }
 
-        // TODO: Move bias somewhere else with other non user-controlled render options
-        const float bias = 1e-4f;
-
-        Ray shadowRay(interaction.m_HitPoint + interaction.m_Normal * bias, lightDirection, distanceToLight);
-        bool inShadow = scene->Occluded(shadowRay);
-
-        // Note: Divding the albedo by PI enables us to specify the albedo in the
-        // range [0, 1] while making sure that energy is conserved i.e. the total
-        // amount of light reflected off the surface should always be less than or
-        // equal to the sum of amount of light received by the surface and emitted
-        // by the surface.
-        //
-        glm::vec3 diffuse = (interaction.m_Shape->m_Albedo / glm::vec3(M_PI))
-            * (scene->m_Lights[i]->GetIncidentLight(interaction.m_HitPoint))
-            * std::max(0.f, glm::dot(lightDirection, interaction.m_Normal)
-                * static_cast<int>(!inShadow));
-
-        // Compute Specular component.
-        // glm::vec3 viewDirection = -ray.m_Direction;
-        // Ray reflectedRay = getReflectedRay(Ray(scene.m_Lights[i]->m_Position(), -lightDirection), hitPoint, intersection.m_Normal);
-        // float n = 250.f;
-        // glm::vec3 specular = scene.mLights[i]->getIncidentLight(hitPoint) * (std::pow(std::max(0.f, glm::dot(viewDirection, reflectedRay.mDirection)), n) * static_cast<int>(!inShadow));
-
-        // hitColor += 0.15f * specular + 0.85f * diffuse;
-        hitColor += 0.85f * diffuse;
+        return hitColor;
     }
-
-    return hitColor;
-}
 
 }   // namespace Hikari

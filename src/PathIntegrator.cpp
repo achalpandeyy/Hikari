@@ -44,22 +44,21 @@ namespace Hikari
 
             // accumulatedRadiance += throughput * interaction.m_Shape->m_Emission;
 
-            const float bias = 1e-3f;
-
             // Next Event Estimation
+            //
             for (auto light : scene->m_Lights)
             {
-                // glm::vec3 wi = glm::normalize(light->m_Position - interaction.m_HitPoint);
-                // float distanceToLight = glm::distance(interaction.m_HitPoint, light->m_Position);
-                // Ray lightRay(interaction.m_HitPoint + bias * interaction.m_Normal, wi, distanceToLight);
-                Ray lightRay(interaction.m_HitPoint + bias * interaction.m_Normal, light->m_Direction);
+                Ray lightRay = light->GetLightRay(interaction);
 
-                if (scene->Occluded(lightRay)) continue;
+                if (scene->Occluded(lightRay))
+                    continue;
 
+                // TODO(achal): Can't the whole calculation of the `diffuse` component
+                // be delegated to Light?
+                //
                 glm::vec3 diffuse = (interaction.m_Shape->m_Albedo / glm::vec3(M_PI))
                     * (light->GetIncidentLight(interaction.m_HitPoint))
-                    // * std::max(0.f, glm::dot(wi, interaction.m_Normal));
-                    * std::max(0.f, glm::dot(light->m_Direction, interaction.m_Normal));
+                    * std::max(0.f, glm::dot(lightRay.m_Direction, interaction.m_Normal));
 
                 accumulatedRadiance += throughput * diffuse;
             }
@@ -76,6 +75,7 @@ namespace Hikari
 
             glm::vec3 scatterDirection = toShading.TransformVector(UniformSampleHemisphere(sample));
 
+            const float bias = 1e-3f;
             tracingRay.m_Origin = interaction.m_HitPoint + bias * interaction.m_Normal;
             tracingRay.m_Direction = glm::normalize(scatterDirection);
 

@@ -2,24 +2,26 @@
 
 #include "Light.h"
 
-#include "glm/vec3.hpp"
-#include "glm/geometric.hpp"
+#include <glm/glm.hpp>
 
 namespace Hikari
 {
+    class Interaction;
+    class Ray;
 
-class DirectionalLight : public Light
-{
-public:
-    DirectionalLight(const glm::vec3& direction, const glm::vec3& color = glm::vec3(1.f), float intensity = 1.f)
-        : Light(color, intensity)
+    class DirectionalLight : public Light
     {
-        m_Direction = glm::normalize(direction);
-        m_LightType = Light::E_DIRECTIONAL_LIGHT;
-    }
+    public:
+        DirectionalLight(const glm::vec3& direction, const glm::vec3& intensity)
+            : Light(intensity), m_Direction(glm::normalize(direction))
+        {}
 
-    glm::vec3 GetIncidentLight(const glm::vec3& hitPoint) const;
-};
+        glm::vec3 GetIncidentLight(const glm::vec3& hitPoint) const override;
+        Ray GetLightRay(const Interaction& interaction) const override;
+
+    private:
+        glm::vec3 m_Direction;
+    };
 
 }   // namespace Hikari
 

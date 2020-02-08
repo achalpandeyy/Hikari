@@ -75,8 +75,7 @@ namespace Hikari
         m_Lights.push_back(std::make_shared<DirectionalLight>
         (
             glm::vec3(0.f, 1.f, 1.f),
-            glm::vec3(1.f),
-            1.f
+            glm::vec3(1.f)
         ));
 
         // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(-7.f, 4.f, 0.f)));

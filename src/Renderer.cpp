@@ -103,7 +103,6 @@ void Renderer::RenderBlock(ImageBlock& block) const
             {
                 const glm::vec2 sample = sampler.GetSample();
                 Ray primaryRay = m_Camera->SpawnRay(rasterCoordinates + glm::vec2(row, col) + sample);
-                // Ray primaryRay = m_Camera->SpawnRay(glm::vec2(rasterCoordinates.x + row + u, rasterCoordinates.y + col + v));
 
                 color += m_Integrator->Li(primaryRay, sampler, m_Scene);
             }

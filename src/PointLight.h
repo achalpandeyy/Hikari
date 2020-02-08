@@ -6,21 +6,18 @@
 
 namespace Hikari
 {
-
-class PointLight : public Light
-{
-public:
-    PointLight(
-        const glm::vec3&    position,
-        const glm::vec3&    color = glm::vec3(1.f),
-        float               intensity = 1500.f)
-        : Light(color, intensity)
+    class PointLight : public Light
     {
-        m_Position = position;
-        m_LightType = E_POINT_LIGHT;
-    }
+    public:
+        PointLight(const glm::vec3& position, const glm::vec3& intensity)
+            : Light(intensity), m_Position(position)
+        {}
 
-    glm::vec3 GetIncidentLight(const glm::vec3& hitPoint) const;
-};
+        glm::vec3 GetIncidentLight(const glm::vec3& hitPoint) const override;
+        Ray GetLightRay(const Interaction& interaction) const override;
+
+    private:
+        glm::vec3 m_Position;
+    };
 
 }   // namespace Hikari
