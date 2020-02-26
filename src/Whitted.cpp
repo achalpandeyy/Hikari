@@ -39,7 +39,8 @@ namespace Hikari
             // equal to the sum of amount of light received by the surface and emitted
             // by the surface.
             //
-            glm::vec3 diffuse = (interaction.m_Shape->m_Albedo / glm::vec3(M_PI))
+            glm::vec3 albedo = interaction.m_Shape->m_Material->m_Color->Evaluate(glm::vec2(0.f));
+            glm::vec3 diffuse = (albedo / glm::vec3(M_PI))
                 * (light->GetIncidentRadiance(interaction.m_HitPoint))
                 * std::max(0.f, glm::dot(lightRay.m_Direction, interaction.m_Normal));
 

@@ -44,6 +44,8 @@ namespace Hikari
 
             // accumulatedRadiance += throughput * interaction.m_Shape->m_Emission;
 
+            const glm::vec3 albedo = interaction.m_Shape->m_Material->m_Color->Evaluate(glm::vec2(0.f));
+
             // Next Event Estimation
             //
             for (auto light : scene->m_Lights)
@@ -56,7 +58,7 @@ namespace Hikari
                 // TODO(achal): Can't the whole calculation of the `diffuse` component
                 // be delegated to Light?
                 //
-                glm::vec3 diffuse = (interaction.m_Shape->m_Albedo / glm::vec3(M_PI))
+                glm::vec3 diffuse = (albedo / glm::vec3(M_PI))
                     * (light->GetIncidentRadiance(interaction.m_HitPoint))
                     * std::max(0.f, glm::dot(lightRay.m_Direction, interaction.m_Normal));
 
@@ -80,7 +82,7 @@ namespace Hikari
             tracingRay.m_Direction = glm::normalize(scatterDirection);
 
             float cosThetaI = std::abs(glm::dot(interaction.m_Normal, scatterDirection));
-            throughput *= cosThetaI * interaction.m_Shape->m_Albedo;
+            throughput *= cosThetaI * albedo;
         }
         return accumulatedRadiance;
     }

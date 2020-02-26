@@ -4,7 +4,9 @@
 #include "Lights/Directional.h"
 #include "Lights/Point.h"
 #include "Lights/Spot.h"
+#include "Material.h"
 #include "Ray.h"
+#include "Textures/Constant.h"
 #include "Transform.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -36,17 +38,24 @@ namespace Hikari
         Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
         meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
         meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
-        AddTriangleMesh("../../models/ajax.obj", meshToWorld2, meshAlbedo2, glm::vec3(0.f));
+        // AddTriangleMesh("../../models/ajax.obj", meshToWorld2, meshAlbedo2, glm::vec3(0.f));
 
-        // glm::vec3 redSphereAlbedo(1.f, 0.f, 0.f);
-        // Transform redSphereToWorld = Scale(glm::vec3(5.f));
-        // AddSphere(redSphereToWorld, redSphereAlbedo, glm::vec3(0.f));
+        // Red Analytic Sphere
+        //
+        Transform redSphereToWorld = Scale(glm::vec3(5.f));
+        std::shared_ptr< Texture<glm::vec3> > redTexture = std::make_shared< ConstantTexture<glm::vec3> >(
+            glm::vec3(1.f, 0.f, 0.f));
+        std::shared_ptr<Material> redMaterial = std::make_shared<Material>(redTexture);
+        AddSphere(redSphereToWorld, redMaterial, glm::vec3(0.f));
 
-        // Add an analytic sphere
-        glm::vec3 sphereAlbedo(0.4f, 0.9f, 0.4f);
+        // Greenish Analytic Sphere for the ground
+        //
         Transform sphereToWorld = Translate(glm::vec3(0.f, -1000.f, 0.f));
         sphereToWorld = sphereToWorld * Scale(glm::vec3(995.f));
-        AddSphere(sphereToWorld, sphereAlbedo, glm::vec3(0.f));
+        std::shared_ptr< Texture<glm::vec3> > greenTexture = std::make_shared< ConstantTexture<glm::vec3> >(
+            glm::vec3(0.4f, 0.9f, 0.4f));
+        std::shared_ptr<Material> greenMaterial = std::make_shared<Material>(greenTexture);
+        AddSphere(sphereToWorld, greenMaterial, glm::vec3(0.f));
 
         // glm::vec3 lightAlbedo(0.f);
         // Transform lightToWorld = Scale(glm::vec3(5.f));
@@ -140,24 +149,24 @@ namespace Hikari
     }
 
     void Scene::AddTriangleMesh(
-        const char*         path,
-        const Transform&    objectToWorld,
-        const glm::vec3&    albedo,
-        const glm::vec3&    emission)
+        const char*                         path,
+        const Transform&                    objectToWorld,
+        const std::shared_ptr<Material>&    material,
+        const glm::vec3&                    emission)
     {
         std::shared_ptr<Shape> geom = std::make_shared<TriangleMesh>(m_Device,
-            objectToWorld, path, albedo, emission);
+            objectToWorld, path, material, emission);
         geom->Attach(m_Scene);
         m_Shapes.push_back(geom);
     }
 
     void Scene::AddSphere(
-        const Transform&    objectToWorld,
-        const glm::vec3&    albedo,
-        const glm::vec3&    emission)
+        const Transform&                    objectToWorld,
+        const std::shared_ptr<Material>&    material,
+        const glm::vec3&                    emission)
     {
         std::shared_ptr<Shape> geom = std::make_shared<Sphere>(
-            m_Device, objectToWorld, albedo, emission);
+            m_Device, objectToWorld, material, emission);
         geom->Attach(m_Scene);
         m_Shapes.push_back(geom);
     }

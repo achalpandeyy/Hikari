@@ -1,10 +1,12 @@
 #pragma once
 
+#include "Material.h"
 #include "Transform.h"
 
 #include <embree3/rtcore.h>
 #include <glm/glm.hpp>
 
+#include <memory>
 #include <vector>
 
 namespace Hikari
@@ -15,11 +17,11 @@ namespace Hikari
     {
     public:
         Shape(
-            RTCGeometry         geometry,
-            const Transform&    objectToWorld,
-            const glm::vec3&    albedo,
-            const glm::vec3&    emission)
-            : m_Geometry(geometry), m_ObjectToWorld(objectToWorld), m_Albedo(albedo),
+            RTCGeometry                         geometry,
+            const Transform&                    objectToWorld,
+            const std::shared_ptr<Material>&    material,
+            const glm::vec3&                    emission)
+            : m_Geometry(geometry), m_ObjectToWorld(objectToWorld), m_Material(material),
             m_Emission(emission)
         {}
 
@@ -31,8 +33,8 @@ namespace Hikari
             rtcAttachGeometry(scene, m_Geometry);
         }
 
-        glm::vec3 m_Albedo;
         glm::vec3 m_Emission;
+        std::shared_ptr<Material> m_Material;
 
     protected:
         RTCGeometry m_Geometry;
@@ -43,11 +45,11 @@ namespace Hikari
     {
     public:
         TriangleMesh(
-            RTCDevice           device,
-            const Transform&    objectToWorld,
-            const char*         path,
-            const glm::vec3&    albedo,
-            const glm::vec3&    emission);
+            RTCDevice                           device,
+            const Transform&                    objectToWorld,
+            const char*                         path,
+            const std::shared_ptr<Material>&    material,
+            const glm::vec3&                    emission);
 
         ~TriangleMesh();
 
@@ -64,10 +66,10 @@ namespace Hikari
     {
     public:
         Sphere(
-            RTCDevice           device,
-            const Transform&    objectToWorld,
-            const glm::vec3&    albedo,
-            const glm::vec3&    emission);
+            RTCDevice                           device,
+            const Transform&                    objectToWorld,
+            const std::shared_ptr<Material>&    material,
+            const glm::vec3&                    emission);
 
         ~Sphere();
 

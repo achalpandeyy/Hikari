@@ -1,5 +1,5 @@
 #include "Shape.h"
-
+#include "Material.h"
 #include "ObjLoader.h"
 
 #include <iostream>
@@ -8,13 +8,13 @@ namespace Hikari
 {
 
     TriangleMesh::TriangleMesh(
-        RTCDevice           device,
-        const Transform&    objectToWorld,
-        const char*         path,
-        const glm::vec3&    albedo,
-        const glm::vec3&    emission)
+        RTCDevice                           device,
+        const Transform&                    objectToWorld,
+        const char*                         path,
+        const std::shared_ptr<Material>&    material,
+        const glm::vec3&                    emission)
         : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE), objectToWorld,
-            albedo, emission)
+            material, emission)
     {
         // Load the obj file.
         if (LoadObj(path, m_VertexPositions, m_VertexNormals, m_VertexUV, m_Indices,

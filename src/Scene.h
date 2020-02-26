@@ -29,15 +29,15 @@ namespace Hikari
 
     private:
         void AddTriangleMesh(
-            const char*         path,
-            const Transform&    objectToWorld,
-            const glm::vec3&    albedo,
-            const glm::vec3&    emission);
+            const char*                         path,
+            const Transform&                    objectToWorld,
+            const std::shared_ptr<Material>&    material,
+            const glm::vec3&                    emission);
 
         void AddSphere(
-            const Transform&    ojbectToWorld,
-            const glm::vec3&    albedo,
-            const glm::vec3&    emission);
+            const Transform&                    ojbectToWorld,
+            const std::shared_ptr<Material>&    material,
+            const glm::vec3&                    emission);
 
         RTCRay ToRTCRay(const Ray& ray) const;
 

@@ -1,14 +1,15 @@
 #include "Shape.h"
+#include "Material.h"
 
 namespace Hikari
 {
 
     Sphere::Sphere(
-        RTCDevice           device,
-        const Transform&    objectToWorld,
-        const glm::vec3&    albedo,
-        const glm::vec3&    emission)
-        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld, albedo,
+        RTCDevice                           device,
+        const Transform&                    objectToWorld,
+        const std::shared_ptr<Material>&    material,
+        const glm::vec3&                    emission)
+        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld, material,
             emission), m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))),
         m_Radius(m_ObjectToWorld.MaxScaleFactor() * 1.f)
     {
