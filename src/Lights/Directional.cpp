@@ -7,7 +7,7 @@ namespace Hikari
 {
     glm::vec3 DirectionalLight::GetIncidentRadiance(const glm::vec3& hitPoint) const
     {
-        return m_Intensity;
+        return m_Radiance;
     }
 
     Ray DirectionalLight::GetLightRay(const Interaction& interaction) const

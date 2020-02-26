@@ -20,7 +20,7 @@ namespace Hikari
             const glm::vec3&    intensity,
             float               totalWidth,
             float               falloffStart)
-            : Light(intensity), m_Position(position), m_RefDirection(glm::normalize(lookAt - position)),
+            : m_Position(position), m_RefDirection(glm::normalize(lookAt - position)), m_Intensity(intensity),
             m_CosTotalWidth(std::cos(glm::radians(totalWidth))), m_CosFalloffStart(std::cos(glm::radians(falloffStart)))
         {}
         
@@ -32,6 +32,7 @@ namespace Hikari
         float Falloff(const glm::vec3& direction) const;
 
         const glm::vec3 m_Position, m_RefDirection;
+        const glm::vec3 m_Intensity;
         const float m_CosTotalWidth, m_CosFalloffStart;
     };
 
