@@ -1,5 +1,7 @@
 #include "Sampler.h"
 
+#include "Core/Constants.h"
+
 namespace Hikari
 {
     void Sampler::StartPixel()

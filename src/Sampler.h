@@ -6,6 +6,8 @@
 
 namespace Hikari
 {
+    glm::vec3 UniformSampleHemisphere(const glm::vec2& sample);
+
     class Sampler
     {
     public:

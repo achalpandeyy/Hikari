@@ -1,9 +1,9 @@
+#include "Core/Constants.h"
 #include "Shape.h"
 #include "Material.h"
 
 namespace Hikari
 {
-
     Sphere::Sphere(
         RTCDevice                           device,
         const Transform&                    objectToWorld,
@@ -54,9 +54,10 @@ namespace Hikari
     // The implementations of the following two functions `Intersect` and
     // `Occluded` are a stripped down version of the functions in the
     // following file.
-    // https://github.com/embree/embree/blob/master/tutorials/user_geometry/user_geometry_device.cpp
+    // https://github.com/embree/embree/blob/master/tutorials/user_geometry/user_geometry_device.cpp#L340
     // Many features which are included above are stripped down from here.
     // Refer to the above link for more features to specialize the implementation.
+    //
     void Sphere::Intersect(const RTCIntersectFunctionNArguments* args)
     {
         // Intersect is only implemented for one sphere per User Geometry
@@ -90,22 +91,22 @@ namespace Hikari
         const float t1 = 0.5f * rcpA * (-B + Q);
 
         RTCHit potentialHit;
-        potentialHit.u = 0.0f;
-        potentialHit.v = 0.0f;
 
-        // TODO(achal): Set sensible values for `geomID` and `primID` and possibly
+        // TODO(achal): Set sensible values for `primID` and possibly
         // make use of them during shading.
         potentialHit.geomID = sphere.m_ID;
         potentialHit.primID = 100u;
 
         if ((ray->tnear < t0) & (t0 < ray->tfar))
         {
-            const glm::vec3 geometricNormal = rayOrigin + t0 * rayDirection
-                - sphere.m_Center;
+            const glm::vec3 geometricNormal = rayOrigin + t0 * rayDirection - sphere.m_Center;
 
             potentialHit.Ng_x = geometricNormal.x;
             potentialHit.Ng_y = geometricNormal.y;
             potentialHit.Ng_z = geometricNormal.z;
+
+            potentialHit.v = std::acosf(geometricNormal.y / sphere.m_Radius) * INVPI;
+            potentialHit.u = (std::atan2(geometricNormal.z, geometricNormal.x) + PI) * 0.5f * INVPI;
 
             ray->tfar = t0;
             *hit = potentialHit;
@@ -113,12 +114,14 @@ namespace Hikari
 
         if ((ray->tnear < t1) & (t1 < ray->tfar))
         {
-            const glm::vec3 geometricNormal = rayOrigin + t1 * rayDirection
-                - sphere.m_Center;
+            const glm::vec3 geometricNormal = rayOrigin + t1 * rayDirection - sphere.m_Center;
 
             potentialHit.Ng_x = geometricNormal.x;
             potentialHit.Ng_y = geometricNormal.y;
             potentialHit.Ng_z = geometricNormal.z;
+
+            potentialHit.v = std::acosf(geometricNormal.y / sphere.m_Radius) * INVPI;
+            potentialHit.u = (std::atan2(geometricNormal.z, geometricNormal.x) + PI) * 0.5f * INVPI;
 
             ray->tfar = t1;
             *hit = potentialHit;

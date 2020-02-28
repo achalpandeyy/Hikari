@@ -9,7 +9,6 @@
 
 namespace Hikari
 {
-
     struct Less
     {
         bool operator()(const glm::uvec3& a, const glm::uvec3& b) const
@@ -27,7 +26,7 @@ namespace Hikari
         const Transform&            objToWorld)
     {
         // TODO(achal): Add support for materials
-        std::cout << "Loading OBJ at " << path << std::endl;
+        std::cout << "Loading .obj file at " << path << std::endl;
 
         tinyobj::attrib_t attrib;
         std::vector<tinyobj::shape_t> shapes;

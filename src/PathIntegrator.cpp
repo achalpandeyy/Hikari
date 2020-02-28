@@ -1,5 +1,6 @@
 #define _USE_MATH_DEFINES
 
+#include "Core/Constants.h"
 #include "PathIntegrator.h"
 #include "Sampler.h"
 
@@ -9,24 +10,8 @@
 
 namespace Hikari
 {
-    glm::vec3 UniformSampleHemisphere(const glm::vec2& sample)
-    {
-        float sinTheta = std::sqrt(std::max(0.f, 1.f - sample[0] * sample[0]));
-        return glm::vec3(sinTheta * std::cos(2.f * M_PI * sample[1]), sample[0],
-            sinTheta * std::sin(2.f * M_PI * sample[1]));
-    }
+    const unsigned int numBounces = 50u;
 
-    void OrthonormalBasis(const glm::vec3& axisY, glm::vec3& axisX, glm::vec3& axisZ)
-    {
-        if (axisY.x < axisY.y)
-            axisX = glm::normalize(glm::vec3(0.f, -axisY.z, axisY.y));
-        else
-            axisX = glm::normalize(glm::vec3(axisY.z, 0.f, -axisY.x));
-
-        axisZ = glm::cross(axisX, axisY);
-    }
-
-    const unsigned int numBounces = 5u;
     glm::vec3 PathIntegrator::Li(const Ray& ray, Sampler& sampler, const std::shared_ptr<Scene>& scene) const
     {
         Ray tracingRay = ray;
@@ -42,11 +27,21 @@ namespace Hikari
                 return accumulatedRadiance;
             }
 
-            // accumulatedRadiance += throughput * interaction.m_Shape->m_Emission;
+            const std::unique_ptr<BSDF> bsdf = interaction.m_Shape->m_Material->ComputeScatteringFunctions(interaction);
+            if (!bsdf) continue;
+            
+            const glm::vec2 sample = sampler.GetSample();
 
-            const glm::vec3 albedo = interaction.m_Shape->m_Material->m_Color->Evaluate(glm::vec2(0.f));
+            glm::vec3 wo = -tracingRay.m_Direction, wi;
+            float pdf;
 
-            // Next Event Estimation
+            bsdf->Sample(wi, sample, pdf);
+            if (pdf == 0.f) break;
+
+            glm::vec3 f = bsdf->Evaluate(wo, wi);
+            if (f == glm::vec3(0.f)) break;
+
+            // Sample Illumination from lights - direct lighting.
             //
             for (auto light : scene->m_Lights)
             {
@@ -55,34 +50,13 @@ namespace Hikari
                 if (scene->Occluded(lightRay))
                     continue;
 
-                // TODO(achal): Can't the whole calculation of the `diffuse` component
-                // be delegated to Light?
-                //
-                glm::vec3 diffuse = (albedo / glm::vec3(M_PI))
-                    * (light->GetIncidentRadiance(interaction.m_HitPoint))
-                    * std::max(0.f, glm::dot(lightRay.m_Direction, interaction.m_Normal));
-
-                accumulatedRadiance += throughput * diffuse;
+                accumulatedRadiance += f * throughput * light->GetIncidentRadiance(interaction.m_HitPoint) * std::max(0.f, glm::dot(lightRay.m_Direction, interaction.m_Normal));
             }
 
-            glm::vec3 normalY = interaction.m_Normal;
-            glm::vec3 normalX, normalZ;
-            OrthonormalBasis(normalY, normalX, normalZ);
+            throughput *= f * std::abs(glm::dot(interaction.m_Normal, wi)) / pdf;
 
-            glm::mat4 mat(glm::vec4(normalX, 0.f), glm::vec4(normalY, 0.f), glm::vec4(normalZ, 0.f),
-                glm::vec4(glm::vec3(0.f), 1.f));
-            Transform toShading(mat);
-
-            const glm::vec2 sample = sampler.GetSample();
-
-            glm::vec3 scatterDirection = toShading.TransformVector(UniformSampleHemisphere(sample));
-
-            const float bias = 1e-3f;
-            tracingRay.m_Origin = interaction.m_HitPoint + bias * interaction.m_Normal;
-            tracingRay.m_Direction = glm::normalize(scatterDirection);
-
-            float cosThetaI = std::abs(glm::dot(interaction.m_Normal, scatterDirection));
-            throughput *= cosThetaI * albedo;
+            tracingRay.m_Origin = interaction.m_HitPoint + EPSILON * interaction.m_Normal;
+            tracingRay.m_Direction = wi;
         }
         return accumulatedRadiance;
     }

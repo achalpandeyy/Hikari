@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Texture.h"
+#include "BSDF.h"
 
 #include <memory>
 
 namespace Hikari
 {
+	class Interaction;
+
 	class Material
 	{
 	public:
-		Material(std::shared_ptr< Texture<glm::vec3> > color) : m_Color(color) {}
+		virtual ~Material() {}
 
-		// Base color
-		//
-		const std::shared_ptr< Texture<glm::vec3> > m_Color = nullptr;
+		virtual std::unique_ptr<BSDF> ComputeScatteringFunctions(const Interaction& interaction) const = 0;
 	};
 
 }	// namespace Hikari

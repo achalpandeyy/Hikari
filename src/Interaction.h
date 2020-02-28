@@ -12,12 +12,16 @@ namespace Hikari
         Interaction(
             const glm::vec3&    hitPoint,
             const glm::vec3&    normal,
+            const glm::vec2&    uv,
             const Shape*        shape)
-            : m_HitPoint(hitPoint), m_Normal(normal), m_Shape(shape)
+            : m_HitPoint(hitPoint), m_Normal(normal), m_UV(uv), m_Shape(shape)
         {}
 
         glm::vec3 m_HitPoint, m_Normal;
-        const Shape* m_Shape;
+        glm::vec2 m_UV;
+
+        // TODO(achal): Make it a shared_ptr.
+        const Shape* m_Shape = nullptr;
     };
 
 }   // namespace Hikari
