@@ -13,15 +13,20 @@ namespace Hikari
     {
     public:
         DirectionalLight(const glm::vec3& direction, const glm::vec3& radiance)
-            : m_Direction(glm::normalize(direction)), m_Radiance(radiance)
+            : Light(LightType::Directional), m_Direction(glm::normalize(direction)), m_Radiance(radiance)
         {}
 
-        glm::vec3 GetIncidentRadiance(const glm::vec3& hitPoint) const override;
-        Ray GetLightRay(const Interaction& interaction) const override;
+        glm::vec3 Sample_Li(
+            const Interaction&  illumPoint,
+            const glm::vec2&    e,
+            glm::vec3*          wi,
+            float*              pdf,
+            VisibilityTester*   vis) const override;
+
+        float Pdf_Li(const Interaction& illumPoint, const glm::vec3& wi) const override;
 
     private:
-        const glm::vec3 m_Direction;
-        const glm::vec3 m_Radiance;
+        const glm::vec3 m_Direction, m_Radiance;
     };
 
 }   // namespace Hikari

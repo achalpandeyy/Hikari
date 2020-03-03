@@ -27,20 +27,23 @@ namespace Hikari
 
         // Ajax
         //
-        // glm::vec3 meshAlbedo2 = glm::vec3(1.f, 1.f, 0.f);
-        // Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
-        // meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
-        // meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
-        // AddTriangleMesh("../../models/ajax.obj", meshToWorld2, meshAlbedo2, glm::vec3(0.f));
+        Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
+        meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
+        meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
+        std::shared_ptr< Texture<glm::vec3> > ref = std::make_shared< ConstantTexture<glm::vec3> >(
+            glm::vec3(0.5f, 0.5f, 0.5f));
+        std::shared_ptr< Texture<float> > roug = std::make_shared< ConstantTexture<float> >(90.f);
+        std::shared_ptr<Material> gray = std::make_shared<MatteMaterial>(ref, roug);
+        AddTriangleMesh("../../models/ajax.obj", meshToWorld2, gray, glm::vec3(0.f));
 
         // Red Analytic Sphere
         //
-        Transform redSphereToWorld = Scale(glm::vec3(5.f));
-        std::shared_ptr< Texture<glm::vec3> > reflectivity1 = std::make_shared< ConstantTexture<glm::vec3> >(
-            glm::vec3(1.f, 0.f, 0.f));
-        std::shared_ptr< Texture<float> > roughness1 = std::make_shared< ConstantTexture<float> >(90.f);
-        std::shared_ptr<Material> red = std::make_shared<MatteMaterial>(reflectivity1, roughness1);
-        AddSphere(redSphereToWorld, red, glm::vec3(0.f));
+        // Transform redSphereToWorld = Scale(glm::vec3(5.f));
+        // std::shared_ptr< Texture<glm::vec3> > reflectivity1 = std::make_shared< ConstantTexture<glm::vec3> >(
+        //     glm::vec3(1.f, 0.f, 0.f));
+        // std::shared_ptr< Texture<float> > roughness1 = std::make_shared< ConstantTexture<float> >(90.f);
+        // std::shared_ptr<Material> red = std::make_shared<MatteMaterial>(reflectivity1, roughness1);
+        // AddSphere(redSphereToWorld, red, glm::vec3(0.f));
 
         // Greenish Analytic Sphere for the ground
         //

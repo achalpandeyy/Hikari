@@ -5,24 +5,27 @@
 
 namespace Hikari
 {
-    glm::vec3 SpotLight::GetIncidentRadiance(const glm::vec3& hitPoint) const
+    glm::vec3 SpotLight::Sample_Li(
+        const Interaction&  illumPoint,
+        const glm::vec2&    e,
+        glm::vec3*          wi,
+        float*              pdf,
+        VisibilityTester*   vis) const
     {
-        glm::vec3 lightDirection = glm::normalize(m_Position - hitPoint);
-        float distanceToLightSquared = glm::dot(m_Position - hitPoint, m_Position - hitPoint);
-        if (distanceToLightSquared < 1e-8f)
-        {
-            distanceToLightSquared = 1e-8f;
-        }
-        return (m_Intensity * Falloff(-lightDirection)) / distanceToLightSquared;
+        *wi = glm::normalize(m_Position - illumPoint.m_Position);
+        *pdf = 1.f;
+        *vis = VisibilityTester(illumPoint, Interaction(m_Position));
+        float distance = glm::dot(m_Position - illumPoint.m_Position, m_Position - illumPoint.m_Position);
+        // if (distance < 1e-8f) distance = 1e-8f;
+        return (m_Intensity * Falloff(-*wi)) / distance;
     }
 
-    Ray SpotLight::GetLightRay(const Interaction& interaction) const
+    float SpotLight::Pdf_Li(const Interaction& illumPoint, const glm::vec3& wi) const
     {
-        const float bias = 1e-3f;
-
-        glm::vec3 lightDirection = glm::normalize(m_Position - interaction.m_HitPoint);
-        float distanceToLight = glm::distance(interaction.m_HitPoint, m_Position);
-        return Ray(interaction.m_HitPoint + interaction.m_Normal * bias, lightDirection, distanceToLight);
+        // The probability of incoming light from any other direction except from the direction returned
+        // by `Sample_Li` would be 0.
+        //
+        return 0.f;
     }
 
     float SpotLight::Falloff(const glm::vec3& direction) const

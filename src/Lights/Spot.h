@@ -20,13 +20,19 @@ namespace Hikari
             const glm::vec3&    intensity,
             float               totalWidth,
             float               falloffStart)
-            : m_Position(position), m_RefDirection(glm::normalize(lookAt - position)), m_Intensity(intensity),
-            m_CosTotalWidth(std::cos(glm::radians(totalWidth))), m_CosFalloffStart(std::cos(glm::radians(falloffStart)))
+            : Light(LightType::Spot), m_Position(position), m_RefDirection(glm::normalize(lookAt - position)),
+            m_Intensity(intensity), m_CosTotalWidth(std::cos(glm::radians(totalWidth))),
+            m_CosFalloffStart(std::cos(glm::radians(falloffStart)))
         {}
-        
-        glm::vec3 GetIncidentRadiance(const glm::vec3& hitPoint) const override;
 
-        Ray GetLightRay(const Interaction& interaction) const override;
+        glm::vec3 Sample_Li(
+            const Interaction&  illumPoint,
+            const glm::vec2&    e,
+            glm::vec3*          wi,
+            float*              pdf,
+            VisibilityTester*   vis) const override;
+
+        float Pdf_Li(const Interaction& illumPoint, const glm::vec3& wi) const override;
 
     private:
         float Falloff(const glm::vec3& direction) const;
