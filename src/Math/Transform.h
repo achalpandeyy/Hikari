@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Interaction.h"
+#include "Core/Interaction.h"
 #include "Ray.h"
 
 #include "glm/mat4x4.hpp"

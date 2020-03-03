@@ -1,8 +1,9 @@
 #define _USE_MATH_DEFINES
 
-#include "Core/Constants.h"
-#include "PathIntegrator.h"
-#include "Sampler.h"
+#include "Path.h"
+
+#include "Math/Constants.h"
+#include "Core/Sampler.h"
 
 #include <cmath>
 

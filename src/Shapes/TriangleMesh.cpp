@@ -1,5 +1,5 @@
-#include "Shape.h"
-#include "Material.h"
+#include "Core/Shape.h"
+#include "Core/Material.h"
 #include "ObjLoader.h"
 
 #include <iostream>

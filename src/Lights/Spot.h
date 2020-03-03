@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Light.h"
+#include "Core/Light.h"
 
 #include <glm/glm.hpp>
 

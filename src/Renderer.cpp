@@ -2,11 +2,11 @@
 
 #include "BlockGenerator.h"
 #include "ImageBlock.h"
-#include "PathIntegrator.h"
-#include "Ray.h"
-#include "Sampler.h"
-#include "Transform.h"
-#include "Whitted.h"
+#include "Integrators/Path.h"
+#include "Math/Ray.h"
+#include "Core/Sampler.h"
+#include "Math/Transform.h"
+#include "Integrators/Whitted.h"
 
 #include <glm/glm.hpp>
 #include <tbb/tbb.h>
@@ -88,7 +88,7 @@ namespace Hikari
     {
         glm::vec2 rasterCoordinates(block.m_Position.x * BLOCK_DIMENSION, block.m_Position.y * BLOCK_DIMENSION);
 
-        const unsigned int numSamples = 128u;
+        const unsigned int numSamples = 16u;
         Sampler sampler(numSamples);
 
         for (unsigned int row = 0; row < block.m_Dimensions.y; ++row)

@@ -65,27 +65,20 @@ include_directories (
 include_directories (src/)
 
 set (HIKARI_SOURCE
-	src/App.cpp
-	src/BlockGenerator.cpp
-	src/BSDF.cpp
-	src/BxDF.cpp
-
-	src/Camera.cpp
-	src/ImageBlock.cpp
-	src/Main.cpp
-
-	src/ObjLoader.cpp
-	src/PathIntegrator.cpp
-	src/Renderer.cpp
-	src/Sampler.cpp
-	src/Scene.cpp
-	src/Sphere.cpp
-	src/Transform.cpp
-	src/TriangleMesh.cpp
-	# src/Whitted.cpp
 
 	# BxDFs
 	src/BxDFs/OrenNayar.cpp
+
+	# Core
+	src/Core/BSDF.cpp
+	src/Core/BxDF.cpp
+	src/Core/Camera.cpp
+	src/Core/Sampler.cpp
+	src/Core/Scene.cpp
+
+	# Integrators
+	src/Integrators/Path.cpp
+	# src/Integrators/Whitted.cpp
 
 	# Lights
 	src/Lights/Directional.cpp
@@ -94,6 +87,22 @@ set (HIKARI_SOURCE
 
 	# Materials
 	src/Materials/Matte.cpp
+
+	# Math
+	src/Math/Transform.cpp
+
+	# Shapes
+	src/Shapes/Sphere.cpp
+	src/Shapes/TriangleMesh.cpp
+
+	src/App.cpp
+	src/BlockGenerator.cpp
+
+	src/ImageBlock.cpp
+	src/Main.cpp
+
+	src/ObjLoader.cpp
+	src/Renderer.cpp
 )
 
 add_executable (Hikari ${HIKARI_SOURCE})

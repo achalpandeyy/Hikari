@@ -4,9 +4,9 @@
 #include "Lights/Point.h"
 #include "Lights/Spot.h"
 #include "Materials/Matte.h"
-#include "Ray.h"
+#include "Math/Ray.h"
 #include "Textures/Constant.h"
-#include "Transform.h"
+#include "Math/Transform.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

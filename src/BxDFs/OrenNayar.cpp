@@ -1,6 +1,6 @@
 #include "OrenNayar.h"
 
-#include "Core/Constants.h"
+#include "Math/Constants.h"
 
 #include <glm/glm.hpp>
 

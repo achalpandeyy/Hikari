@@ -1,7 +1,7 @@
 #include "Spot.h"
 
-#include "Interaction.h"
-#include "Ray.h"
+#include "Core/Interaction.h"
+#include "Math/Ray.h"
 
 namespace Hikari
 {

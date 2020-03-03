@@ -1,8 +1,8 @@
 #pragma once
 
-#include "BSDF.h"
-#include "Material.h"
-#include "Texture.h"
+#include "Core/BSDF.h"
+#include "Core/Material.h"
+#include "Core/Texture.h"
 
 #include <memory>
 

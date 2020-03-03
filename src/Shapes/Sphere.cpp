@@ -1,6 +1,6 @@
-#include "Core/Constants.h"
-#include "Shape.h"
-#include "Material.h"
+#include "Math/Constants.h"
+#include "Core/Shape.h"
+#include "Core/Material.h"
 
 namespace Hikari
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Camera.h"
-#include "Integrator.h"
-#include "Scene.h"
+#include "Core/Camera.h"
+#include "Core/Integrator.h"
+#include "Core/Scene.h"
 
 #include <glm/vec2.hpp>
 

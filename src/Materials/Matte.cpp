@@ -2,7 +2,7 @@
 
 #include "BxDFs/Lambertian.h"
 #include "BxDFs/OrenNayar.h"
-#include "Interaction.h"
+#include "Core/Interaction.h"
 
 namespace Hikari
 {

@@ -1,6 +1,6 @@
 #include "Sampler.h"
 
-#include "Core/Constants.h"
+#include "Math/Constants.h"
 
 namespace Hikari
 {

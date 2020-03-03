@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BxDF.h"
-#include "Core/Constants.h"
+#include "Core/BxDF.h"
+#include "Math/Constants.h"
 
 namespace Hikari
 {

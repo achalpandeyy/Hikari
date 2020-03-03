@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Transform.h"
+#include "Math/Transform.h"
 
 #include "glm/glm.hpp"
 
@@ -8,7 +8,6 @@
 
 namespace Hikari
 {
-
     bool LoadObj(
         const char*                 path,
         std::vector<glm::vec3>&     vertexPositions,

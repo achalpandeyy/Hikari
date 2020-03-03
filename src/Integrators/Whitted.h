@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Integrator.h"
+#include "Core/Integrator.h"
 
 #include <memory>
 
 namespace Hikari
 {
-
     class WhittedIntegrator : public Integrator
     {
     public:
