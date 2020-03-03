@@ -84,6 +84,7 @@ set (HIKARI_SOURCE
 
 	# Lights
 	src/Lights/Directional.cpp
+	src/Lights/Diffuse.cpp
 	src/Lights/Point.cpp
 	src/Lights/Spot.cpp
 

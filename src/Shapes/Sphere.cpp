@@ -2,8 +2,18 @@
 #include "Core/Shape.h"
 #include "Core/Material.h"
 
+#include <algorithm>
+
 namespace Hikari
 {
+    glm::vec3 UniformSampleSphere(const glm::vec2& e)
+    {
+        float y = 1.f - 2.f * e[0];
+        float sinTheta = std::sqrt(std::max(0.f, 1.f - y * y));
+        float phi = 2.f * PI * e[1];
+        return glm::vec3(sinTheta * std::cos(phi), y, sinTheta * std::sin(phi));
+    }
+
     Sphere::Sphere(
         RTCDevice                           device,
         const Transform&                    objectToWorld,
@@ -33,6 +43,27 @@ namespace Hikari
     {
         if (m_Geometry)
             rtcReleaseGeometry(m_Geometry);
+    }
+
+    float Sphere::SurfaceArea() const
+    {
+        return 4.f * PI * 20.f * 20.f;
+    }
+
+    Interaction Sphere::Sample(const Interaction& i, const glm::vec2& e, float* pdf) const
+    {
+        glm::vec3 pShape = /*m_Radius*/ 20.f * UniformSampleSphere(e);
+        Interaction interaction;
+
+        interaction.m_Position = m_ObjectToWorld.TransformPoint(pShape);
+        interaction.m_Normal = glm::normalize(m_ObjectToWorld.TransformNormal(pShape));
+        *pdf = 1.f / SurfaceArea();
+        return interaction;
+    }
+
+    float Sphere::Pdf(const Interaction& pShape, const glm::vec3& wi) const
+    {
+        return 1.f / SurfaceArea();
     }
 
 

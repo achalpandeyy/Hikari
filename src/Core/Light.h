@@ -38,12 +38,6 @@ namespace Hikari
         const unsigned int m_NumSamples;
     };
 
-    class AreaLight : public Light
-    {
-    public:
-        AreaLight();
-    };
-
     class VisibilityTester
     {
     public:

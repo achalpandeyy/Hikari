@@ -30,7 +30,7 @@ namespace Hikari
         m_Integrator = std::make_unique<PathIntegrator>();
         m_Camera = std::make_unique<Camera>
         (
-            glm::vec3(0.f, 0.f, 20.f),      // camera position
+            glm::vec3(0.f, 20.f, 80.f),      // camera position
             glm::vec3(0.f, 0.f, 0.f),       // look at
             glm::vec3(0.f, 1.f, 0.f),       // up
             resolution

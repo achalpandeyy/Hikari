@@ -1,6 +1,7 @@
 #include "Scene.h"
 
-#include "Interaction.h"
+#include "Core/Interaction.h"
+#include "Lights/Diffuse.h"
 #include "Lights/Point.h"
 #include "Lights/Spot.h"
 #include "Materials/Matte.h"
@@ -27,23 +28,23 @@ namespace Hikari
 
         // Ajax
         //
-        Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
-        meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
-        meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
-        std::shared_ptr< Texture<glm::vec3> > ref = std::make_shared< ConstantTexture<glm::vec3> >(
-            glm::vec3(0.5f, 0.5f, 0.5f));
-        std::shared_ptr< Texture<float> > roug = std::make_shared< ConstantTexture<float> >(90.f);
-        std::shared_ptr<Material> gray = std::make_shared<MatteMaterial>(ref, roug);
-        AddTriangleMesh("../../models/ajax.obj", meshToWorld2, gray, glm::vec3(0.f));
+        // Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
+        // meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
+        // meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
+        // std::shared_ptr< Texture<glm::vec3> > ref = std::make_shared< ConstantTexture<glm::vec3> >(
+        //     glm::vec3(0.5f, 0.5f, 0.5f));
+        // std::shared_ptr< Texture<float> > roug = std::make_shared< ConstantTexture<float> >(90.f);
+        // std::shared_ptr<Material> gray = std::make_shared<MatteMaterial>(ref, roug);
+        // AddTriangleMesh("../../models/ajax.obj", meshToWorld2, gray, glm::vec3(0.f));
 
         // Red Analytic Sphere
         //
-        // Transform redSphereToWorld = Scale(glm::vec3(5.f));
-        // std::shared_ptr< Texture<glm::vec3> > reflectivity1 = std::make_shared< ConstantTexture<glm::vec3> >(
-        //     glm::vec3(1.f, 0.f, 0.f));
-        // std::shared_ptr< Texture<float> > roughness1 = std::make_shared< ConstantTexture<float> >(90.f);
-        // std::shared_ptr<Material> red = std::make_shared<MatteMaterial>(reflectivity1, roughness1);
-        // AddSphere(redSphereToWorld, red, glm::vec3(0.f));
+        Transform redSphereToWorld = Scale(glm::vec3(5.f));
+        std::shared_ptr< Texture<glm::vec3> > reflectivity1 = std::make_shared< ConstantTexture<glm::vec3> >(
+            glm::vec3(1.f, 0.f, 0.f));
+        std::shared_ptr< Texture<float> > roughness1 = std::make_shared< ConstantTexture<float> >(90.f);
+        std::shared_ptr<Material> red = std::make_shared<MatteMaterial>(reflectivity1, roughness1);
+        AddSphere(redSphereToWorld, red, glm::vec3(0.f));
 
         // Greenish Analytic Sphere for the ground
         //
@@ -55,9 +56,23 @@ namespace Hikari
         std::shared_ptr<Material> green = std::make_shared<MatteMaterial>(reflectivity2, roughness2);
         AddSphere(sphereToWorld, green, glm::vec3(0.f));
 
+        Transform lightSphereToWorld = Translate(glm::vec3(35.f, 25.f, 0.f));
+        lightSphereToWorld = lightSphereToWorld * Scale(glm::vec3(1.f));
+        std::shared_ptr< Texture<glm::vec3> > lightRefl = std::make_shared< ConstantTexture<glm::vec3> >(
+            glm::vec3(1.f));
+        std::shared_ptr< Texture<float> > lightRoug = std::make_shared< ConstantTexture<float> >(0.f);
+        std::shared_ptr<Material> white = std::make_shared<MatteMaterial>(lightRefl, lightRoug);
+        std::shared_ptr<Shape> lightSphere = std::make_shared<Sphere>(
+            m_Device, lightSphereToWorld, white, glm::vec3(0.f));
+        lightSphere->Attach(m_Scene);
+        m_Shapes.push_back(lightSphere);
+
         rtcCommitScene(m_Scene);
 
-        m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(20.f, 20.f, 20.f), glm::vec3(750.f)));
+        std::shared_ptr<Light> dal = std::make_shared<DiffuseAreaLight>(1u, glm::vec3(1.5f), lightSphere, false);
+        m_Lights.push_back(dal);
+
+        // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(20.f, 20.f, 20.f), glm::vec3(750.f)));
     }
 
     Scene::~Scene()

@@ -33,6 +33,12 @@ namespace Hikari
             rtcAttachGeometry(scene, m_Geometry);
         }
 
+        virtual float SurfaceArea() const = 0;
+
+        virtual Interaction Sample(const Interaction& i, const glm::vec2& e, float* pdf) const = 0;
+
+        virtual float Pdf(const Interaction& pShape, const glm::vec3& wi) const = 0;
+
         glm::vec3 m_Emission;
         std::shared_ptr<Material> m_Material;
 
@@ -54,6 +60,25 @@ namespace Hikari
         ~TriangleMesh();
 
         void Release() override;
+
+        ///////////////////////////////////////////////////////////////////////
+        // TODO(achal): Implement the following methods for triangle meshes. //
+        ///////////////////////////////////////////////////////////////////////
+
+        float SurfaceArea() const override
+        {
+            return 1.f;
+        }
+
+        Interaction Sample(const Interaction& i, const glm::vec2& e, float* pdf) const override
+        {
+            return Interaction();
+        }
+
+        float Pdf(const Interaction& pShape, const glm::vec3& wi) const override
+        {
+            return 1.f;
+        }
 
     private:
         std::vector<glm::vec3> m_VertexPositions, m_VertexNormals;
@@ -79,6 +104,12 @@ namespace Hikari
         }
 
         void Release() override;
+
+        float SurfaceArea() const override;
+
+        Interaction Sample(const Interaction& i, const glm::vec2& e, float* pdf) const override;
+
+        float Pdf(const Interaction& pShape, const glm::vec3& wi) const override;
 
         glm::vec3 m_Center;
         float m_Radius;

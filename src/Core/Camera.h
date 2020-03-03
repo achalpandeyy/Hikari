@@ -17,7 +17,7 @@ public:
         const glm::vec3&    up,
         const glm::vec2&    resolution,
         float               focalLength = 1.f,
-        float               fieldOfView = 90.f);
+        float               fieldOfView = 45.f);
 
     Ray SpawnRay(const glm::vec2& rasterCoordinates) const;
     glm::vec2 GetResolution() const;
