@@ -73,6 +73,7 @@ set (HIKARI_SOURCE
 	src/Core/BSDF.cpp
 	src/Core/BxDF.cpp
 	src/Core/Camera.cpp
+	src/Core/Integrator.cpp
 	src/Core/Interaction.cpp
 	src/Core/Light.cpp
 	src/Core/Sampler.cpp

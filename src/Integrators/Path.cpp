@@ -1,27 +1,21 @@
-#define _USE_MATH_DEFINES
-
 #include "Path.h"
 
-#include "Math/Constants.h"
 #include "Core/Sampler.h"
-
-#include <cmath>
-
-#define BLACK glm::vec3(0.f)
+#include "Core/Scene.h"
+#include "Math/Constants.h"
+#include "Math/Ray.h"
 
 namespace Hikari
 {
-    const unsigned int numBounces = 50u;
-
-    glm::vec3 PathIntegrator::Li(const Ray& ray, Sampler& sampler, const std::shared_ptr<Scene>& scene) const
+    glm::vec3 PathIntegrator::Li(const Ray& ray, Sampler& sampler, const Scene& scene, unsigned int depth) const
     {
         Ray tracingRay = ray;
 
-        glm::vec3 accumulatedRadiance = BLACK;
+        glm::vec3 accumulatedRadiance(0.f);
         glm::vec3 throughput(1.f);
-        for (unsigned int i = 0; i < numBounces; ++i)
+        for (unsigned int i = 0; i < depth; ++i)
         {
-            Interaction interaction = scene->Intersect(tracingRay);
+            Interaction interaction = scene.Intersect(tracingRay);
 
             if (!interaction.m_Shape)
             {
@@ -35,7 +29,7 @@ namespace Hikari
 
             // Sample Illumination from lights - direct lighting.
             //
-            for (auto light : scene->m_Lights)
+            for (auto light : scene.m_Lights)
             {
                 glm::vec3 wi;
                 float lightPdf;
@@ -50,7 +44,7 @@ namespace Hikari
                     glm::vec3 f = bsdf->Evaluate(wo, wi) * std::max(0.f, glm::dot(wi, interaction.m_Normal));
                     if (f != glm::vec3(0.f))
                     {
-                        if (!visibility.Unoccluded(*scene.get()))
+                        if (!visibility.Unoccluded(scene))
                         {
                             Li = glm::vec3(0.f);
                         }
