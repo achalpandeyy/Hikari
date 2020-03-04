@@ -1,7 +1,5 @@
 #include "App.h"
 
-#include "nanogui/nanogui.h"
-
 namespace Hikari
 {
 
