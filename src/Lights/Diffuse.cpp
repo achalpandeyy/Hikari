@@ -19,7 +19,10 @@ namespace Hikari
 
 		*wi = glm::normalize(pShape.m_Position - illumPoint.m_Position);
 		*vis = VisibilityTester(illumPoint, pShape);
-		return L(pShape, -*wi);
+		float cosTheta = glm::dot(-*wi, pShape.m_Normal);
+		if (cosTheta < 0.f)
+			cosTheta = 0.f;
+		return L(pShape, -*wi) * cosTheta / glm::dot(pShape.m_Position - illumPoint.m_Position, pShape.m_Position - illumPoint.m_Position);
 	}
 
 	float DiffuseAreaLight::Pdf_Li(const Interaction& illumPoint, const glm::vec3& wi) const
