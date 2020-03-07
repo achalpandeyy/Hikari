@@ -6,8 +6,10 @@
 #include "Lights/Spot.h"
 #include "Materials/Matte.h"
 #include "Math/Ray.h"
-#include "Textures/Constant.h"
 #include "Math/Transform.h"
+#include "Shapes/Sphere.h"
+#include "Shapes/TriangleMesh.h"
+#include "Textures/Constant.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -28,51 +30,73 @@ namespace Hikari
 
         // Ajax
         //
-        // Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
-        // meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
-        // meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
-        // std::shared_ptr< Texture<glm::vec3> > ref = std::make_shared< ConstantTexture<glm::vec3> >(
-        //     glm::vec3(0.5f, 0.5f, 0.5f));
-        // std::shared_ptr< Texture<float> > roug = std::make_shared< ConstantTexture<float> >(90.f);
-        // std::shared_ptr<Material> gray = std::make_shared<MatteMaterial>(ref, roug);
-        // AddTriangleMesh("../../models/ajax.obj", meshToWorld2, gray, glm::vec3(0.f));
+        Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
+        meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
+        meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
+
+        std::shared_ptr<Shape> ajaxMesh = std::make_shared<TriangleMesh>(m_Device, m_Scene, meshToWorld2, "../../models/ajax.obj");
+
+        std::shared_ptr< Texture<glm::vec3> > ref = std::make_shared< ConstantTexture<glm::vec3> >(
+            glm::vec3(0.5f, 0.5f, 0.5f));
+        std::shared_ptr< Texture<float> > roug = std::make_shared< ConstantTexture<float> >(90.f);
+        std::shared_ptr<Material> grayMtl = std::make_shared<MatteMaterial>(ref, roug);
+
+        std::shared_ptr<Primitive> ajaxPrimitive = std::make_shared<Primitive>(ajaxMesh, grayMtl, nullptr);
+        m_Primitives.push_back(ajaxPrimitive);
+
 
         // Red Analytic Sphere
         //
+        /*
         Transform redSphereToWorld = Scale(glm::vec3(5.f));
+
+        std::shared_ptr<Shape> redSphere = std::make_shared<Sphere>(m_Device, m_Scene, redSphereToWorld);
+
         std::shared_ptr< Texture<glm::vec3> > reflectivity1 = std::make_shared< ConstantTexture<glm::vec3> >(
             glm::vec3(1.f, 0.f, 0.f));
         std::shared_ptr< Texture<float> > roughness1 = std::make_shared< ConstantTexture<float> >(90.f);
-        std::shared_ptr<Material> red = std::make_shared<MatteMaterial>(reflectivity1, roughness1);
-        AddSphere(redSphereToWorld, red, glm::vec3(0.f));
+        std::shared_ptr<Material> redMtl = std::make_shared<MatteMaterial>(reflectivity1, roughness1);
+
+        std::shared_ptr<Primitive> redSpherePrimitive = std::make_shared<Primitive>(redSphere, redMtl, nullptr);
+        m_Primitives.push_back(redSpherePrimitive);
+        */
 
         // Greenish Analytic Sphere for the ground
         //
-        Transform sphereToWorld = Translate(glm::vec3(0.f, -1000.f, 0.f));
-        sphereToWorld = sphereToWorld * Scale(glm::vec3(995.f));
+        Transform greenSphereToWorld = Translate(glm::vec3(0.f, -1000.f, 0.f));
+        greenSphereToWorld = greenSphereToWorld * Scale(glm::vec3(995.f));
+
+        std::shared_ptr<Shape> greenSphere = std::make_shared<Sphere>(m_Device, m_Scene, greenSphereToWorld);
+
         std::shared_ptr< Texture<glm::vec3> > reflectivity2 = std::make_shared< ConstantTexture<glm::vec3> >(
             glm::vec3(0.4f, 0.9f, 0.4f));
         std::shared_ptr< Texture<float> > roughness2 = std::make_shared< ConstantTexture<float> >(90.f);
-        std::shared_ptr<Material> green = std::make_shared<MatteMaterial>(reflectivity2, roughness2);
-        AddSphere(sphereToWorld, green, glm::vec3(0.f));
+        std::shared_ptr<Material> greenMtl = std::make_shared<MatteMaterial>(reflectivity2, roughness2);
 
+        std::shared_ptr<Primitive> greenSpherePrimitive = std::make_shared<Primitive>(greenSphere, greenMtl, nullptr);
+        m_Primitives.push_back(greenSpherePrimitive);
+
+
+        // Area light sphere
+        //
         Transform lightSphereToWorld = Translate(glm::vec3(35.f, 25.f, 0.f));
         lightSphereToWorld = lightSphereToWorld * Scale(glm::vec3(1.f));
+
+        std::shared_ptr<Shape> lightSphere = std::make_shared<Sphere>(m_Device, m_Scene, lightSphereToWorld);
+
         std::shared_ptr< Texture<glm::vec3> > lightRefl = std::make_shared< ConstantTexture<glm::vec3> >(
             glm::vec3(1.f));
         std::shared_ptr< Texture<float> > lightRoug = std::make_shared< ConstantTexture<float> >(0.f);
-        std::shared_ptr<Material> white = std::make_shared<MatteMaterial>(lightRefl, lightRoug);
-        std::shared_ptr<Shape> lightSphere = std::make_shared<Sphere>(
-            m_Device, lightSphereToWorld, white, glm::vec3(0.f));
-        lightSphere->Attach(m_Scene);
-        m_Shapes.push_back(lightSphere);
+        std::shared_ptr<Material> whiteMtl = std::make_shared<MatteMaterial>(lightRefl, lightRoug);
+
+        std::shared_ptr<AreaLight> dal = std::make_shared<DiffuseAreaLight>(1u, glm::vec3(1.5f), lightSphere, false);
+        m_Lights.push_back(dal);
+
+        std::shared_ptr<Primitive> lightSpherePrimitive = std::make_shared<Primitive>(lightSphere, whiteMtl, dal);
+        m_Primitives.push_back(lightSpherePrimitive);
 
         rtcCommitScene(m_Scene);
 
-        std::shared_ptr<Light> dal = std::make_shared<DiffuseAreaLight>(1u, glm::vec3(1.5f), lightSphere, false);
-        m_Lights.push_back(dal);
-
-        // m_Lights.push_back(std::make_shared<PointLight>(glm::vec3(20.f, 20.f, 20.f), glm::vec3(750.f)));
     }
 
     Scene::~Scene()
@@ -104,13 +128,13 @@ namespace Hikari
 
         if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID)
         {
-            assert(m_Shapes.size() > rayhit.hit.geomID);
+            assert(m_Primitives.size() > rayhit.hit.geomID);
 
             return Interaction(
                 ray(rayhit.ray.tfar),
                 glm::normalize(glm::vec3(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z)),
                 glm::vec2(rayhit.hit.u, rayhit.hit.v),
-                m_Shapes[rayhit.hit.geomID].get());
+                m_Primitives[rayhit.hit.geomID].get());
         }
         return Interaction(glm::vec3(0.f), glm::vec3(0.f), glm::vec2(0.f), nullptr);
     }
@@ -127,29 +151,7 @@ namespace Hikari
         return rtcRay.tfar == -INFINITY;
     }
 
-    void Scene::AddTriangleMesh(
-        const char*                         path,
-        const Transform&                    objectToWorld,
-        const std::shared_ptr<Material>&    material,
-        const glm::vec3&                    emission)
-    {
-        std::shared_ptr<Shape> geom = std::make_shared<TriangleMesh>(m_Device,
-            objectToWorld, path, material, emission);
-        geom->Attach(m_Scene);
-        m_Shapes.push_back(geom);
-    }
-
-    void Scene::AddSphere(
-        const Transform&                    objectToWorld,
-        const std::shared_ptr<Material>&    material,
-        const glm::vec3&                    emission)
-    {
-        std::shared_ptr<Shape> geom = std::make_shared<Sphere>(
-            m_Device, objectToWorld, material, emission);
-        geom->Attach(m_Scene);
-        m_Shapes.push_back(geom);
-    }
-
+    // TODO(achal): Put it in Ray.
     RTCRay Scene::ToRTCRay(const Ray& ray) const
     {
         RTCRay rtcRay;

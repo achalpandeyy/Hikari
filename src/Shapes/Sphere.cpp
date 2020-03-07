@@ -1,11 +1,13 @@
-#include "Math/Constants.h"
-#include "Core/Shape.h"
+#include "Sphere.h"
+
 #include "Core/Material.h"
+#include "Math/Constants.h"
 
 #include <algorithm>
 
 namespace Hikari
 {
+    // TODO(achal): Put it somewhere else.
     glm::vec3 UniformSampleSphere(const glm::vec2& e)
     {
         float y = 1.f - 2.f * e[0];
@@ -15,13 +17,11 @@ namespace Hikari
     }
 
     Sphere::Sphere(
-        RTCDevice                           device,
-        const Transform&                    objectToWorld,
-        const std::shared_ptr<Material>&    material,
-        const glm::vec3&                    emission)
-        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld, material,
-            emission), m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))),
-        m_Radius(m_ObjectToWorld.MaxScaleFactor() * 1.f)
+        RTCDevice           device,
+        RTCScene            scene,
+        const Transform&    objectToWorld)
+        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld),
+        m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))), m_Radius(m_ObjectToWorld.MaxScaleFactor() * 1.f)
     {
         // Set all callbacks
         rtcSetGeometryUserPrimitiveCount(m_Geometry, 1u);
@@ -32,14 +32,11 @@ namespace Hikari
         rtcSetGeometryOccludedFunction(m_Geometry, Occluded);
 
         rtcCommitGeometry(m_Geometry);
+
+        m_Id = rtcAttachGeometry(scene, m_Geometry);
     }
 
     Sphere::~Sphere()
-    {
-        Release();
-    }
-
-    void Sphere::Release()
     {
         if (m_Geometry)
             rtcReleaseGeometry(m_Geometry);
@@ -125,7 +122,7 @@ namespace Hikari
 
         // TODO(achal): Set sensible values for `primID` and possibly
         // make use of them during shading.
-        potentialHit.geomID = sphere.m_ID;
+        potentialHit.geomID = sphere.m_Id;
         potentialHit.primID = 100u;
 
         if ((ray->tnear < t0) & (t0 < ray->tfar))

@@ -17,12 +17,12 @@ namespace Hikari
         {
             Interaction interaction = scene.Intersect(tracingRay);
 
-            if (!interaction.m_Shape)
+            if (!interaction.m_Primitive)
             {
                 return accumulatedRadiance;
             }
 
-            const std::unique_ptr<BSDF> bsdf = interaction.m_Shape->m_Material->ComputeScatteringFunctions(interaction);
+            const std::unique_ptr<BSDF> bsdf = interaction.m_Primitive->m_Material->ComputeScatteringFunctions(interaction);
             if (!bsdf) continue;
 
             glm::vec3 wo = -tracingRay.m_Direction;

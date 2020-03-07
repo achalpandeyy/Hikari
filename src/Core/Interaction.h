@@ -6,6 +6,7 @@
 
 namespace Hikari
 {
+    class Primitive;
     class Shape;
 
     class Interaction
@@ -19,8 +20,8 @@ namespace Hikari
             const glm::vec3&    position,
             const glm::vec3&    normal,
             const glm::vec2&    uv,
-            const Shape*        shape)
-            : m_Position(position), m_Normal(normal), m_UV(uv), m_Shape(shape)
+            const Primitive*    primitive)
+            : m_Position(position), m_Normal(normal), m_UV(uv), m_Primitive(primitive)
         {}
 
         Ray SpawnRayTo(const Interaction& i) const;
@@ -28,8 +29,8 @@ namespace Hikari
         glm::vec3 m_Position, m_Normal;
         glm::vec2 m_UV;
 
-        // TODO(achal): Make it a shared_ptr.
-        const Shape* m_Shape = nullptr;
+        // TODO(achal): Consider making it a shared_ptr.
+        const Primitive* m_Primitive = nullptr;
     };
 
 }   // namespace Hikari

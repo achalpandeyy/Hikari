@@ -33,7 +33,7 @@ Transform Transform::operator * (const Transform& t) const
 Interaction Transform::operator () (const Interaction& interaction) const
 {
     return Interaction(TransformPoint(interaction.m_Position),
-        glm::normalize(TransformNormal(interaction.m_Normal)), interaction.m_UV, interaction.m_Shape);
+        glm::normalize(TransformNormal(interaction.m_Normal)), interaction.m_UV, interaction.m_Primitive);
 }
 
 bool Transform::SwapsHandedness() const

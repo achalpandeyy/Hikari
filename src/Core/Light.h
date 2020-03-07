@@ -50,4 +50,12 @@ namespace Hikari
         Interaction m_P0, m_P1;
     };
 
+    class AreaLight : public Light
+    {
+    public:
+        AreaLight(unsigned int numSamples) : Light(LightType::Area, numSamples) {}
+
+        virtual glm::vec3 L(const Interaction& interaction, const glm::vec3& w) const = 0;
+    };
+
 }   // namespace Hikari

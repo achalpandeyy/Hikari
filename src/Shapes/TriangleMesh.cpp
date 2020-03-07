@@ -1,20 +1,17 @@
-#include "Core/Shape.h"
-#include "Core/Material.h"
+#include "TriangleMesh.h"
+
 #include "ObjLoader.h"
 
 #include <iostream>
 
 namespace Hikari
 {
-
     TriangleMesh::TriangleMesh(
-        RTCDevice                           device,
-        const Transform&                    objectToWorld,
-        const char*                         path,
-        const std::shared_ptr<Material>&    material,
-        const glm::vec3&                    emission)
-        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE), objectToWorld,
-            material, emission)
+        RTCDevice           device,
+        RTCScene            scene,
+        const Transform&    objectToWorld,
+        const char*         path)
+        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE), objectToWorld)
     {
         // Load the obj file.
         if (LoadObj(path, m_VertexPositions, m_VertexNormals, m_VertexUV, m_Indices,
@@ -31,6 +28,8 @@ namespace Hikari
                 m_IndexBuffer, 0, sizeof(glm::uvec3), m_Indices.size());
 
             rtcCommitGeometry(m_Geometry);
+
+            m_Id = rtcAttachGeometry(scene, m_Geometry);
         }
         else
         {
@@ -39,11 +38,6 @@ namespace Hikari
     }
 
     TriangleMesh::~TriangleMesh()
-    {
-        Release();
-    }
-
-    void TriangleMesh::Release()
     {
         if (m_Geometry)
         {

@@ -11,15 +11,15 @@ namespace Hikari
 	class Interaction;
 	class Shape;
 
-	class DiffuseAreaLight : public Light
+	class DiffuseAreaLight : public AreaLight
 	{
 	public:
 		DiffuseAreaLight(
-			unsigned int numSamples,
-			const glm::vec3& LEmit,
-			const std::shared_ptr<Shape>& shape,
-			bool twoSided)
-			: Light(LightType::Area, numSamples), m_LEmit(LEmit), m_Shape(shape), m_TwoSided(twoSided)
+			unsigned int					numSamples,
+			const glm::vec3&				LEmit,
+			const std::shared_ptr<Shape>&	shape,
+			bool							twoSided)
+			: AreaLight(numSamples), m_LEmit(LEmit), m_Shape(shape), m_TwoSided(twoSided)
 		{}
 
 		glm::vec3 Sample_Li(
@@ -31,7 +31,7 @@ namespace Hikari
 
 		float Pdf_Li(const Interaction& illumPoint, const glm::vec3& wi) const override;
 
-		glm::vec3 L(const Interaction& interaction, const glm::vec3& w) const;
+		glm::vec3 L(const Interaction& interaction, const glm::vec3& w) const override;
 
 	private:
 		const glm::vec3 m_LEmit;
