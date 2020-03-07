@@ -55,6 +55,7 @@ set (HIKARI_SOURCE
 	src/Core/Scene.cpp
 
 	# Integrators
+	src/Integrators/DirectLighting.cpp
 	src/Integrators/Path.cpp
 	# src/Integrators/Whitted.cpp
 

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Interaction.h"
+#include "Core/Scene.h"
+
 #include <glm/glm.hpp>
 
 #include <memory>
@@ -36,4 +39,14 @@ namespace Hikari
         void RenderBlock(ImageBlock& block, const Scene& scene) const;
     };
 
-}   // namespace Rays
+    glm::vec3 UniformSampleAllLights(const Interaction& interaction, const Scene& scene, Sampler& sampler);
+
+    glm::vec3 UniformSampleOneLight(const Interaction& interaction, const Scene& scene, Sampler& sampler);
+
+    glm::vec3 EstimateDirect(
+        const Interaction&  interaction,
+        const Light&        light,
+        const Scene&        scene,
+        Sampler&            sampler);
+
+}   // namespace Hikari

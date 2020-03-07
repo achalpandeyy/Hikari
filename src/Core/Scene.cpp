@@ -108,6 +108,7 @@ namespace Hikari
             rtcReleaseDevice(m_Device);
     }
 
+    // TODO(achal): Make it return bool and pass Interaction by pointer.
     Interaction Scene::Intersect(const Ray& ray) const
     {
         // Convert Hikari's conception of ray to RTCRay or RTCRayHit
@@ -133,10 +134,11 @@ namespace Hikari
             return Interaction(
                 ray(rayhit.ray.tfar),
                 glm::normalize(glm::vec3(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z)),
+                -ray.m_Direction,
                 glm::vec2(rayhit.hit.u, rayhit.hit.v),
                 m_Primitives[rayhit.hit.geomID].get());
         }
-        return Interaction(glm::vec3(0.f), glm::vec3(0.f), glm::vec2(0.f), nullptr);
+        return Interaction(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(0.f), glm::vec2(0.f), nullptr);
     }
 
     bool Scene::Occluded(const Ray& ray) const

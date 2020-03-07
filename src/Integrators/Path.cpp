@@ -35,7 +35,7 @@ namespace Hikari
                 float lightPdf;
                 VisibilityTester visibility;
 
-                const glm::vec2 lightSample = sampler.GetSample();
+                const glm::vec2 lightSample = sampler.GetSample2D();
 
                 glm::vec3 Li = light->Sample_Li(interaction, lightSample, &wi, &lightPdf, &visibility);
 
@@ -61,7 +61,7 @@ namespace Hikari
             glm::vec3 wi;
             float pdf;
 
-            const glm::vec2 bsdfSample = sampler.GetSample();
+            const glm::vec2 bsdfSample = sampler.GetSample2D();
 
             bsdf->Sample(wi, bsdfSample, pdf);
             if (pdf == 0.f) break;

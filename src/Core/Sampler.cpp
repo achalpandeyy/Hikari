@@ -9,15 +9,14 @@ namespace Hikari
         m_Engine.seed(m_RandomDevice());
     }
 
-    glm::vec2 Sampler::GetSample()
+    float Sampler::GetSample1D()
     {
-        return glm::vec2(Real(), Real());
+        return m_Distribution(m_Engine);
     }
 
-    float Sampler::Real()
+    glm::vec2 Sampler::GetSample2D()
     {
-        const std::uniform_real_distribution<float> distribution(0, 1);
-        return distribution(m_Engine);
+        return glm::vec2(GetSample1D(), GetSample1D());
     }
 
 }   // namespace Hikari

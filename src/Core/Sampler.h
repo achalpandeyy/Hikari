@@ -12,15 +12,18 @@ namespace Hikari
     {
     public:
         Sampler(unsigned int numSamples) : m_NumSamples(numSamples) {}
+
         void StartPixel();
-        glm::vec2 GetSample();
+
+        float GetSample1D();
+
+        glm::vec2 GetSample2D();
 
         const unsigned int m_NumSamples;
 
     private:
-        float Real();
-
         std::mt19937 m_Engine;
+        const std::uniform_real_distribution<float> m_Distribution{ 0.f, 1.f }; 
         std::random_device m_RandomDevice;
     };
 
