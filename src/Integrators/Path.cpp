@@ -7,7 +7,7 @@
 
 namespace Hikari
 {
-    glm::vec3 PathIntegrator::Li(const Ray& ray, Sampler& sampler, const Scene& scene, unsigned int depth) const
+    glm::vec3 PathIntegrator::Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth) const
     {
         Ray tracingRay = ray;
 

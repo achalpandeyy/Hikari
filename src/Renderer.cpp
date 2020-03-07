@@ -4,6 +4,7 @@
 #include "ImageBlock.h"
 #include "Integrators/DirectLighting.h"
 #include "Integrators/Path.h"
+#include "Integrators/Whitted.h"
 #include "Math/Ray.h"
 #include "Core/Sampler.h"
 #include "Math/Transform.h"
@@ -29,8 +30,9 @@ namespace Hikari
             resolution
         );
 
-        m_Integrator = std::make_unique<DirectLightingIntegrator>(LightStrategy::UniformSampleAll, 0u, m_Camera);
-        
+        // m_Integrator = std::make_unique<DirectLightingIntegrator>(LightStrategy::UniformSampleAll, 0u, m_Camera);
+        // m_Integrator = std::make_unique<PathIntegrator>(m_Camera);
+        m_Integrator = std::make_unique<WhittedIntegrator>(0u, m_Camera);
     }
 
     void Renderer::Render() const

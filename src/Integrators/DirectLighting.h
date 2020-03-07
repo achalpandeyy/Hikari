@@ -23,7 +23,7 @@ namespace Hikari
 			: SamplerIntegrator(camera), m_LightStrategy(strategy), m_MaxDepth(maxDepth)
 		{}
 
-		glm::vec3 Li(const Ray& ray, Sampler& sampler, const Scene& scene, unsigned int depth = 0) const override;
+		glm::vec3 Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth = 0) const override;
 
 	private:
 		LightStrategy m_LightStrategy;

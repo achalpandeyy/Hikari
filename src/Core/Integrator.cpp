@@ -85,7 +85,7 @@ namespace Hikari
                     const glm::vec2 sample = sampler.GetSample2D();
                     Ray primaryRay = m_Camera->SpawnRay(rasterCoordinates + glm::vec2(row, col) + sample);
 
-                    color += Li(primaryRay, sampler, scene, depth);
+                    color += Li(primaryRay, scene, sampler, depth);
                 }
 
                 // TODO(achal): This way of getting the index seems inconsistent and unintuitive.

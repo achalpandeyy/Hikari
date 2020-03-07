@@ -7,12 +7,15 @@
 
 namespace Hikari
 {
+    class Sampler;
+    class Scene;
+
     class PathIntegrator : public SamplerIntegrator
     {
     public:
         PathIntegrator(std::shared_ptr<const Camera> camera) : SamplerIntegrator(camera) {}
 
-        glm::vec3 Li(const Ray& ray, Sampler& sampler, const Scene& scene, unsigned int depth = 0) const override;
+        glm::vec3 Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth = 0) const override;
     };
 
 }   // namespace Hikari

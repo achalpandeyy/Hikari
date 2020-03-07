@@ -30,7 +30,7 @@ namespace Hikari
 
         void Render(const Scene& scene) override;
 
-        virtual glm::vec3 Li(const Ray& ray, Sampler& sampler, const Scene& scene, unsigned int depth = 0) const = 0;
+        virtual glm::vec3 Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth = 0) const = 0;
 
     protected:
         std::shared_ptr<const Camera> m_Camera;

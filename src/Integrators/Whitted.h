@@ -6,10 +6,22 @@
 
 namespace Hikari
 {
-    class WhittedIntegrator : public Integrator
+    class Camera;
+    class Ray;
+    class Sampler;
+    class Scene;
+
+    class WhittedIntegrator : public SamplerIntegrator
     {
     public:
-        glm::vec3 Li(const Ray& ray, Sampler& sampler, const std::shared_ptr<Scene>& scene) const override;
+        WhittedIntegrator(unsigned int maxDepth, std::shared_ptr<const Camera> camera)
+            : SamplerIntegrator(camera), m_MaxDepth(maxDepth)
+        {}
+
+        glm::vec3 Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth = 0) const override;
+
+    private:
+        const unsigned int m_MaxDepth;
     };
 
 }   // namespace Hikari
