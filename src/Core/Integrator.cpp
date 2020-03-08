@@ -123,7 +123,7 @@ namespace Hikari
     {
         size_t numLights = scene.m_Lights.size();
 
-        if (numLights == 0)
+        if (numLights == 0u)
             return glm::vec3(0.f);
 
         size_t lightIdx = std::min((size_t)sampler.GetSample1D() * numLights, numLights - 1);

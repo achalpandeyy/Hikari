@@ -10,7 +10,8 @@ namespace Hikari
         Sphere(
             RTCDevice           device,
             RTCScene            scene,
-            const Transform& objectToWorld);
+            const Transform&    objectToWorld,
+            float               radius = 1.f);
 
         ~Sphere();
 
@@ -20,13 +21,13 @@ namespace Hikari
 
         float Pdf(const Interaction& pShape, const glm::vec3& wi) const override;
 
-        glm::vec3 m_Center;
-        float m_Radius;
-
     private:
         static void Bounds(const RTCBoundsFunctionArguments* args);
         static void Intersect(const RTCIntersectFunctionNArguments* args);
         static void Occluded(const RTCOccludedFunctionNArguments* args);
+
+        float m_Radius;
+        glm::vec3 m_Center;
     };
 
 }	// namespace Hikari

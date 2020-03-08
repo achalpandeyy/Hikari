@@ -24,7 +24,7 @@ namespace Hikari
 
         m_Camera = std::make_shared<Camera>
         (
-            glm::vec3(0.f, 10.f, 40.f),      // camera position
+            glm::vec3(0.f, 20.f, 80.f),      // camera position
             glm::vec3(0.f, 0.f, 0.f),       // look at
             glm::vec3(0.f, 1.f, 0.f),       // up
             resolution

@@ -15,7 +15,7 @@ namespace Hikari
 
         Ray tracingRay(ray);
 
-        for (unsigned int bounces = 0u; bounces <= m_MaxDepth; ++bounces)
+        for (unsigned int bounces = 0u; ; ++bounces)
         {
             // Find the next path vertex and accumulate contribution
 
@@ -25,15 +25,16 @@ namespace Hikari
 
             // Terminate path if ray escaped
             //
-            if (!interaction.m_Primitive)
+            if (!interaction.m_Primitive || bounces >= m_MaxDepth)
                 break;
 
             // Possibly add emitted light at the intersection point
             //
             if (bounces == 0u)
             {
-                // Add emitted light at path vertex or from the environment
-                if (!interaction.m_Primitive)
+                // Add emitted light at path vertex
+                //
+                if (interaction.m_Primitive)
                     L += throughput * interaction.Le();
             }
 

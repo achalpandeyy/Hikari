@@ -19,9 +19,10 @@ namespace Hikari
     Sphere::Sphere(
         RTCDevice           device,
         RTCScene            scene,
-        const Transform&    objectToWorld)
+        const Transform&    objectToWorld,
+        float               radius)
         : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld),
-        m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))), m_Radius(m_ObjectToWorld.MaxScaleFactor() * 1.f)
+        m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))), m_Radius(radius)
     {
         // Set all callbacks
         rtcSetGeometryUserPrimitiveCount(m_Geometry, 1u);
@@ -44,12 +45,12 @@ namespace Hikari
 
     float Sphere::SurfaceArea() const
     {
-        return 4.f * PI * 20.f * 20.f;
+        return 4.f * PI * m_Radius * m_Radius;
     }
 
     Interaction Sphere::Sample(const Interaction& i, const glm::vec2& e, float* pdf) const
     {
-        glm::vec3 pShape = /*m_Radius*/ 20.f * UniformSampleSphere(e);
+        glm::vec3 pShape = m_Radius * UniformSampleSphere(e);
         Interaction interaction;
 
         interaction.m_Position = m_ObjectToWorld.TransformPoint(pShape);
@@ -62,7 +63,6 @@ namespace Hikari
     {
         return 1.f / SurfaceArea();
     }
-
 
     void Sphere::Bounds(const RTCBoundsFunctionArguments* args)
     {
