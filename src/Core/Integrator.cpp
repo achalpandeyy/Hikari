@@ -68,7 +68,6 @@ namespace Hikari
         glm::vec2 rasterCoordinates(block.m_Position.x * BLOCK_DIMENSION, block.m_Position.y * BLOCK_DIMENSION);
 
         // TODO(achal): Put it elsewhere.
-        const unsigned int depth = 50u;
         const unsigned int numSamples = 16u;
         Sampler sampler(numSamples);
 
@@ -85,7 +84,7 @@ namespace Hikari
                     const glm::vec2 sample = sampler.GetSample2D();
                     Ray primaryRay = m_Camera->SpawnRay(rasterCoordinates + glm::vec2(row, col) + sample);
 
-                    color += Li(primaryRay, scene, sampler, depth);
+                    color += Li(primaryRay, scene, sampler);
                 }
 
                 // TODO(achal): This way of getting the index seems inconsistent and unintuitive.
@@ -99,7 +98,7 @@ namespace Hikari
         }
     }
 
-    glm::vec3 UniformSampleAllLights(const Interaction& interaction, const Scene& scene, Sampler& sampler)
+    glm::vec3 UniformSampleAllLights(const Interaction& illumPoint, const Scene& scene, Sampler& sampler)
     {
         glm::vec3 L(0.f);
 
@@ -111,7 +110,7 @@ namespace Hikari
 
             for (unsigned int i = 0; i < light->m_NumSamples; ++i)
             {
-                Ld += EstimateDirect(interaction, *light, scene, sampler);
+                Ld += EstimateDirect(illumPoint, *light, scene, sampler);
             }
 
             L += Ld / static_cast<float>(light->m_NumSamples);
@@ -120,7 +119,7 @@ namespace Hikari
         return L;
     }
 
-    glm::vec3 UniformSampleOneLight(const Interaction& interaction, const Scene& scene, Sampler& sampler)
+    glm::vec3 UniformSampleOneLight(const Interaction& illumPoint, const Scene& scene, Sampler& sampler)
     {
         size_t numLights = scene.m_Lights.size();
 
@@ -130,7 +129,7 @@ namespace Hikari
         size_t lightIdx = std::min((size_t)sampler.GetSample1D() * numLights, numLights - 1);
         const std::shared_ptr<Light>& light = scene.m_Lights[lightIdx];
 
-        return static_cast<float>(numLights) * EstimateDirect(interaction, *light, scene, sampler);
+        return static_cast<float>(numLights) * EstimateDirect(illumPoint, *light, scene, sampler);
     }
 
     glm::vec3 EstimateDirect(const Interaction& illumPoint, const Light& light, const Scene& scene, Sampler& sampler)

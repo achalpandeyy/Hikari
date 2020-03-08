@@ -20,14 +20,13 @@ namespace Hikari
 	{
 	public:
 		DirectLightingIntegrator(LightStrategy strategy, unsigned int maxDepth, std::shared_ptr<const Camera> camera)
-			: SamplerIntegrator(camera), m_LightStrategy(strategy), m_MaxDepth(maxDepth)
+			: SamplerIntegrator(maxDepth, camera), m_LightStrategy(strategy)
 		{}
 
-		glm::vec3 Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth = 0) const override;
+		glm::vec3 Li(const Ray& ray, const Scene& scene, Sampler& sampler) const override;
 
 	private:
 		LightStrategy m_LightStrategy;
-		unsigned int m_MaxDepth;
 	};
 
 }	// namespace Hikari

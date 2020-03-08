@@ -7,7 +7,7 @@
 
 namespace Hikari
 {
-	glm::vec3 WhittedIntegrator::Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth) const
+	glm::vec3 WhittedIntegrator::Li(const Ray& ray, const Scene& scene, Sampler& sampler) const
 	{
 		glm::vec3 L(0.f);
 
@@ -22,7 +22,7 @@ namespace Hikari
 		const std::unique_ptr<BSDF> bsdf = interaction.m_Primitive->m_Material->ComputeScatteringFunctions(interaction);
 
 		if (!bsdf)
-			return Li(interaction.SpawnRay(ray.m_Direction), scene, sampler, depth);
+			return Li(interaction.SpawnRay(ray.m_Direction), scene, sampler);
 
 		// Compute emitted light from this point of interaction, in case we hit an area light source.
 		//

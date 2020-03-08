@@ -1,5 +1,7 @@
 #include "Path.h"
 
+#include "Core/BSDF.h"
+#include "Core/Interaction.h"
 #include "Core/Sampler.h"
 #include "Core/Scene.h"
 #include "Math/Constants.h"
@@ -7,74 +9,60 @@
 
 namespace Hikari
 {
-    glm::vec3 PathIntegrator::Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth) const
+    glm::vec3 PathIntegrator::Li(const Ray& ray, const Scene& scene, Sampler& sampler) const
     {
-        Ray tracingRay = ray;
+        glm::vec3 L(0.f), throughput(1.f);
 
-        glm::vec3 accumulatedRadiance(0.f);
-        glm::vec3 throughput(1.f);
-        for (unsigned int i = 0; i < depth; ++i)
+        Ray tracingRay(ray);
+
+        for (unsigned int bounces = 0u; bounces <= m_MaxDepth; ++bounces)
         {
+            // Find the next path vertex and accumulate contribution
+
+            // Intersect the ray with the scene and store the result in an Interaction
+            //
             Interaction interaction = scene.Intersect(tracingRay);
 
-            if (!interaction.m_Primitive)
-            {
-                return accumulatedRadiance;
-            }
-
-            const std::unique_ptr<BSDF> bsdf = interaction.m_Primitive->m_Material->ComputeScatteringFunctions(interaction);
-            if (!bsdf) continue;
-
-            glm::vec3 wo = -tracingRay.m_Direction;
-
-            // Sample Illumination from lights - direct lighting.
+            // Terminate path if ray escaped
             //
-            for (auto light : scene.m_Lights)
+            if (!interaction.m_Primitive)
+                break;
+
+            // Possibly add emitted light at the intersection point
+            //
+            if (bounces == 0u)
             {
-                glm::vec3 wi;
-                float lightPdf;
-                VisibilityTester visibility;
-
-                const glm::vec2 lightSample = sampler.GetSample2D();
-
-                glm::vec3 Li = light->Sample_Li(interaction, lightSample, &wi, &lightPdf, &visibility);
-
-                if (lightPdf > 0.f && Li != glm::vec3(0.f))
-                {
-                    glm::vec3 f = bsdf->Evaluate(wo, wi) * std::max(0.f, glm::dot(wi, interaction.m_Normal));
-                    if (f != glm::vec3(0.f))
-                    {
-                        if (!visibility.Unoccluded(scene))
-                        {
-                            Li = glm::vec3(0.f);
-                        }
-                        else
-                        {
-                            accumulatedRadiance += throughput * f * Li / lightPdf;
-                        }
-                    }
-                }
+                // Add emitted light at path vertex or from the environment
+                if (!interaction.m_Primitive)
+                    L += throughput * interaction.Le();
             }
 
-            // Sample bsdf
+            // Compute scattering functions
+            //
+            std::unique_ptr<BSDF> bsdf = interaction.m_Primitive->m_Material->ComputeScatteringFunctions(interaction);
 
-            glm::vec3 wi;
+            // Sample illumination from lights to find path contribution
+            //
+            L += throughput * UniformSampleOneLight(interaction, scene, sampler);
+
+            // Sample BSDF to get new path direction
+            //
+            glm::vec3 wo = -tracingRay.m_Direction, wi;
             float pdf;
 
-            const glm::vec2 bsdfSample = sampler.GetSample2D();
-
-            bsdf->Sample(wi, bsdfSample, pdf);
-            if (pdf == 0.f) break;
-
+            // TODO(achal): Combine the two following functions into one -- BSDF::Sample_f
+            bsdf->Sample(wi, sampler.GetSample2D(), pdf);
             glm::vec3 f = bsdf->Evaluate(wo, wi);
-            if (f == glm::vec3(0.f)) break;
 
-            throughput *= f * std::abs(glm::dot(interaction.m_Normal, wi)) / pdf;
+            if (f == glm::vec3(0.f) || pdf == 0.f)
+                break;
 
-            tracingRay.m_Origin = interaction.m_Position + EPSILON * interaction.m_Normal;
-            tracingRay.m_Direction = wi;
+            throughput *= f * glm::abs(glm::dot(wi, interaction.m_Normal)) / pdf;
+            
+            tracingRay = interaction.SpawnRay(wi);
         }
-        return accumulatedRadiance;
+
+        return L;
     }
 
 }   // namespace Hikari

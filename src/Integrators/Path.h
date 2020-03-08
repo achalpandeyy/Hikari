@@ -5,6 +5,8 @@
 
 #include <glm/glm.hpp>
 
+#include <memory>
+
 namespace Hikari
 {
     class Sampler;
@@ -13,9 +15,11 @@ namespace Hikari
     class PathIntegrator : public SamplerIntegrator
     {
     public:
-        PathIntegrator(std::shared_ptr<const Camera> camera) : SamplerIntegrator(camera) {}
+        PathIntegrator(unsigned int maxDepth, std::shared_ptr<const Camera> camera)
+            : SamplerIntegrator(maxDepth, camera)
+        {}
 
-        glm::vec3 Li(const Ray& ray, const Scene& scene, Sampler& sampler, unsigned int depth = 0) const override;
+        glm::vec3 Li(const Ray& ray, const Scene& scene, Sampler& sampler) const override;
     };
 
 }   // namespace Hikari
