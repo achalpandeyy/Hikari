@@ -19,10 +19,7 @@ namespace Hikari
 		const glm::vec3& normal = interaction.m_Normal;
 		glm::vec3 wo = interaction.m_wo;
 
-		const std::unique_ptr<BSDF> bsdf = interaction.m_Primitive->m_Material->ComputeScatteringFunctions(interaction);
-
-		if (!bsdf)
-			return Li(interaction.SpawnRay(ray.m_Direction), scene, sampler);
+		interaction.ComputeScatteringFunctions();
 
 		// Compute emitted light from this point of interaction, in case we hit an area light source.
 		//
@@ -38,7 +35,7 @@ namespace Hikari
 
 			if (Li == glm::vec3(0.f) || pdf == 0.f) continue;
 
-			glm::vec3 f = bsdf->Evaluate(wo, wi);
+			glm::vec3 f = interaction.m_BSDF->f(wo, wi);
 
 			if (f != glm::vec3(0.f) && visibility.Unoccluded(scene))
 				L += f * Li * glm::abs(glm::dot(wi, interaction.m_Normal)) / pdf;

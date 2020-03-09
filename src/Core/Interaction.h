@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Core/BSDF.h"
 #include "Math/Ray.h"
 
 #include <glm/glm.hpp>
+
+#include <memory>
 
 namespace Hikari
 {
@@ -30,11 +33,14 @@ namespace Hikari
 
         glm::vec3 Le() const;
 
+        void ComputeScatteringFunctions();
+
         glm::vec3 m_Position, m_Normal, m_wo;
         glm::vec2 m_UV;
 
         // TODO(achal): Consider making it a shared_ptr.
         const Primitive* m_Primitive = nullptr;
+        std::shared_ptr<BSDF> m_BSDF = nullptr;
     };
 
 }   // namespace Hikari

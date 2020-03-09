@@ -132,8 +132,9 @@ namespace Hikari
         return static_cast<float>(numLights) * EstimateDirect(illumPoint, *light, scene, sampler);
     }
 
-    glm::vec3 EstimateDirect(const Interaction& illumPoint, const Light& light, const Scene& scene, Sampler& sampler)
+    glm::vec3 EstimateDirect(const Interaction& illumPoint, const Light& light, const Scene& scene, Sampler& sampler, bool specular)
     {
+        // BxDFType flags = specular ? BxDF_ALL : BxDFType(BxDF_ALL & ~BxDF_SPECULAR);
         glm::vec3 Ld(0.f);
 
         // Sample the light source
@@ -147,10 +148,8 @@ namespace Hikari
 
         if (lightPdf > 0.f && Li != glm::vec3(0.f))
         {
-            // TODO(achal): Make a BSDF member in Interaction quickly!
-            glm::vec3 f = illumPoint.m_Primitive->m_Material->ComputeScatteringFunctions(illumPoint)
-                ->Evaluate(illumPoint.m_wo, wi) * glm::abs(glm::dot(wi, illumPoint.m_Normal));
-
+            glm::vec3 f = illumPoint.m_BSDF->f(illumPoint.m_wo, wi) * glm::abs(glm::dot(wi, illumPoint.m_Normal));
+    
             if (f != glm::vec3(0.f))
             {
                 if (!visibility.Unoccluded(scene))

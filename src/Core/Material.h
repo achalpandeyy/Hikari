@@ -1,9 +1,5 @@
 #pragma once
 
-#include "BSDF.h"
-
-#include <memory>
-
 namespace Hikari
 {
 	class Interaction;
@@ -13,7 +9,7 @@ namespace Hikari
 	public:
 		virtual ~Material() {}
 
-		virtual std::unique_ptr<BSDF> ComputeScatteringFunctions(const Interaction& interaction) const = 0;
+		virtual void ComputeScatteringFunctions(Interaction* interaction) const = 0;
 	};
 
 }	// namespace Hikari

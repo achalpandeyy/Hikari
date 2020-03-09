@@ -40,7 +40,7 @@ namespace Hikari
 
             // Compute scattering functions
             //
-            std::unique_ptr<BSDF> bsdf = interaction.m_Primitive->m_Material->ComputeScatteringFunctions(interaction);
+            interaction.ComputeScatteringFunctions();
 
             // Sample illumination from lights to find path contribution
             //
@@ -49,11 +49,10 @@ namespace Hikari
             // Sample BSDF to get new path direction
             //
             glm::vec3 wo = -tracingRay.m_Direction, wi;
+
             float pdf;
 
-            // TODO(achal): Combine the two following functions into one -- BSDF::Sample_f
-            bsdf->Sample(wi, sampler.GetSample2D(), pdf);
-            glm::vec3 f = bsdf->Evaluate(wo, wi);
+            glm::vec3 f = interaction.m_BSDF->Sample_f(wo, &wi, sampler.GetSample2D(), &pdf);
 
             if (f == glm::vec3(0.f) || pdf == 0.f)
                 break;

@@ -22,10 +22,7 @@ namespace Hikari
 		// a member of type BSDF.
 		// interaction.ComputScatteringFunctions(ray);
 
-		const std::unique_ptr<BSDF> bsdf = interaction.m_Primitive->m_Material->ComputeScatteringFunctions(interaction);
-
-		if (!bsdf)
-			return Li(interaction.SpawnRay(ray.m_Direction), scene, sampler);
+		interaction.ComputeScatteringFunctions();
 
 		// Compute emitted light from this point of interaction, in case we hit an area light source.
 		//

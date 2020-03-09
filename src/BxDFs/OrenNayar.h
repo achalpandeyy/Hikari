@@ -14,7 +14,7 @@ namespace Hikari
 	public:
 		OrenNayar(const glm::vec3& reflectivity, float sigma);
 
-		glm::vec3 Evaluate(const glm::vec3& wo, const glm::vec3& wi) const override;
+		glm::vec3 f(const glm::vec3& wo, const glm::vec3& wi) const override;
 
 	private:
 		const glm::vec3 m_Reflectivity;

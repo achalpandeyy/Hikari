@@ -49,6 +49,7 @@ namespace Hikari
         const Interaction&  interaction,
         const Light&        light,
         const Scene&        scene,
-        Sampler&            sampler);
+        Sampler&            sampler,
+        bool                specular = false);
 
 }   // namespace Hikari

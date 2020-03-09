@@ -21,4 +21,10 @@ namespace Hikari
 		return m_Primitive->m_AreaLight ? m_Primitive->m_AreaLight->L(*this, m_wo): glm::vec3(0.f);
 	}
 
+	void Interaction::ComputeScatteringFunctions()
+	{
+		if (m_Primitive->m_Material)
+			m_Primitive->m_Material->ComputeScatteringFunctions(this);
+	}
+
 }	// namespace Hikari

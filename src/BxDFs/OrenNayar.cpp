@@ -9,14 +9,14 @@
 namespace Hikari
 {
 	OrenNayar::OrenNayar(const glm::vec3& reflectivity, float sigma)
-		: m_Reflectivity(reflectivity), m_Sigma(glm::radians(sigma))
+		: BxDF(BxDFType(BxDF_REFLECTION | BxDF_DIFFUSE)), m_Reflectivity(reflectivity), m_Sigma(glm::radians(sigma))
 	{
 		float sigmaSq = sigma * sigma;
 		m_A = 1.f - (sigmaSq / (2.f * (sigmaSq + 0.33f)));
 		m_B = 0.45f * sigmaSq / (sigmaSq + 0.09f);
 	}
 
-	glm::vec3 OrenNayar::Evaluate(const glm::vec3& wo, const glm::vec3& wi) const
+	glm::vec3 OrenNayar::f(const glm::vec3& wo, const glm::vec3& wi) const
 	{
 		float sinThetaI = SinTheta(wi);
 		float sinThetaO = SinTheta(wo);
@@ -44,6 +44,5 @@ namespace Hikari
 		}
 		return m_Reflectivity * INVPI * (m_A + m_B * maxCos * sinAlpha * tanBeta);
 	}
-
 
 }	// namespace Hikari
