@@ -18,8 +18,6 @@ namespace Hikari
 			: m_Shape(shape), m_Material(material), m_AreaLight(areaLight)
 		{}
 		
-
-	// private:
 		std::shared_ptr<Shape> m_Shape;
 		std::shared_ptr<Material> m_Material;
 		std::shared_ptr<AreaLight> m_AreaLight;

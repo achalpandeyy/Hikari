@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-#include "Core/Material.h"
+#include "Core/Interaction.h"
 #include "Math/Constants.h"
 
 #include <algorithm>
@@ -17,12 +17,11 @@ namespace Hikari
     }
 
     Sphere::Sphere(
+        const glm::vec3&    center,
+        float               radius,
         RTCDevice           device,
-        RTCScene            scene,
-        const Transform&    objectToWorld,
-        float               radius)
-        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER), objectToWorld),
-        m_Center(m_ObjectToWorld.TransformPoint(glm::vec3(0.f))), m_Radius(radius)
+        RTCScene            scene)
+        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER)), m_Center(center), m_Radius(radius)
     {
         // Set all callbacks
         rtcSetGeometryUserPrimitiveCount(m_Geometry, 1u);
@@ -48,14 +47,15 @@ namespace Hikari
         return 4.f * PI * m_Radius * m_Radius;
     }
 
-    Interaction Sphere::Sample(const Interaction& i, const glm::vec2& e, float* pdf) const
+    Interaction Sphere::Sample(const Interaction& i, const glm::vec2& sample, float* pdf) const
     {
-        glm::vec3 pShape = m_Radius * UniformSampleSphere(e);
         Interaction interaction;
+        const glm::vec3& pSphere = UniformSampleSphere(sample);
+        interaction.m_Position = m_Radius * pSphere + m_Center;
+        interaction.m_Normal = pSphere;
 
-        interaction.m_Position = m_ObjectToWorld.TransformPoint(pShape);
-        interaction.m_Normal = glm::normalize(m_ObjectToWorld.TransformNormal(pShape));
         *pdf = 1.f / SurfaceArea();
+
         return interaction;
     }
 

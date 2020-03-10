@@ -30,38 +30,39 @@ namespace Hikari
 
         // Ajax
         //
-        // Transform meshToWorld2 = Translate(glm::vec3(6.0f, -8.f, 2.f));
-        // meshToWorld2 = meshToWorld2 * Rotate(60.f, glm::vec3(0.f, 1.f, 0.f));
-        // meshToWorld2 = meshToWorld2 * Scale(glm::vec3(0.5f));
+        std::shared_ptr<Shape> ajaxMesh = CreateTriangleMeshShape(
+            "../../models/ajax.obj",
+            glm::vec3(6.f, -8.f, 2.f),
+            60.f,
+            glm::vec3(0.f, 1.f, 0.f),
+            glm::vec3(0.5f),
+            m_Device,
+            m_Scene);
 
-        // std::shared_ptr<Shape> ajaxMesh = std::make_shared<TriangleMesh>(m_Device, m_Scene, meshToWorld2, "../../models/ajax.obj");
+        std::shared_ptr< Texture<glm::vec3> > ref = std::make_shared< ConstantTexture<glm::vec3> >(
+            glm::vec3(0.5f, 0.5f, 0.5f));
+        std::shared_ptr< Texture<float> > roug = std::make_shared< ConstantTexture<float> >(90.f);
+        std::shared_ptr<Material> grayMtl = std::make_shared<MatteMaterial>(ref, roug);
 
-        // std::shared_ptr< Texture<glm::vec3> > ref = std::make_shared< ConstantTexture<glm::vec3> >(
-        //     glm::vec3(0.5f, 0.5f, 0.5f));
-        // std::shared_ptr< Texture<float> > roug = std::make_shared< ConstantTexture<float> >(90.f);
-        // std::shared_ptr<Material> grayMtl = std::make_shared<MatteMaterial>(ref, roug);
-
-        // std::shared_ptr<Primitive> ajaxPrimitive = std::make_shared<Primitive>(ajaxMesh, grayMtl, nullptr);
-        // m_Primitives.push_back(ajaxPrimitive);
+        std::shared_ptr<Primitive> ajaxPrimitive = std::make_shared<Primitive>(ajaxMesh, grayMtl, nullptr);
+        m_Primitives.push_back(ajaxPrimitive);
 
 
         // Red Analytic Sphere
         //
-        std::shared_ptr<Shape> redSphere = std::make_shared<Sphere>(m_Device, m_Scene, Transform(), 5.f);
+        // std::shared_ptr<Shape> redSphere = std::make_shared<Sphere>(m_Device, m_Scene, Transform(), 5.f);
 
-        std::shared_ptr< Texture<glm::vec3> > reflectivity1 = std::make_shared< ConstantTexture<glm::vec3> >(
-            glm::vec3(1.f, 0.f, 0.f));
-        std::shared_ptr< Texture<float> > roughness1 = std::make_shared< ConstantTexture<float> >(90.f);
-        std::shared_ptr<Material> redMtl = std::make_shared<MatteMaterial>(reflectivity1, roughness1);
+        // std::shared_ptr< Texture<glm::vec3> > reflectivity1 = std::make_shared< ConstantTexture<glm::vec3> >(
+        //     glm::vec3(1.f, 0.f, 0.f));
+        // std::shared_ptr< Texture<float> > roughness1 = std::make_shared< ConstantTexture<float> >(90.f);
+        // std::shared_ptr<Material> redMtl = std::make_shared<MatteMaterial>(reflectivity1, roughness1);
 
-        std::shared_ptr<Primitive> redSpherePrimitive = std::make_shared<Primitive>(redSphere, redMtl, nullptr);
-        m_Primitives.push_back(redSpherePrimitive);
+        // std::shared_ptr<Primitive> redSpherePrimitive = std::make_shared<Primitive>(redSphere, redMtl, nullptr);
+        // m_Primitives.push_back(redSpherePrimitive);
 
         // Greenish Analytic Sphere for the ground
         //
-        Transform greenSphereToWorld = Translate(glm::vec3(0.f, -1000.f, 0.f));
-
-        std::shared_ptr<Shape> greenSphere = std::make_shared<Sphere>(m_Device, m_Scene, greenSphereToWorld, 995.f);
+        std::shared_ptr<Shape> greenSphere = std::make_shared<Sphere>(glm::vec3(0.f, -1000.f, 0.f), 995.f, m_Device, m_Scene);
 
         std::shared_ptr< Texture<glm::vec3> > reflectivity2 = std::make_shared< ConstantTexture<glm::vec3> >(
             glm::vec3(0.4f, 0.9f, 0.4f));
@@ -74,9 +75,7 @@ namespace Hikari
 
         // Area light sphere
         //
-        Transform lightSphereToWorld = Translate(glm::vec3(35.f, 25.f, 0.f));
-
-        std::shared_ptr<Shape> lightSphere = std::make_shared<Sphere>(m_Device, m_Scene, lightSphereToWorld, 20.f);
+        std::shared_ptr<Shape> lightSphere = std::make_shared<Sphere>(glm::vec3(35.f, 25.f, 0.f), 20.f, m_Device, m_Scene);
 
         std::shared_ptr< Texture<glm::vec3> > lightRefl = std::make_shared< ConstantTexture<glm::vec3> >(
             glm::vec3(0.5f));
@@ -90,7 +89,6 @@ namespace Hikari
         m_Primitives.push_back(lightSpherePrimitive);
 
         rtcCommitScene(m_Scene);
-
     }
 
     Scene::~Scene()
@@ -102,8 +100,7 @@ namespace Hikari
             rtcReleaseDevice(m_Device);
     }
 
-    // TODO(achal): Make it return bool and pass Interaction by pointer.
-    Interaction Scene::Intersect(const Ray& ray) const
+    bool Scene::Intersect(const Ray& ray, Interaction* interaction) const
     {
         // Convert Hikari's conception of ray to RTCRay or RTCRayHit
         //
@@ -125,14 +122,16 @@ namespace Hikari
         {
             assert(m_Primitives.size() > rayhit.hit.geomID);
 
-            return Interaction(
+            *interaction = Interaction(
                 ray(rayhit.ray.tfar),
                 glm::normalize(glm::vec3(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z)),
                 -ray.m_Direction,
                 glm::vec2(rayhit.hit.u, rayhit.hit.v),
                 m_Primitives[rayhit.hit.geomID].get());
+
+            return true;
         }
-        return Interaction(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(0.f), glm::vec2(0.f), nullptr);
+        return false;
     }
 
     bool Scene::Occluded(const Ray& ray) const

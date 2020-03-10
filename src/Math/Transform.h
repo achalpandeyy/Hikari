@@ -53,12 +53,6 @@ namespace Hikari
             return Ray(TransformPoint(ray.m_Origin), TransformVector(ray.m_Direction), ray.m_tMax);
         }
 
-        inline float MaxScaleFactor() const
-        {
-            float x = m_Matrix[0][0], y = m_Matrix[1][1], z = m_Matrix[2][2];
-            return std::max(x, std::max(y, z));
-        }
-
         Transform operator * (const Transform& t) const;
         Interaction operator () (const Interaction& interaction) const;
     

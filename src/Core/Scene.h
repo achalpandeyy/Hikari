@@ -19,9 +19,11 @@ namespace Hikari
     {
     public:
         Scene(const char* path);
+
         ~Scene();
 
-        Interaction Intersect(const Ray& ray) const;
+        bool Intersect(const Ray& ray, Interaction* interaction) const;
+
         bool Occluded(const Ray& ray) const;
 
         std::vector< std::shared_ptr<Light> > m_Lights;

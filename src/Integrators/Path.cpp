@@ -18,14 +18,12 @@ namespace Hikari
         for (unsigned int bounces = 0u; ; ++bounces)
         {
             // Find the next path vertex and accumulate contribution
-
-            // Intersect the ray with the scene and store the result in an Interaction
             //
-            Interaction interaction = scene.Intersect(tracingRay);
+            Interaction interaction;
 
             // Terminate path if ray escaped
             //
-            if (!interaction.m_Primitive || bounces >= m_MaxDepth)
+            if (!scene.Intersect(tracingRay, &interaction) || bounces >= m_MaxDepth)
                 break;
 
             // Possibly add emitted light at the intersection point

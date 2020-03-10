@@ -1,6 +1,5 @@
 #include "Whitted.h"
 
-#include "Core/BSDF.h"
 #include "Core/Sampler.h"
 #include "Core/Scene.h"
 #include "Math/Ray.h"
@@ -11,9 +10,9 @@ namespace Hikari
 	{
 		glm::vec3 L(0.f);
 
-		Interaction interaction = scene.Intersect(ray);
+		Interaction interaction;
 
-		if (!interaction.m_Primitive)
+		if (!scene.Intersect(ray, &interaction))
 			return L;
 
 		const glm::vec3& normal = interaction.m_Normal;

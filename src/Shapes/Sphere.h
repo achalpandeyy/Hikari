@@ -8,10 +8,10 @@ namespace Hikari
     {
     public:
         Sphere(
+            const glm::vec3&    center,
+            float               radius,
             RTCDevice           device,
-            RTCScene            scene,
-            const Transform&    objectToWorld,
-            float               radius = 1.f);
+            RTCScene            scene);
 
         ~Sphere();
 
@@ -26,8 +26,8 @@ namespace Hikari
         static void Intersect(const RTCIntersectFunctionNArguments* args);
         static void Occluded(const RTCOccludedFunctionNArguments* args);
 
-        float m_Radius;
         glm::vec3 m_Center;
+        float m_Radius;
     };
 
 }	// namespace Hikari

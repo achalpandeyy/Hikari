@@ -7,15 +7,15 @@
 namespace Hikari
 {
     TriangleMesh::TriangleMesh(
-        RTCDevice           device,
-        RTCScene            scene,
+        const char*         path,
         const Transform&    objectToWorld,
-        const char*         path)
-        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE), objectToWorld)
+        RTCDevice           device,
+        RTCScene            scene)
+        : Shape(rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE))
     {
         // Load the obj file.
         if (LoadObj(path, m_VertexPositions, m_VertexNormals, m_VertexUV, m_Indices,
-            m_ObjectToWorld))
+            objectToWorld))
         {
             m_VertexPositionBuffer = rtcNewSharedBuffer(device, m_VertexPositions.data(),
                 m_VertexPositions.size() * sizeof(glm::vec3));
@@ -45,6 +45,22 @@ namespace Hikari
             rtcReleaseBuffer(m_IndexBuffer);
             rtcReleaseGeometry(m_Geometry);
         }
+    }
+
+    std::shared_ptr<TriangleMesh> CreateTriangleMeshShape(
+        const char*         path,
+        const glm::vec3&    position,
+        float               degrees,
+        const glm::vec3&    rotationAxis,
+        const glm::vec3&    scale,
+        RTCDevice           device,
+        RTCScene            scene)
+    {
+        Transform objectToWorld = Translate(position);
+        objectToWorld = objectToWorld * Rotate(degrees, rotationAxis);
+        objectToWorld = objectToWorld * Scale(scale);
+
+        return std::make_shared<TriangleMesh>(path, objectToWorld, device, scene);
     }
 
 }   // namespace Hikari

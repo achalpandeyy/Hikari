@@ -2,16 +2,20 @@
 
 #include "Core/Shape.h"
 
+#include <vector>
+
 namespace Hikari
 {
+    class Transform;
+
     class TriangleMesh : public Shape
     {
     public:
         TriangleMesh(
+            const char*         path,
+            const Transform&    objectToWorld,
             RTCDevice           device,
-            RTCScene            scene,
-            const Transform& objectToWorld,
-            const char* path);
+            RTCScene            scene);
 
         ~TriangleMesh();
 
@@ -24,7 +28,7 @@ namespace Hikari
             return 1.f;
         }
 
-        Interaction Sample(const Interaction& i, const glm::vec2& e, float* pdf) const override
+        Interaction Sample(const Interaction& illumPoint, const glm::vec2& sample, float* pdf) const override
         {
             return Interaction();
         }
@@ -40,5 +44,14 @@ namespace Hikari
         std::vector<glm::uvec3> m_Indices;
         RTCBuffer m_VertexPositionBuffer = nullptr, m_IndexBuffer = nullptr;
     };
+
+    std::shared_ptr<TriangleMesh> CreateTriangleMeshShape(
+        const char*         path,
+        const glm::vec3&    translate,
+        float               degrees,
+        const glm::vec3&    rotationAxis,
+        const glm::vec3&    scale,
+        RTCDevice           device,
+        RTCScene            scene);
 
 }	// namespace Hikari

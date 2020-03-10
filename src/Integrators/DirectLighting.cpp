@@ -13,9 +13,8 @@ namespace Hikari
 		glm::vec3 L(0.f);
 
 		Interaction interaction;
-		interaction = scene.Intersect(ray);
 
-		if (!interaction.m_Primitive)
+		if (!scene.Intersect(ray, &interaction))
 			return L;
 
 		// TODO(achal): Make `ComputeScatteringFunctions` method for Interaction, and give Interaction
