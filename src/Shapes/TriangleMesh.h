@@ -56,7 +56,7 @@ namespace Hikari
         float               degrees,
         const glm::vec3&    rotationAxis,
         const glm::vec3&    scale,
-        RTCDevice           device,
-        RTCScene            scene);
+        RTCDevice           rtcDevice,
+        RTCScene            rtcScene);
 
 }	// namespace Hikari

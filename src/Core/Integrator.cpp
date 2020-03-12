@@ -17,9 +17,6 @@
 #include <iostream>
 #include <thread>
 
-// TODO(achal): Put it elsewhere.
-#define BLOCK_DIMENSION 32u
-
 namespace Hikari
 {
 	void SamplerIntegrator::Render(const Scene& scene) 

@@ -53,14 +53,14 @@ namespace Hikari
         float               degrees,
         const glm::vec3&    rotationAxis,
         const glm::vec3&    scale,
-        RTCDevice           device,
-        RTCScene            scene)
+        RTCDevice           rtcDevice,
+        RTCScene            rtcScene)
     {
         Transform objectToWorld = Translate(position);
         objectToWorld = objectToWorld * Rotate(degrees, rotationAxis);
         objectToWorld = objectToWorld * Scale(scale);
 
-        return std::make_shared<TriangleMesh>(path, objectToWorld, device, scene);
+        return std::make_shared<TriangleMesh>(path, objectToWorld, rtcDevice, rtcScene);
     }
 
 }   // namespace Hikari
