@@ -11,8 +11,8 @@ namespace Hikari
 		float*				pdf,
 		BxDFType*			sampledType) const
 	{
-		*wi = UniformSampleHemisphere(sample);
-		// *wi = CosineSampleHemisphere(sample);
+		// *wi = UniformSampleHemisphere(sample);
+		*wi = CosineSampleHemisphere(sample);
 
 		if (wi->y < 0.f)
 			wi->y *= -1.f;
@@ -24,8 +24,8 @@ namespace Hikari
 
 	float BxDF::Pdf(const glm::vec3& wo, const glm::vec3& wi) const
 	{
-		return SameHemisphere(wo, wi) ? 0.5f * INVPI : 0.f;
-		// return SameHemisphere(wo, wi) ? AbsCosTheta(wi) * INVPI : 0.f;
+		// return SameHemisphere(wo, wi) ? 0.5f * INVPI : 0.f;
+		return SameHemisphere(wo, wi) ? AbsCosTheta(wi) * INVPI : 0.f;
 	}
 
 }	// namespace Hikari

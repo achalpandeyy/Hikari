@@ -24,13 +24,13 @@ namespace Hikari
 
         m_Camera = std::make_shared<Camera>
         (
-            glm::vec3(0.f, 10.f, 35.f),      // camera position
-            glm::vec3(0.f, 10.f, 0.f),       // look at
+            glm::vec3(0.f, 50.f, 105.f),      // camera position
+            glm::vec3(0.f, 15.f, 0.f),       // look at
             glm::vec3(0.f, 1.f, 0.f),       // up
             resolution
         );
 
-        const unsigned int maxDepth = 5u;
+        const unsigned int maxDepth = 50u;
         // m_Integrator = std::make_unique<DirectLightingIntegrator>(LightStrategy::UniformSampleAll, maxDepth, m_Camera);
         m_Integrator = std::make_unique<PathIntegrator>(maxDepth, m_Camera);
         // m_Integrator = std::make_unique<WhittedIntegrator>(maxDepth, m_Camera);

@@ -2,6 +2,7 @@
 
 #include "Core/Interaction.h"
 #include "Lights/Diffuse.h"
+#include "Lights/Directional.h"
 #include "Lights/Point.h"
 #include "Lights/Spot.h"
 #include "Materials/Matte.h"
@@ -28,25 +29,38 @@ namespace Hikari
         // Hard code scene here for now
         m_Scene = rtcNewScene(m_Device);
 
-        /*
         // Ajax
         //
         std::shared_ptr<Shape> ajaxMesh = CreateTriangleMeshShape(
             "../../models/ajax.obj",
-            glm::vec3(6.f, 0.f, 4.f),
+            glm::vec3(17.f, 0.f, 8.f),
             60.f,
             glm::vec3(0.f, 1.f, 0.f),
-            glm::vec3(0.35f),
+            glm::vec3(1.f),
             m_Device,
             m_Scene);
 
         std::shared_ptr< Texture<glm::vec3> > refGray = std::make_shared< ConstantTexture<glm::vec3> >(
-            glm::vec3(0.5f, 0.5f, 0.5f));
-        std::shared_ptr< Texture<float> > rougGray = std::make_shared< ConstantTexture<float> >(90.f);
+            glm::vec3(0.25f, 0.25f, 0.25f));
+        std::shared_ptr< Texture<float> > rougGray = std::make_shared< ConstantTexture<float> >(0.f);
         std::shared_ptr<Material> grayMtl = std::make_shared<MatteMaterial>(refGray, rougGray);
 
         std::shared_ptr<Primitive> ajaxPrimitive = std::make_shared<Primitive>(ajaxMesh, grayMtl, nullptr);
         m_Primitives.push_back(ajaxPrimitive);
+
+        /*
+        // Bunny
+        //
+        std::shared_ptr<Shape> bunnyMesh = CreateTriangleMeshShape(
+            "../../models/bunny.obj",
+            glm::vec3(5.f, -2.f, 5.f),
+            0.f,
+            glm::vec3(0.f, 1.f, 0.f),
+            glm::vec3(50.f),
+            m_Device,
+            m_Scene);
+        std::shared_ptr<Primitive> bunnyPrimitive = std::make_shared<Primitive>(bunnyMesh, grayMtl, nullptr);
+        m_Primitives.push_back(bunnyPrimitive);
         */
 
         // Floor
@@ -56,7 +70,7 @@ namespace Hikari
             glm::vec3(0.f),
             0.f,
             glm::vec3(0.f, 1.f, 0.f),
-            glm::vec3(10.f),
+            glm::vec3(150.f),
             m_Device,
             m_Scene
         );
@@ -69,6 +83,17 @@ namespace Hikari
         std::shared_ptr<Primitive> floor = std::make_shared<Primitive>(floorMesh, whiteMtl, nullptr);
         m_Primitives.push_back(floor);
 
+        // White Area Light
+        //
+        std::shared_ptr<Shape> whitelightSphere = std::make_shared<Sphere>(glm::vec3(-40.f, 48.f, 44.f), 25.f, m_Device, m_Scene);
+
+        std::shared_ptr<AreaLight> whiteDal = std::make_shared<DiffuseAreaLight>(1u, glm::vec3(4.f, 4.f, 4.f), whitelightSphere, false);
+        m_Lights.push_back(whiteDal);
+
+        std::shared_ptr<Primitive> whiteLight = std::make_shared<Primitive>(whitelightSphere, whiteMtl, whiteDal);
+        m_Primitives.push_back(whiteLight);
+
+        /*
         // Ceiling
         //
         std::shared_ptr<Shape> ceilingMesh = CreateTriangleMeshShape(
@@ -80,9 +105,9 @@ namespace Hikari
             m_Device,
             m_Scene
         );
-
         std::shared_ptr<Primitive> ceiling = std::make_shared<Primitive>(ceilingMesh, whiteMtl, nullptr);
         m_Primitives.push_back(ceiling);
+        */
 
         // Backwall
         //
@@ -91,14 +116,14 @@ namespace Hikari
             glm::vec3(0.f),
             0.f,
             glm::vec3(0.f, 1.f, 0.f),
-            glm::vec3(10.f),
+            glm::vec3(150.f),
             m_Device,
             m_Scene
         );
-
         std::shared_ptr<Primitive> backwall = std::make_shared<Primitive>(backwallMesh, whiteMtl, nullptr);
         m_Primitives.push_back(backwall);
 
+        /*
         // Rightwall
         //
         std::shared_ptr<Shape> rightwallMesh = CreateTriangleMeshShape(
@@ -130,7 +155,6 @@ namespace Hikari
             m_Device,
             m_Scene
         );
-
         std::shared_ptr< Texture<glm::vec3> > refGreen = std::make_shared< ConstantTexture<glm::vec3> >(
             glm::vec3(0.12f, 0.45f, 0.12f));
         std::shared_ptr< Texture<float> > rougGreen = std::make_shared< ConstantTexture<float> >(0.f);
@@ -138,6 +162,49 @@ namespace Hikari
 
         std::shared_ptr<Primitive> leftwall = std::make_shared<Primitive>(leftwallMesh, greenMtl, nullptr);
         m_Primitives.push_back(leftwall);
+        */
+
+        /*
+        // White Area Light
+        //
+        std::shared_ptr<Shape> whitelightSphere = std::make_shared<Sphere>(glm::vec3(7.5f, 17.5f, 7.5f), 2.f, m_Device, m_Scene);
+
+        std::shared_ptr<AreaLight> whiteDal = std::make_shared<DiffuseAreaLight>(1u, glm::vec3(3.f, 3.f, 3.f), whitelightSphere, false);
+        m_Lights.push_back(whiteDal);
+
+        std::shared_ptr<Primitive> whiteLight = std::make_shared<Primitive>(whitelightSphere, whiteMtl, whiteDal);
+        m_Primitives.push_back(whiteLight);
+
+        // White Area Light
+        //
+        std::shared_ptr<Shape> greenlightSphere = std::make_shared<Sphere>(glm::vec3(7.5f, 17.5f, -7.5f), 2.f, m_Device, m_Scene);
+
+        std::shared_ptr<AreaLight> greenDal = std::make_shared<DiffuseAreaLight>(1u, glm::vec3(3.f, 3.f, 3.f), greenlightSphere, false);
+        m_Lights.push_back(greenDal);
+
+        std::shared_ptr<Primitive> greenLight = std::make_shared<Primitive>(greenlightSphere, whiteMtl, greenDal);
+        m_Primitives.push_back(greenLight);
+
+        // White Area Light
+        //
+        std::shared_ptr<Shape> blueLightSphere = std::make_shared<Sphere>(glm::vec3(-7.5f, 17.5f, 7.5f), 2.f, m_Device, m_Scene);
+
+        std::shared_ptr<AreaLight> blueDal = std::make_shared<DiffuseAreaLight>(1u, glm::vec3(3.f, 3.f, 3.f), blueLightSphere, false);
+        m_Lights.push_back(blueDal);
+
+        std::shared_ptr<Primitive> blueLight = std::make_shared<Primitive>(blueLightSphere, whiteMtl, blueDal);
+        m_Primitives.push_back(blueLight);
+
+        // White Area Light
+        //
+        std::shared_ptr<Shape> redLightSphere = std::make_shared<Sphere>(glm::vec3(-7.5f, 17.5f, -7.5f), 2.f, m_Device, m_Scene);
+
+        std::shared_ptr<AreaLight> redDal = std::make_shared<DiffuseAreaLight>(1u, glm::vec3(3.f, 3.f, 3.f), redLightSphere, false);
+        m_Lights.push_back(redDal);
+
+        std::shared_ptr<Primitive> redLight = std::make_shared<Primitive>(redLightSphere, whiteMtl, redDal);
+        m_Primitives.push_back(redLight);
+        */
 
         /*
         // Greenish Analytic Sphere for the ground
@@ -153,6 +220,7 @@ namespace Hikari
         m_Primitives.push_back(greenSpherePrimitive);
         */
 
+        /*
         // White Area Light
         //
         std::shared_ptr<Shape> whitelightSphere = std::make_shared<Sphere>(glm::vec3(7.f, 10.f, -7.f), 2.f, m_Device, m_Scene);
@@ -192,6 +260,7 @@ namespace Hikari
 
         std::shared_ptr<Primitive> redLight = std::make_shared<Primitive>(redLightSphere, whiteMtl, redDal);
         m_Primitives.push_back(redLight);
+        */
 
         rtcCommitScene(m_Scene);
     }

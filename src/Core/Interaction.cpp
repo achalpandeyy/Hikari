@@ -8,7 +8,7 @@ namespace Hikari
 	Ray Interaction::SpawnRayTo(const Interaction& i) const
 	{
 		return Ray(m_Position + EPSILON * m_Normal, glm::normalize(i.m_Position - m_Position),
-			glm::distance(i.m_Position, m_Position) - 3.f * EPSILON);
+			glm::distance(i.m_Position, m_Position) - 15.f * EPSILON);
 	}
 
 	Ray Interaction::SpawnRay(const glm::vec3& direction) const

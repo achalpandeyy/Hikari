@@ -68,7 +68,7 @@ namespace Hikari
         glm::vec2 rasterCoordinates(block.m_Position.x * BLOCK_DIMENSION, block.m_Position.y * BLOCK_DIMENSION);
 
         // TODO(achal): Put it elsewhere.
-        const unsigned int numSamples = 16u;
+        const unsigned int numSamples = 4u;
         Sampler sampler(numSamples);
 
         for (unsigned int row = 0; row < block.m_Dimensions.y; ++row)
