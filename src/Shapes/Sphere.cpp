@@ -65,7 +65,6 @@ namespace Hikari
         return 1.f / SurfaceArea();
     }
 
-#ifndef lol
     Interaction Sphere::SolidAngleSample(const Interaction& illumPoint, const glm::vec2& sample, float* pdf) const
     {
         float dc = glm::distance(m_Center, illumPoint.m_Position);
@@ -97,66 +96,6 @@ namespace Hikari
 
         return interaction;
     }
-#else
-    Interaction Sphere::SolidAngleSample(const Interaction& illumPoint, const glm::vec2& sample, float* pdf) const
-    {
-        // Sample uniformly on sphere if $\pt{}$ is inside it
-        // Point3f pOrigin = OffsetRayOrigin(ref.p, ref.pError, ref.n, pCenter - ref.p);
-
-        // Sample sphere uniformly inside subtended cone
-
-        // Compute coordinate system for sphere sampling
-        float dc = glm::distance(illumPoint.m_Position, m_Center);
-        float invDc = 1.f / dc;
-        glm::vec3 wcY = (m_Center - illumPoint.m_Position) * invDc;
-        glm::vec3 wcX, wcZ;
-        OrthonormalBasis(wcY, wcX, wcZ);
-
-        // Compute $\theta$ and $\phi$ values for sample in cone
-        float sinThetaMax = m_Radius * invDc;
-        float sinThetaMax2 = sinThetaMax * sinThetaMax;
-        float invSinThetaMax = 1.f / sinThetaMax;
-        float cosThetaMax = glm::sqrt(glm::max(0.f, 1.f - sinThetaMax2));
-
-        float cosTheta = (cosThetaMax - 1) * sample[0] + 1.f;
-        float sinTheta2 = 1.f - cosTheta * cosTheta;
-
-
-        if (sinThetaMax2 < 0.00068523f /* sin^2(1.5 deg) */) {
-            /* Fall back to a Taylor series expansion for small angles, where
-               the standard approach suffers from severe cancellation errors */
-            sinTheta2 = sinThetaMax2 * sample[0];
-            cosTheta = glm::sqrt(1 - sinTheta2);
-        }
-
-        // Compute angle $\alpha$ from center of sphere to sampled point on surface
-        float cosAlpha = sinTheta2 * invSinThetaMax +
-            cosTheta * glm::sqrt(glm::max(0.f, 1.f - sinTheta2 * invSinThetaMax * invSinThetaMax));
-        float sinAlpha = glm::sqrt(glm::max(0.f, 1.f - cosAlpha * cosAlpha));
-        float phi = sample[1] * 2.f * PI;
-
-        // Compute surface normal and sampled point on sphere
-        glm::vec3 nWorld = sinAlpha * glm::cos(phi) * (-wcX) + sinAlpha * glm::sin(phi) * (-wcZ) +
-            cosAlpha * (-wcY);
-            // SphericalDirection(sinAlpha, cosAlpha, phi, -wcX, -wcY, -wc);
-
-        glm::vec3 pWorld = m_Center + m_Radius * nWorld;
-
-        // Return _Interaction_ for sampled point on sphere
-        Interaction it;
-        it.m_Position = pWorld;
-        // it.pError = gamma(5) * Abs((Vector3f)pWorld);
-        it.m_Normal = nWorld;
-        // if (reverseOrientation) it.n *= -1;
-
-        // Uniform cone PDF.
-        *pdf = 1.f / (2.f * PI * (1.f - cosThetaMax));
-
-        return it;
-    }
-
-#endif
-
 
     void Sphere::Bounds(const RTCBoundsFunctionArguments* args)
     {
