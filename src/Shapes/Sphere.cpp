@@ -2,6 +2,7 @@
 
 #include "Core/Interaction.h"
 #include "Math/Constants.h"
+#include "Math/Utility.h"
 
 #include <algorithm>
 
@@ -47,7 +48,7 @@ namespace Hikari
         return 4.f * PI * m_Radius * m_Radius;
     }
 
-    Interaction Sphere::Sample(const Interaction& i, const glm::vec2& sample, float* pdf) const
+    Interaction Sphere::AreaSample(const glm::vec2& sample, float* pdf) const
     {
         Interaction interaction;
         const glm::vec3& pSphere = UniformSampleSphere(sample);
@@ -63,6 +64,35 @@ namespace Hikari
     {
         return 1.f / SurfaceArea();
     }
+
+    Interaction Sphere::SolidAngleSample(const Interaction& illumPoint, const glm::vec2& sample, float* pdf) const
+    {
+        float sinThetaMaxSq = (m_Radius * m_Radius) / glm::dot(illumPoint.m_Position - m_Center, illumPoint.m_Position - m_Center);
+        float cosThetaMax = glm::sqrt(glm::max(0.f, 1.f - sinThetaMaxSq));
+        float cosTheta = sample[0] * (cosThetaMax - 1.f) + 1.f;
+        float sinTheta = glm::sqrt(glm::max(0.f, 1.f - cosTheta * cosTheta));
+        float phi = 2.f * PI * sample[1];
+
+        float dc = glm::distance(m_Center, illumPoint.m_Position);
+        float ds = dc * cosTheta - glm::sqrt(glm::max(0.f, m_Radius * m_Radius - dc * dc * sinThetaMaxSq));
+
+        float cosAlpha = ((dc * dc) + (m_Radius * m_Radius) - (ds * ds)) / 2.f * dc * m_Radius;
+        float sinAlpha = glm::sqrt(glm::max(0.f, 1.f - cosAlpha * cosAlpha));
+
+        glm::vec3 localY = glm::normalize(m_Center - illumPoint.m_Position);
+        glm::vec3 localX, localZ;
+        OrthonormalBasis(localY, localX, localZ);
+
+        Interaction interaction;
+        interaction.m_Normal = glm::normalize((-localX) * sinAlpha * glm::cos(phi) + (-localY) * cosAlpha +
+            (-localZ) * sinAlpha * glm::sin(phi));
+        interaction.m_Position = m_Center + m_Radius * interaction.m_Normal;
+
+        *pdf = 1.f / (2.f * PI * (1.f - cosThetaMax));
+
+        return interaction;
+    }
+
 
     void Sphere::Bounds(const RTCBoundsFunctionArguments* args)
     {

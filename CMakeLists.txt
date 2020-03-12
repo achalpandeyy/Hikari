@@ -70,6 +70,7 @@ set (HIKARI_SOURCE
 
 	# Math
 	src/Math/Transform.cpp
+	src/Math/Utility.cpp
 
 	# Shapes
 	src/Shapes/Sphere.cpp

@@ -4,8 +4,6 @@
 
 #include <glm/glm.hpp>
 
-#include <memory>
-
 namespace Hikari
 {
 	class Interaction;
@@ -51,7 +49,6 @@ namespace Hikari
 
 		const glm::vec3 m_Normal;
 		glm::vec3 m_Tangent, m_BiTangent;
-		std::unique_ptr<BxDF> m_BxDF;
 
 		unsigned int m_NumBxDFs = 0u;
 		static constexpr unsigned int m_MaxBxDFs = 8u;

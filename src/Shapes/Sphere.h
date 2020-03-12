@@ -17,9 +17,11 @@ namespace Hikari
 
         float SurfaceArea() const override;
 
-        Interaction Sample(const Interaction& i, const glm::vec2& e, float* pdf) const override;
+        Interaction AreaSample(const glm::vec2& sample, float* pdf) const override;
 
         float Pdf(const Interaction& pShape, const glm::vec3& wi) const override;
+
+        Interaction SolidAngleSample(const Interaction& illumPoint, const glm::vec2& sample, float* pdf) const override;
 
     private:
         static void Bounds(const RTCBoundsFunctionArguments* args);

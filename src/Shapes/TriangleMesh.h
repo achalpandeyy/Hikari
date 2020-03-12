@@ -28,7 +28,7 @@ namespace Hikari
             return 1.f;
         }
 
-        Interaction Sample(const Interaction& illumPoint, const glm::vec2& sample, float* pdf) const override
+        Interaction AreaSample(const glm::vec2& sample, float* pdf) const override
         {
             return Interaction();
         }
@@ -36,6 +36,11 @@ namespace Hikari
         float Pdf(const Interaction& pShape, const glm::vec3& wi) const override
         {
             return 1.f;
+        }
+
+        Interaction SolidAngleSample(const Interaction& illumPoint, const glm::vec2& sample, float* pdf) const override
+        {
+            return Interaction();
         }
 
     private:

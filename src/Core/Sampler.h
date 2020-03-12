@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Math/Constants.h"
+
 #include <glm/glm.hpp>
 
 #include <random>
@@ -23,7 +25,7 @@ namespace Hikari
 
     private:
         std::mt19937 m_Engine;
-        const std::uniform_real_distribution<float> m_Distribution{ 0.f, 1.f }; 
+        std::uniform_real_distribution<float> m_Distribution{ 0.f, 1.f - EPSILON }; 
         std::random_device m_RandomDevice;
     };
 

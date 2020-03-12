@@ -7,12 +7,13 @@ namespace Hikari
 {
 	glm::vec3 DiffuseAreaLight::Sample_Li(
 		const Interaction&	illumPoint,
-		const glm::vec2&	e,
+		const glm::vec2&	sample,
 		glm::vec3*			wi,
 		float*				pdf,
 		VisibilityTester*	vis) const
 	{
-		Interaction pShape = m_Shape->Sample(illumPoint, e, pdf);
+		// Interaction pShape = m_Shape->AreaSample(sample, pdf);
+		Interaction pShape = m_Shape->SolidAngleSample(illumPoint, sample, pdf);
 
 		if (*pdf == 0.f || glm::distance(pShape.m_Position, illumPoint.m_Position) == 0.f)
 			return glm::vec3(0.f);
@@ -22,7 +23,8 @@ namespace Hikari
 		float cosTheta = glm::dot(-*wi, pShape.m_Normal);
 		if (cosTheta < 0.f)
 			cosTheta = 0.f;
-		return L(pShape, -*wi) * cosTheta / glm::dot(pShape.m_Position - illumPoint.m_Position, pShape.m_Position - illumPoint.m_Position);
+		// return L(pShape, -*wi) * cosTheta / glm::dot(pShape.m_Position - illumPoint.m_Position, pShape.m_Position - illumPoint.m_Position);
+		return L(pShape, -*wi);
 	}
 
 	float DiffuseAreaLight::Pdf_Li(const Interaction& illumPoint, const glm::vec3& wi) const

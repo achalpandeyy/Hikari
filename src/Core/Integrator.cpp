@@ -27,7 +27,7 @@ namespace Hikari
 		auto startTime = std::chrono::high_resolution_clock::now();
 
         // TODO(achal): Put it elsewhere.
-        const glm::vec2 resolution(1280, 720);
+        const glm::vec2 resolution(1024, 1024);
 
 		BlockGenerator blockGenerator(resolution, BLOCK_DIMENSION);
 		ImageBlock outputImage(resolution);
@@ -126,7 +126,7 @@ namespace Hikari
         if (numLights == 0u)
             return glm::vec3(0.f);
 
-        size_t lightIdx = std::min((size_t)sampler.GetSample1D() * numLights, numLights - 1);
+        size_t lightIdx = std::min((size_t)(sampler.GetSample1D() * numLights), numLights - 1);
         const std::shared_ptr<Light>& light = scene.m_Lights[lightIdx];
 
         return static_cast<float>(numLights) * EstimateDirect(illumPoint, *light, scene, sampler);

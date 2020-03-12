@@ -1,22 +1,12 @@
 #include "BSDF.h"
 
 #include "Interaction.h"
+#include "Math/Utility.h"
 
 #include <algorithm>
 
 namespace Hikari
 {
-	// TODO(achal): This is not the appropriate place for this function, move it somewhere else.
-	void OrthonormalBasis(const glm::vec3& axisY, glm::vec3& axisX, glm::vec3& axisZ)
-	{
-		if (axisY.x < axisY.y)
-			axisX = glm::normalize(glm::vec3(0.f, -axisY.z, axisY.y));
-		else
-			axisX = glm::normalize(glm::vec3(axisY.z, 0.f, -axisY.x));
-
-		axisZ = glm::cross(axisX, axisY);
-	}
-
 	BSDF::BSDF(const Interaction& interaction) : m_Normal(interaction.m_Normal)
 	{
 		OrthonormalBasis(m_Normal, m_Tangent, m_BiTangent);
