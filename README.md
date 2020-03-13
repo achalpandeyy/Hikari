@@ -1,7 +1,7 @@
 ## Hikari
 Hikari is a physically-based offline rendering engine, which I write in my spare time to learn what goes into building a production rendering engine.
 
-Some notable features of Hikari are (see gallery below to see them in action)-
+Some notable features of Hikari are (see [gallery](https://github.com/achalpandeyy/Hikari#gallery) below to see them in action)-
 - Cosine-weighted and emitter importance sampling
 - Area Lights, Spotlights, Directional Lights and Point Lights
 - Solid Angle Sampling for Spherical Area Lights which drastically reduce variance as compared to Area Sampling (see below for a comparison)
